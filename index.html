@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfroService | Boutique Officielle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --afro-blue: #1d265e; --afro-red: #bd1e24; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        #sideNav, #sideCart, #detailModal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .promo-badge { background: linear-gradient(45deg, #bd1e24, #ff4d4d); }
+        .whatsapp-float { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <div id="overlay" onclick="closeMenus()" class="hidden fixed inset-0 bg-black/70 z-[90] backdrop-blur-sm"></div>
+
+    <a href="https://wa.me/237658562104" target="_blank" class="fixed bottom-6 right-6 z-[120] whatsapp-float bg-[#25D366] text-white p-4 rounded-full shadow-2xl">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <header class="bg-[#1d265e] text-white sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <button onclick="openNav()" class="text-2xl">☰</button>
+            <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" class="h-10 rounded cursor-pointer" onclick="location.reload()">
+            <div class="flex-1 max-w-md relative">
+                <input id="fastSearch" type="text" oninput="quickSearch(this.value)" placeholder="Rechercher un produit..." class="w-full bg-white/10 border border-white/20 rounded-full py-2 px-10 text-sm outline-none focus:bg-white focus:text-slate-900 transition-all">
+                <span class="absolute left-4 top-2 text-white/50"></span>
+            </div>
+            <button onclick="openCart()" class="relative p-2">
+                <span class="text-2xl">🛒</span>
+                <span id="badge" class="absolute -top-1 -right-1 bg-red-600 text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-[#1d265e]">0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="relative h-[200px] md:h-[450px] bg-slate-200 overflow-hidden">
+        <div id="heroSlider" class="flex h-full transition-transform duration-700 ease-in-out">
+            </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-8 min-h-screen">
+        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+    </main>
+
+    <footer class="bg-white border-t mt-12 pb-10">
+        <div class="container mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+            <div class="text-center md:text-left">
+                <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" class="h-12 mx-auto md:mx-0 mb-4">
+                <p class="text-[10px] font-black uppercase text-slate-400">Qualité & Service Afro Service</p>
+            </div>
+            <div class="text-center md:text-left">
+                <h4 class="font-black text-[#1d265e] uppercase text-sm mb-4 italic underline">Nous Suivre</h4>
+                <a href="https://www.facebook.com/profile.php?id=61561732935385" target="_blank" class="flex items-center justify-center md:justify-start gap-3">
+                    <img src="https://i.postimg.cc/ZR3jSwwJ/images.png" class="h-10 w-10 rounded-full shadow">
+                    <span class="text-sm font-bold">Facebook Officiel</span>
+                </a>
+            </div>
+            <div class="text-center md:text-left">
+                <h4 class="font-black text-[#1d265e] uppercase text-[10px] mb-4 italic">LES PAIEMENTS QUE NOUS ACCEPTONS</h4>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <img src="https://i.postimg.cc/xdz2DRQW/mobile-money.jpg" class="h-8 rounded">
+                    <img src="https://i.postimg.cc/Pqwjs4H0/orange-money.png" class="h-8 rounded">
+                    <img src="https://i.postimg.cc/g0ZWFDp5/paiement-a-la-livraison.png" class="h-8 rounded">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="detailModal" class="fixed inset-y-0 right-0 w-full max-w-md bg-white z-[150] shadow-2xl translate-x-full flex flex-col">
+        <div class="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+            <button onclick="closeDetail()" class="font-black text-[#1d265e] flex items-center gap-2">← RETOUR</button>
+            <span class="text-[10px] font-black text-slate-400">DÉTAILS PRODUIT</span>
+        </div>
+        <div id="detailContent" class="flex-1 overflow-y-auto p-6 no-scrollbar"></div>
+    </div>
+
+    <aside id="sideNav" class="fixed inset-y-0 left-0 w-[280px] bg-white z-[110] shadow-2xl -translate-x-full overflow-y-auto">
+        <div class="p-6 bg-[#1d265e] text-white flex justify-between items-center sticky top-0">
+            <span class="font-black italic">RAYONS</span>
+            <button onclick="closeMenus()" class="text-2xl">&times;</button>
+        </div>
+        <div id="categoryMenu" class="py-4"></div>
+        <div class="p-4 border-t">
+            <button onclick="openAdmin()" class="w-full bg-slate-100 py-3 rounded-xl font-black text-[10px] uppercase text-[#1d265e]">🔐 Gestion Stock</button>
+        </div>
+    </aside>
+
+    <aside id="sideCart" class="fixed inset-y-0 right-0 w-[320px] bg-white z-[110] shadow-2xl translate-x-full flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+            <h2 class="font-black text-[#1d265e] uppercase italic">Mon Panier</h2>
+            <button onclick="closeMenus()" class="text-2xl">&times;</button>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-100/50"></div>
+        
+        <div class="p-6 border-t shadow-inner space-y-4">
+            <div id="clientInfo" class="space-y-2">
+                <p class="text-[9px] font-black text-slate-400 uppercase italic">Vos coordonnées pour la livraison</p>
+                <input id="cName" type="text" placeholder="Nom Complet" class="w-full border p-2 text-xs rounded-lg outline-none focus:border-[#1d265e]">
+                <input id="cTel" type="tel" placeholder="N° de Téléphone" class="w-full border p-2 text-xs rounded-lg outline-none focus:border-[#1d265e]">
+                <input id="cQuartier" type="text" placeholder="Ville et Quartier" class="w-full border p-2 text-xs rounded-lg outline-none focus:border-[#1d265e]">
+            </div>
+            <div class="flex justify-between items-center font-black">
+                <span class="text-xs text-slate-400 uppercase">Total</span>
+                <span id="cartTotal" class="text-xl text-red-600">0 F</span>
+            </div>
+            <button onclick="checkout()" class="w-full bg-[#1d265e] text-white py-4 rounded-xl font-black uppercase text-xs flex items-center justify-center gap-2">
+                Commander sur WhatsApp
+            </button>
+        </div>
+    </aside>
+
+    <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] overflow-y-auto">
+        <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white shadow-sm z-50">
+            <button onclick="closeAdmin()" class="font-bold text-[#1d265e]">← FERMER</button>
+            <h2 class="font-black uppercase text-red-600">Espace Gestion AfroService</h2>
+        </div>
+        <div class="max-w-4xl mx-auto p-6 space-y-10">
+            <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-300">
+                <h3 id="admTitle" class="font-black uppercase text-xs mb-4 italic text-[#1d265e]">Fiche Article</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input id="admName" type="text" placeholder="Nom de l'article" class="border p-3 rounded-xl text-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="admPrice" type="number" placeholder="Prix Vente" class="border p-3 rounded-xl text-sm font-bold">
+                        <input id="admOld" type="number" placeholder="Ancien Prix (Promo)" class="border p-3 rounded-xl text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <select id="admCat" onchange="updateAdminSubs()" class="border p-3 rounded-xl text-sm"></select>
+                        <select id="admSub" class="border p-3 rounded-xl text-sm"></select>
+                    </div>
+                    <input id="admImgs" type="text" placeholder="Liens images (séparer par virgule)" class="border p-3 rounded-xl text-xs">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="admColors" type="text" placeholder="Couleurs (Noir, Or...)" class="border p-3 rounded-xl text-xs">
+                        <input id="admMem" type="text" placeholder="Mémoire (128Go, 256Go...)" class="border p-3 rounded-xl text-xs">
+                    </div>
+                    <textarea id="admDesc" placeholder="Description de l'article..." class="md:col-span-2 border p-4 rounded-xl text-sm h-24"></textarea>
+                    <button id="admBtn" onclick="saveProduct()" class="md:col-span-2 bg-[#1d265e] text-white py-4 rounded-xl font-black uppercase">Enregistrer l'article</button>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="font-black uppercase text-xs text-slate-400 italic">Modifier / Supprimer des articles existants</h3>
+                <div id="stockList" class="grid gap-2"></div>
+            </div>
+
+            <div class="bg-slate-100 p-6 rounded-2xl">
+                <h3 class="font-black uppercase text-xs mb-4">Structure des Rayons (Nom:Sous1,Sous2;...)</h3>
+                <input id="admCatsRaw" type="text" class="w-full border p-3 rounded-xl text-xs font-mono mb-4">
+                <button onclick="updateCatsStructure()" class="w-full bg-slate-900 text-white py-2 rounded-xl text-[10px] font-black uppercase">Mettre à jour les rayons</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let categories = JSON.parse(localStorage.getItem('AFRO_CATS')) || [
+            { name: "Téléphones", subs: ["iPhone", "Samsung", "Tecno"] },
+            { name: "Electroménager", subs: ["Frigos", "Cuisinières", "Fours"] }
+        ];
+        let stock = JSON.parse(localStorage.getItem('AFRO_STOCK')) || [];
+        let cart = [];
+        let editIdx = -1;
+
+        function init() {
+            renderProducts(stock);
+            renderMenu();
+            renderAdminStock();
+            generateHero();
+            document.getElementById('admCat').innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            document.getElementById('admCatsRaw').value = categories.map(c => `${c.name}:${c.subs.join(',')}`).join(';');
+            updateAdminSubs();
+            document.getElementById('badge').innerText = cart.length;
+        }
+
+        // --- AFFICHAGE PRODUITS ---
+        function renderProducts(data) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = data.map((p) => {
+                const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
+                const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
+                return `
+                <div class="bg-white rounded-2xl p-3 shadow-sm relative cursor-pointer hover:shadow-md transition" onclick="showDetail('${p.name.replace(/'/g, "\\'")}')">
+                    ${promo > 0 ? `<span class="absolute top-2 left-2 promo-badge text-white text-[9px] font-black px-2 py-1 rounded-lg z-10 flex items-center gap-1">⚡ -${promo}%</span>` : ''}
+                    <div class="aspect-square overflow-hidden rounded-xl mb-3">
+                        <img src="${img}" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-[10px] font-black text-slate-800 uppercase line-clamp-2 h-8 leading-tight">${p.name}</h3>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span class="text-red-600 font-black text-sm">${parseInt(p.price).toLocaleString()} F</span>
+                        ${p.old ? `<span class="text-slate-300 line-through text-[9px]">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            if(!data.length) grid.innerHTML = `<p class="col-span-full text-center py-20 text-slate-400 font-bold uppercase text-xs">Aucun article trouvé</p>`;
+        }
+
+        // --- BANNIÈRE ALÉATOIRE ---
+        function generateHero() {
+            const hero = document.getElementById('heroSlider');
+            if (!stock.length) { hero.innerHTML = `<div class="min-w-full flex items-center justify-center font-black">BIENVENUE CHEZ AFRO SERVICE</div>`; return; }
+            let shuffled = [...stock].sort(() => 0.5 - Math.random()).slice(0, 5);
+            hero.innerHTML = shuffled.map(p => `
+                <div class="min-w-full h-full relative">
+                    <img src="${p.imgs[0]}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex flex-col justify-center px-10 text-white">
+                        <h2 class="text-2xl md:text-4xl font-black uppercase italic leading-tight">${p.name}</h2>
+                        <button onclick="showDetail('${p.name.replace(/'/g, "\\'")}')" class="mt-6 bg-white text-[#1d265e] px-8 py-3 rounded-full font-black text-xs uppercase w-fit">Voir le produit</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        // --- DÉTAILS PRODUIT ---
+        function showDetail(name) {
+            const p = stock.find(item => item.name === name);
+            const content = document.getElementById('detailContent');
+            const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
+            content.innerHTML = `
+                <div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl">
+                    <div id="slideTrack" class="flex transition-transform duration-500">${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover">`).join('')}</div>
+                    ${imgs.length > 1 ? `
+                    <div class="absolute inset-0 flex items-center justify-between px-3">
+                        <button onclick="moveDetailSlide(-1, ${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg font-bold">‹</button>
+                        <button onclick="moveDetailSlide(1, ${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg font-bold">›</button>
+                    </div>
+                    <span id="slideCount" class="absolute bottom-4 right-4 bg-black/70 text-white text-[10px] px-3 py-1 rounded-full font-bold">1 / ${imgs.length}</span>` : ''}
+                </div>
+                <h2 class="text-xl font-black text-[#1d265e] uppercase mb-4">${p.name}</h2>
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-2xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>
+                    ${p.old ? `<span class="line-through text-slate-300 font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                </div>
+                <div class="space-y-4">
+                    ${p.colors ? `<div><p class="text-[9px] font-black text-slate-400 mb-1">COULEUR</p><select id="vCol" class="w-full border p-3 rounded-xl font-bold text-xs">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select></div>` : ''}
+                    ${p.memory ? `<div><p class="text-[9px] font-black text-slate-400 mb-1">MÉMOIRE</p><select id="vMem" class="w-full border p-3 rounded-xl font-bold text-xs">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select></div>` : ''}
+                    <div><p class="text-[9px] font-black text-slate-400 mb-1">QUANTITÉ</p><input id="vQty" type="number" value="1" min="1" class="w-full border p-3 rounded-xl font-bold text-xs"></div>
+                    <div class="bg-slate-50 p-4 rounded-2xl text-xs text-slate-600 border italic leading-relaxed">${p.desc || 'Garanti Afro Service.'}</div>
+                </div>
+                <button onclick="addToCart('${p.name.replace(/'/g, "\\'")}', ${p.price}, '${imgs[0]}')" class="w-full bg-[#1d265e] text-white py-4 rounded-2xl font-black uppercase text-xs mt-8 shadow-xl">Ajouter au Panier</button>
+            `;
+            document.getElementById('detailModal').style.transform = "translateX(0)";
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+
+        let detailSlideIdx = 0;
+        function moveDetailSlide(dir, total) {
+            detailSlideIdx = (detailSlideIdx + dir + total) % total;
+            document.getElementById('slideTrack').style.transform = `translateX(-${detailSlideIdx * 100}%)`;
+            document.getElementById('slideCount').innerText = `${detailSlideIdx + 1} / ${total}`;
+        }
+
+        // --- GESTION PANIER ---
+        function addToCart(name, price, img) {
+            const qty = parseInt(document.getElementById('vQty').value);
+            const color = document.getElementById('vCol')?.value || "";
+            const mem = document.getElementById('vMem')?.value || "";
+            for(let i=0; i<qty; i++) {
+                cart.push({ name: `${name} ${color} ${mem}`.trim(), price, img });
+            }
+            updateCart();
+            closeDetail();
+            openCart();
+        }
+
+        function updateCart() {
+            let total = 0;
+            document.getElementById('cartItems').innerHTML = cart.map((item, i) => {
+                total += parseInt(item.price);
+                return `
+                <div class="flex gap-4 bg-white p-3 rounded-2xl shadow-sm items-center">
+                    <img src="${item.img}" class="w-12 h-12 rounded-lg object-cover shadow">
+                    <div class="flex-1">
+                        <p class="text-[9px] font-black uppercase line-clamp-1">${item.name}</p>
+                        <p class="text-red-600 font-bold text-xs">${parseInt(item.price).toLocaleString()} F</p>
+                    </div>
+                    <button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 text-xl font-bold px-2">&times;</button>
+                </div>`;
+            }).join('');
+            document.getElementById('cartTotal').innerText = total.toLocaleString() + " F";
+            document.getElementById('badge').innerText = cart.length;
+        }
+
+        function checkout() {
+            if(!cart.length) return alert("Panier vide !");
+            const name = document.getElementById('cName').value.trim();
+            const tel = document.getElementById('cTel').value.trim();
+            const quartier = document.getElementById('cQuartier').value.trim();
+
+            if(!name || !tel || !quartier) return alert("Veuillez remplir vos informations de livraison");
+
+            const itemsStr = cart.map(x => `- ${x.name}`).join('%0A');
+            const message = `*COMMANDE AFRO SERVICE*%0A%0A*Client:* ${name}%0A*Tel:* ${tel}%0A*Lieu:* ${quartier}%0A%0A*Articles:*%0A${itemsStr}%0A%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
+            window.open(`https://wa.me/237658562104?text=${message}`, '_blank');
+        }
+
+        // --- ADMINISTRATION ---
+        function saveProduct() {
+            const name = document.getElementById('admName').value.trim();
+            const price = document.getElementById('admPrice').value;
+            if(!name || !price) return alert("Données manquantes");
+
+            const p = {
+                name: name.replace(/'/g, " "),
+                price: price,
+                old: document.getElementById('admOld').value,
+                desc: document.getElementById('admDesc').value,
+                cat: document.getElementById('admCat').value,
+                sub: document.getElementById('admSub').value,
+                imgs: document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== ""),
+                colors: document.getElementById('admColors').value,
+                memory: document.getElementById('admMem').value
+            };
+
+            if(editIdx === -1) stock.push(p); else stock[editIdx] = p;
+            localStorage.setItem('AFRO_STOCK', JSON.stringify(stock));
+            closeAdmin();
+            init();
+        }
+
+        function editItem(i) {
+            editIdx = i; const p = stock[i];
+            document.getElementById('admName').value = p.name;
+            document.getElementById('admPrice').value = p.price;
+            document.getElementById('admOld').value = p.old || '';
+            document.getElementById('admImgs').value = p.imgs.join(',');
+            document.getElementById('admDesc').value = p.desc || '';
+            document.getElementById('admCat').value = p.cat;
+            updateAdminSubs();
+            document.getElementById('admSub').value = p.sub;
+            document.getElementById('admColors').value = p.colors || '';
+            document.getElementById('admMem').value = p.memory || '';
+            document.getElementById('admBtn').innerText = "Mettre à jour l'article";
+            document.getElementById('admTitle').innerText = "Modification : " + p.name;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteItem(i) {
+            if(confirm("Supprimer définitivement cet article ?")) {
+                stock.splice(i, 1);
+                localStorage.setItem('AFRO_STOCK', JSON.stringify(stock));
+                init();
+            }
+        }
+
+        function updateAdminSubs() {
+            const cat = categories.find(c => c.name === document.getElementById('admCat').value);
+            document.getElementById('admSub').innerHTML = cat ? cat.subs.map(s => `<option value="${s}">${s}</option>`).join('') : '<option value="">Aucun</option>';
+        }
+
+        function updateCatsStructure() {
+            const raw = document.getElementById('admCatsRaw').value;
+            categories = raw.split(';').map(x => {
+                const [n, s] = x.split(':');
+                return { name: n.trim(), subs: s ? s.split(',').map(z => z.trim()) : [] };
+            });
+            localStorage.setItem('AFRO_CATS', JSON.stringify(categories));
+            init();
+            alert("Rayons mis à jour !");
+        }
+
+        function renderAdminStock() {
+            document.getElementById('stockList').innerHTML = stock.map((p, i) => `
+                <div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
+                    <div class="flex flex-col"><span class="font-black uppercase text-[10px]">${p.name}</span><span class="text-red-600 font-bold text-xs">${parseInt(p.price).toLocaleString()} F</span></div>
+                    <div class="flex gap-2">
+                        <button onclick="editItem(${i})" class="bg-blue-100 text-blue-600 p-2 rounded-lg text-xs font-bold">✏️ Modifier</button>
+                        <button onclick="deleteItem(${i})" class="bg-red-100 text-red-600 p-2 rounded-lg text-xs font-bold">🗑️</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function renderMenu() {
+            const menu = document.getElementById('categoryMenu');
+            menu.innerHTML = `<button onclick="renderProducts(stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 border-b uppercase">🏷️ TOUTE LA BOUTIQUE</button>`;
+            categories.forEach(c => {
+                let subsHtml = c.subs.map(s => `<button onclick="renderProducts(stock.filter(p=>p.sub==='${s}'));closeMenus()" class="w-full text-left px-10 py-3 text-xs text-slate-500 font-bold border-t">-- ${s}</button>`).join('');
+                menu.innerHTML += `
+                    <div class="border-b">
+                        <button onclick="renderProducts(stock.filter(p=>p.cat==='${c.name}'));closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-[#1d265e] uppercase bg-slate-50">${c.name}</button>
+                        <div class="bg-white">${subsHtml}</div>
+                    </div>`;
+            });
+        }
+
+        // --- UTILS ---
+        function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
+        function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
+        function openAdmin() { document.getElementById('adminModal').classList.remove('hidden'); }
+        function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); editIdx = -1; document.getElementById('admBtn').innerText = "Enregistrer l'article"; document.getElementById('admTitle').innerText = "Fiche Article"; }
+        function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); detailSlideIdx = 0; }
+        function quickSearch(q) { renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.cat.toLowerCase().includes(q.toLowerCase()))); }
+
+        // --- AUTO SLIDER ---
+        setInterval(() => {
+            const s = document.getElementById('heroSlider');
+            if(s && s.children.length > 1) {
+                let idx = (parseInt(s.dataset.idx) || 0) + 1;
+                if(idx >= s.children.length) idx = 0;
+                s.style.transform = `translateX(-${idx * 100}%)`;
+                s.dataset.idx = idx;
+            }
+        }, 5000);
+
+        init();
+    </script>
+</body>
+</html>
+    
