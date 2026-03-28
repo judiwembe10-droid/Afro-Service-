@@ -26,7 +26,7 @@
         const db = getDatabase(app);
         const stockRef = ref(db, 'stock');
 
-        // Écoute des changements en temps réel (Sync automatique pour tous les clients)
+        // Écoute des changements en temps réel
         onValue(stockRef, (snapshot) => {
             const data = snapshot.val();
             window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
@@ -94,7 +94,6 @@
             <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" class="h-10 rounded">
             <div class="flex-1 max-w-md relative">
                 <input id="fastSearch" type="text" oninput="quickSearch(this.value)" placeholder="Rechercher..." class="w-full bg-white/10 border border-white/20 rounded-full py-2 px-10 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all">
-                <span class="absolute left-4 top-2 text-white/50"></span>
             </div>
             <button onclick="openCart()" class="relative p-2">
                 <span class="text-2xl">🛒</span>
@@ -215,8 +214,8 @@
     <script>
         // DONNÉES INITIALES
         let categories = JSON.parse(localStorage.getItem('AFRO_CATS')) || [
-            { name: "Téléphones", subs: ["iPhone", "Samsung", "Tecno"] },
-            { name: "Electroménager", subs: ["Frigos", "Fours"] }
+            { name: "ÉLECTRONIQUE", subs: ["SMARTPHONE", "IPHONE", "TV"] },
+            { name: "ÉLECTROMÉNAGERS", subs: ["FRIGO", "FOUR"] }
         ];
         let cart = [];
         window.stock = [];
@@ -239,6 +238,37 @@
                 </div>`;
             }).join('');
         }
+
+        // --- NOUVEAU CODE MENU DÉROULANT ---
+        function renderMenu() {
+            const menu = document.getElementById('categoryMenu');
+            menu.innerHTML = `<button onclick="renderProducts(window.stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 border-b">🏷️ TOUTE LA BOUTIQUE</button>`;
+            
+            categories.forEach((c, index) => {
+                const catId = `sub-${index}`;
+                menu.innerHTML += `
+                    <div class="border-b bg-slate-50">
+                        <div class="flex items-center justify-between px-6 py-4 cursor-pointer" onclick="document.getElementById('${catId}').classList.toggle('hidden')">
+                            <span class="font-black text-xs text-[#1d265e] uppercase">${c.name}</span>
+                            <span class="text-[10px] text-slate-400">▼</span>
+                        </div>
+                        <div id="${catId}" class="hidden bg-white pb-2">
+                            ${c.subs.map(s => `
+                                <button onclick="filterBySub('${c.name}', '${s}')" class="w-full text-left pl-10 pr-6 py-2 text-[10px] font-bold text-slate-600 uppercase hover:text-red-600">
+                                    • ${s}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        window.filterBySub = function(catName, subName) {
+            const filtered = window.stock.filter(p => p.cat === catName && p.sub === subName);
+            renderProducts(filtered);
+            closeMenus();
+        }
+        // --- FIN NOUVEAU CODE MENU ---
 
         // DETAILS
         function showDetail(id) {
@@ -362,13 +392,6 @@
         function updateAdminSubs() {
             const cat = categories.find(c => c.name === document.getElementById('admCat').value);
             document.getElementById('admSub').innerHTML = cat ? cat.subs.map(s => `<option value="${s}">${s}</option>`).join('') : '';
-        }
-        function renderMenu() {
-            const menu = document.getElementById('categoryMenu');
-            menu.innerHTML = `<button onclick="renderProducts(window.stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 border-b">🏷️ TOUTE LA BOUTIQUE</button>`;
-            categories.forEach(c => {
-                menu.innerHTML += `<button onclick="renderProducts(window.stock.filter(p=>p.cat==='${c.name}'));closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-[#1d265e] uppercase bg-slate-50 border-b">${c.name}</button>`;
-            });
         }
         function updateCatsStructure() {
             const raw = document.getElementById('admCatsRaw').value;
