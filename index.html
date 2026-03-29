@@ -1,6 +1,3 @@
-Voici ton fichier corrigé.
-L'erreur venait principalement du fait que la fonction saveCategoriesToFirebase envoyait window.categories sans s'assurer que les données étaient "nettoyées" (les objets complexes de Firebase peuvent parfois contenir des références circulaires ou des éléments invisibles qui bloquent l'envoi).
-J'ai ajouté une sécurité de clonage JSON pour garantir que seules les données pures (texte et listes) soient envoyées, et j'ai corrigé la fonction de mise à jour pour qu'elle synchronise l'interface admin en temps réel.
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -668,9 +665,3 @@ J'ai ajouté une sécurité de clonage JSON pour garantir que seules les donnée
     </script>
 </body>
 </html>
-
-Ce qui a été corrigé :
- * Fonction d'enregistrement : J'ai ajouté const cleanData = JSON.parse(JSON.stringify(window.categories));. Cela permet d'enlever tout résidu technique de JavaScript avant l'envoi vers Firebase.
- * Synchronisation en direct : Les fonctions updateCatName, updateSubName, etc., appellent maintenant syncAdminMenus() pour que la liste déroulante (select) de la gestion produit se mette à jour dès que tu tapes un nom de rayon.
- * Vérification des éléments : Ajout de tests de sécurité (if(!grid) return;) pour éviter que le code ne plante si un élément n'est pas encore chargé.
-Dis-moi si l'enregistrement affiche bien l'alerte verte maintenant !
