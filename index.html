@@ -435,7 +435,6 @@
             animation-play-state: paused;
         }
 
-        /* STYLES AJOUTÉS POUR LA GRANDE BANNIÈRE */
         .banner-container {
             display: flex;
             overflow-x: auto;
@@ -449,6 +448,16 @@
         }
         @media (min-width: 768px) {
             .banner-item { flex: 0 0 60%; }
+        }
+
+        /* STYLES RETOUR EN HAUT */
+        #backToTop {
+            transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s;
+        }
+        #backToTop:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #bd1e24;
         }
     </style>
 </head>
@@ -526,8 +535,7 @@
     </section>
 
     <section class="bg-white py-6 overflow-hidden border-b border-slate-100">
-        <div id="categoryBubbles" class="flex gap-6 overflow-x-auto px-6 no-scrollbar">
-            </div>
+        <div id="categoryBubbles" class="flex gap-6 overflow-x-auto px-6 no-scrollbar"></div>
     </section>
 
     <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
@@ -589,6 +597,13 @@
         </div>
     </footer>
 
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+        class="fixed bottom-28 right-6 bg-white/20 backdrop-blur-md border border-slate-200 text-slate-500 w-12 h-12 rounded-full flex items-center justify-center z-[400] opacity-0 transition-all duration-500 pointer-events-none shadow-sm">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path>
+        </svg>
+    </button>
+
     <a href="#" id="dynamicWA" target="_blank" class="whatsapp-float">
         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.445 0 .081 5.391.079 11.99c0 2.112.553 4.177 1.6 6.002L0 24l6.163-1.617a11.831 11.831 0 005.883 1.562h.005c6.604 0 11.967-5.391 11.97-11.991a11.856 11.856 0 00-3.486-8.452z"/></svg>
     </a>
@@ -630,7 +645,6 @@
                 <div class="flex justify-between items-center mb-6"><h3 class="font-black uppercase text-xs text-[#101944]">🏗️ Structure des Rayons</h3><button onclick="addNewCategory()" class="bg-green-600 text-white text-[9px] px-4 py-2 rounded-full font-black uppercase">+ Nouveau Rayon</button></div>
                 <div id="visualCatsManager" class="space-y-4 mb-6"></div>
                 <div class="flex gap-4"><button onclick="saveCategoriesToFirebase()" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-black uppercase text-[10px]">Enregistrer la structure</button></div>
-                <textarea id="catsJSON" class="hidden"></textarea>
             </div>
 
             <div class="bg-slate-50 p-8 rounded-3xl border">
@@ -692,6 +706,18 @@
             updateWALink();
         });
 
+        // GESTION DU SCROLL POUR LE BOUTON RETOUR EN HAUT
+        window.addEventListener('scroll', () => {
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                btt.classList.remove('opacity-0', 'pointer-events-none');
+                btt.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                btt.classList.add('opacity-0', 'pointer-events-none');
+                btt.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        });
+
         function renderProducts(data) {
             const grid = document.getElementById('productGrid'); 
             if(!grid) return;
@@ -728,16 +754,12 @@
         function renderCategoryBubbles() {
             const container = document.getElementById('categoryBubbles');
             if(!container || !window.categories || window.categories.length === 0 || window.categories[0].name === "CHARGEMENT...") return;
-
             container.innerHTML = window.categories.map(cat => {
                 const prod = window.stock.find(p => p.cat === cat.name);
                 const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
-                
                 return `
                 <div class="category-bubble" onclick="filterItems('${cat.name}', '', '')">
-                    <div class="bubble-img-container">
-                        <img src="${imgSrc}" alt="${cat.name}">
-                    </div>
+                    <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}"></div>
                     <span class="bubble-text">${cat.name}</span>
                 </div>`;
             }).join('');
