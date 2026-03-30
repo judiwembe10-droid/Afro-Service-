@@ -6,7 +6,7 @@
     
     <meta name="google-site-verification" content="Qxa9yWa5h9Bo50pYc6dNZfem6xkZ9YlCMUr3dH5AvM0" />
 
-    <title>Afro Service Cameroun | Vente en ligne & Livraison Rapide</title>
+    <title>Afro Service Cameroun | Site de vente en ligne </title>
     <meta name="description" content="Trouvez et achetez facilement avec Afro Service, l'un des meilleurs sites de vente en ligne au Cameroun. Produits authentiques avec garantie au meilleur prix.">
     <meta name="keywords" content="Vente en ligne Cameroun, Afro Service, Bafoussam Shopping, E-commerce Cameroun, Livraison rapide Cameroun">
     <meta name="author" content="Afro Service">
@@ -439,11 +439,11 @@
         
         <div class="ticker-wrap">
             <div class="ticker">
-                <div class="ticker__item">🚀 Livraison Rapide à Bafoussam et environs</div>
-                <div class="ticker__item">💎 Qualité Garantie sur tous nos produits</div>
+                <div class="ticker__item"> Livraison Rapide à Bafoussam et environs</div>
+                <div class="ticker__item"> Qualité Garantie sur tous nos produits</div>
                 <div class="ticker__item">📞 Service Client 24h/7j sur WhatsApp</div>
-                <div class="ticker__item">🔥 Nouvel arrivage chaque semaine !</div>
-                <div class="ticker__item">🔒 Paiement sécurisé à la livraison</div>
+                <div class="ticker__item"> Nouvel arrivage chaque semaine !</div>
+                <div class="ticker__item"> Paiement sécurisé à la livraison</div>
             </div>
         </div>
     </header>
@@ -630,7 +630,7 @@
                                     <span class="text-[8px] text-slate-300">▶</span>
                                 </div>
                                 <div id="${subId}" class="hidden pl-4 border-l-2 border-slate-200 mb-2">
-                                    ${s.subsubs ? s.subsubs.map(ss => `<button onclick="filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">- ${ss}</button>`).join('') : ''}
+                                    ${s.subsubs ? s.subsubs.map(ss => `<button onclick="filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">${ss}</button>`).join('') : ''}
                                 </div>
                             </div>`; 
                         }).join('') : ''}
@@ -645,7 +645,11 @@
             if(el) el.classList.toggle('hidden');
         };
 
-        window.filterItems = (cat, sub, subsub) => { renderProducts(window.stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub))); closeMenus(); }
+        window.filterItems = (cat, sub, subsub) => { 
+            const filtered = window.stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
+            renderProducts(filtered); 
+            closeMenus(); 
+        }
 
         function showDetail(id) {
             const p = window.stock.find(x => x.id === id); 
