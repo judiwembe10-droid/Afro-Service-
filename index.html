@@ -48,8 +48,6 @@
     </script>
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Afro Service Cameroun | Boutique en ligne">
-    <meta property="og:description" content="Découvrez le meilleur du shopping en ligne au Cameroun. Produits garantis et livraison express.">
     <meta property="og:image" content="https://i.postimg.cc/9QB2XQRM/20260329-213515.png">
     <meta property="og:url" content="https://judiwembe10-droid.github.io/Afro-Service/">
     <meta property="og:site_name" content="Afro Service">
@@ -194,7 +192,6 @@
             window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
             renderProducts(window.stock);
             if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
-            generateHero();
             renderCategoryBubbles(); 
         });
 
@@ -357,34 +354,13 @@
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        /* --- EFFET DE LUMIERE CIRCULAIRE --- */
         .product-card-container {
             position: relative;
             border-radius: 24px;
             background: white;
             border: 1px solid #e2e8f0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInProduct 0.5s ease forwards;
             z-index: 1;
-        }
-
-        .product-card-container::before {
-            content: "";
-            position: absolute;
-            inset: -2px; 
-            background: conic-gradient(from 0deg, #bd1e24, #101944, #bd1e24);
-            border-radius: 26px;
-            z-index: -1;
-            opacity: 0.4;
-            filter: blur(8px);
-            animation: rotateGlow 3s linear infinite; 
-        }
-
-        @keyframes rotateGlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         .product-card-inner {
@@ -396,36 +372,6 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-        }
-
-        @keyframes fadeInProduct {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .auto-banner {
-            grid-column: 1 / -1; 
-            background: linear-gradient(135deg, #101944 0%, #bd1e24 100%);
-            border-radius: 32px;
-            padding: 30px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(16, 25, 68, 0.2);
-        }
-
-        .auto-banner::after {
-            content: "AFRO SERVICE";
-            position: absolute;
-            right: -20px;
-            bottom: -10px;
-            font-size: 60px;
-            font-weight: 900;
-            opacity: 0.1;
-            font-style: italic;
         }
         
         .category-bubble {
@@ -476,7 +422,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* --- ANIMATION MARQUEE --- */
         @keyframes marquee {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -490,33 +435,20 @@
             animation-play-state: paused;
         }
 
-        /* --- NOUVELLE BANNIERE DÉROULANTE --- */
-        .main-slider {
-            width: calc(100% - 32px);
-            margin: 20px auto;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .slides-container {
+        /* STYLES AJOUTÉS POUR LA GRANDE BANNIÈRE */
+        .banner-container {
             display: flex;
-            width: 300%; /* Car on a 3 images */
-            animation: slider-loop 12s infinite ease-in-out;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
         }
-        .slide-item {
-            width: 100%;
+        .banner-item {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+            margin-right: 15px;
         }
-        .slide-item img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            display: block;
-        }
-        @keyframes slider-loop {
-            0%, 30% { transform: translateX(0); }
-            33%, 63% { transform: translateX(-33.33%); }
-            66%, 96% { transform: translateX(-66.66%); }
-            100% { transform: translateX(0); }
+        @media (min-width: 768px) {
+            .banner-item { flex: 0 0 60%; }
         }
     </style>
 </head>
@@ -560,23 +492,38 @@
         </div>
     </header>
 
-    <section class="relative h-[220px] md:h-[450px] bg-slate-200 overflow-hidden">
-        <div id="heroSlider" class="flex h-full transition-transform duration-700 ease-in-out"></div>
-    </section>
+    <section class="pt-6 pb-2 bg-white">
+        <div class="banner-container no-scrollbar px-4">
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-900 group">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000">
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full">
+                    <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter shadow-lg">Promo Spéciale</span>
+                    <h2 class="text-white text-2xl font-black uppercase leading-none">Électroménager<br><span class="text-red-500 text-3xl">Premium</span></h2>
+                    <p class="text-white/80 text-[11px] font-bold mt-2 uppercase italic tracking-widest">Qualité garantie • Garantie 1 an</p>
+                </div>
+            </div>
 
-    <div class="main-slider">
-        <div class="slides-container">
-            <div class="slide-item">
-                <img src="https://i.postimg.cc/9QB2XQRM/20260329-213515.png" alt="Offre 1">
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-[#101944] group">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000">
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full text-right items-end">
+                    <span class="bg-white text-[#101944] text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter">Nouveautés</span>
+                    <h2 class="text-white text-2xl font-black uppercase leading-none">Smartphones<br>& Gadgets</h2>
+                    <button onclick="filterItems('ÉLECTRONIQUE', '', '')" class="mt-4 bg-white/10 backdrop-blur-md text-white text-[10px] font-black py-2 px-6 rounded-full border border-white/20 uppercase">Découvrir →</button>
+                </div>
             </div>
-            <div class="slide-item">
-                <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" alt="Offre 2">
-            </div>
-            <div class="slide-item">
-                <img src="https://i.postimg.cc/9QB2XQRM/20260329-213515.png" alt="Offre 3">
+
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-red-600 group">
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full items-center text-center">
+                    <div class="bg-white/20 backdrop-blur-xl p-4 rounded-3xl mb-3 shadow-inner">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h2 class="text-white text-2xl font-black uppercase leading-tight">Livraison Rapide</h2>
+                    <p class="text-white/90 text-[11px] font-bold uppercase tracking-[0.2em] mt-1">À domicile dans tout Bafoussam</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <section class="bg-white py-6 overflow-hidden border-b border-slate-100">
         <div id="categoryBubbles" class="flex gap-6 overflow-x-auto px-6 no-scrollbar">
@@ -600,14 +547,6 @@
                     <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v4.5h2.39l.75-2H14V7z"></path></svg>
                     Livraison Rapide à Bafoussam
                 </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
-            </div>
-            <div class="flex items-center gap-10 px-6">
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]"><svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.477.859h4z"></path></svg> Nouvel arrivage Électroménager</span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 012.49-2.33c.756 0 1.444.304 1.943.793.468.459.785 1.14.785 1.916 0 .717-.282 1.368-.735 1.849a2.127 2.127 0 01-1.547.651c-.131 0-.259-.01-.383-.031a5.617 5.617 0 00-1.883 1.011 5.628 5.628 0 00-1.123 1.228l-.13.19a1 1 0 00.174 1.36 1 1 0 001.314-.055l.135-.13c.222-.213.46-.412.711-.595.304-.222.634-.413.978-.57.34-.155.706-.279 1.09-.37a5.12 5.12 0 001.077-.336 5.132 5.132 0 001.55-.953c.691-.645 1.252-1.503 1.252-2.583 0-1.016-.403-1.928-1.047-2.593a4.63 4.63 0 00-3.32-1.356c-.052 0-.103.002-.154.004a25.135 25.135 0 01.52-2.188c.11-.42.23-.787.361-1.093.13-.306.273-.55.42-.716.148-.166.216-.179.231-.18a1 1 0 00.613-1.646z" clip-rule="evenodd"></path></svg> -25% sur les TV Smart</span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v4.5h2.39l.75-2H14V7z"></path></svg> Livraison Rapide à Bafoussam</span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
             </div>
         </div>
@@ -763,27 +702,12 @@
                 const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
                 
-                if (index > 0 && index % 8 === 0) {
-                    html += `
-                    <div class="auto-banner">
-                        <div>
-                            <p class="text-[10px] font-black uppercase tracking-widest opacity-80">Offre Spéciale</p>
-                            <h3 class="text-xl font-bold uppercase italic leading-tight">Livraison Rapide à Bafoussam</h3>
-                            <p class="text-[9px] mt-1 opacity-70">Qualité garantie sur tous nos articles</p>
-                        </div>
-                        <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
-                            <span class="text-xs font-black">PROMO</span>
-                        </div>
-                    </div>`;
-                }
-
                 if(index === 3 && randomV) { 
                     html += `<div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl"><div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110"><img src="${randomV.imgs[0]}" class="w-full h-full object-cover"></div><div class="relative z-10"><p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p><h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3><button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button></div></div>`; 
                 }
                 
-                const animationDelay = Math.min(index * 0.08, 1.5);
                 html += `
-                <div class="product-card-container group" style="animation-delay: ${animationDelay}s" onclick="showDetail('${p.id}')">
+                <div class="product-card-container group" onclick="showDetail('${p.id}')">
                     <div class="product-card-inner">
                         ${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}
                         <div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50">
@@ -940,16 +864,12 @@
             document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function generateHero() { const hero = document.getElementById('heroSlider'); if(!hero || !window.stock.length) return; const shuffled = [...window.stock].sort(() => 0.5 - Math.random()).slice(0, 5); hero.innerHTML = shuffled.map(p => `<div class="min-w-full h-full relative group"><img src="${p.imgs[0]}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end pb-12 px-8 text-white"><h2 class="text-2xl md:text-5xl font-black uppercase italic leading-tight">${p.name}</h2><button onclick="showDetail('${p.id}')" class="mt-5 bg-white text-[#101944] px-8 py-3 rounded-full font-black text-[10px] uppercase w-fit shadow-lg">Acheter Maintenant</button></div></div>`).join(''); }
-
         function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
         function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; }
         function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); }
         function quickSearch(q) { renderProducts(window.stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()))); }
-
-        setInterval(() => { const s = document.getElementById('heroSlider'); if(s && s.children.length > 1) { let idx = (parseInt(s.dataset.idx) || 0) + 1; if(idx >= s.children.length) idx = 0; s.style.transform = `translateX(-${idx * 100}%)`; s.dataset.idx = idx; } }, 5000);
     </script>
 </body>
 </html>
