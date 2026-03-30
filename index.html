@@ -322,7 +322,6 @@
             --bg-body: #f8fafc;
             --star-color: #ffffff;
             --star-height: 2px;
-            /* On supprime color-scheme ici aussi pour éviter le forçage système */
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); transition: background 0.3s, color 0.3s; }
         
@@ -338,7 +337,9 @@
         body.dark aside { background-color: #0f172a !important; color: white; }
         body.dark .bubble-img-container { background: #1e293b; border-color: #334155; }
         body.dark .bubble-text { color: white; }
+        body.dark .product-card-container { background: #1e293b !important; border-color: #334155; }
         body.dark .product-card-inner { background: #1e293b !important; }
+        body.dark .price-tag { color: #ff4d4d; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         #sideNav, #sideCart, #detailModal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -483,6 +484,7 @@
 <body class="text-slate-900 dark:text-slate-100 overflow-x-hidden">
 
     <script>
+        // SCRIPT ANTI-FLASH : Applique le thème dès le chargement du body
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark');
         }
@@ -545,7 +547,7 @@
             <div id="reviewsDisplay" class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
                 <p class="text-xs text-slate-400">Chargement des avis...</p>
             </div>
-            <div class="bg-slate-900 rounded-[32px] p-8 text-white mt-4 border border-white/5">
+            <div class="bg-slate-900 rounded-[32px] p-8 text-white mt-4 border border-white/5 dark:bg-[#020617]">
                 <h4 class="font-black italic text-sm mb-4 uppercase">Laissez une note à AfroService</h4>
                 <div class="grid gap-4">
                     <div class="flex items-center gap-4">
@@ -681,7 +683,7 @@
         window.categories = window.categories || [{ name: "CHARGEMENT...", subs: [] }];
         let cart = []; window.stock = []; window.editId = null;
 
-        // MODE SOMBRE : Logique Manuelle Exclusive
+        // MODE SOMBRE : Logique Manuelle
         function toggleDarkMode() {
             const isDark = document.getElementById('darkModeToggle').checked;
             if(isDark) {
@@ -693,7 +695,7 @@
             }
         }
 
-        // Synchronisation du bouton switch au chargement
+        // Init au chargement
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             const toggle = document.getElementById('darkModeToggle');
@@ -709,6 +711,7 @@
             updateWALink();
         });
 
+        // Fonctions d'affichage des produits
         function renderProducts(data) {
             const grid = document.getElementById('productGrid'); 
             if(!grid) return;
@@ -742,6 +745,7 @@
             grid.innerHTML = html;
         }
 
+        // Bulles de catégories
         function renderCategoryBubbles() {
             const container = document.getElementById('categoryBubbles');
             if(!container || !window.categories || window.categories.length === 0 || window.categories[0].name === "CHARGEMENT...") return;
@@ -760,6 +764,7 @@
             }).join('');
         }
 
+        // Menu Catégories Latéral
         function renderMenu() {
             const menu = document.getElementById('categoryMenu'); 
             if(!menu) return;
@@ -786,6 +791,7 @@
             document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        // Détails produit
         function showDetail(id) {
             const p = window.stock.find(x => x.id === id); if(!p) return;
             const content = document.getElementById('detailContent'); 
@@ -798,6 +804,7 @@
         let currentSlide = 0; 
         function moveSlide(dir, total) { currentSlide = (currentSlide + dir + total) % total; document.getElementById('slideTrack').style.transform = `translateX(-${currentSlide * 100}%)`; }
 
+        // Panier
         function addToCart(id) {
             const p = window.stock.find(x => x.id === id); const qty = parseInt(document.getElementById('vQty').value);
             for(let i=0; i<qty; i++) { cart.push({ name: p.name, price: p.price, img: p.imgs[0] }); }
@@ -823,6 +830,7 @@
             if(link) link.href = `https://wa.me/237658562104?text=${encodeURIComponent(msg)}`;
         }
 
+        // Admin
         function openAdmin() { if(prompt("Code d'accès Admin :") === "afro2026") { document.getElementById('adminModal').classList.remove('hidden'); renderVisualManager(); renderAdminStock(); } }
 
         window.renderVisualManager = function() {
