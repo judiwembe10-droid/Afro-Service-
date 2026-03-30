@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <meta name="color-scheme" content="light dark">
+    
     <meta name="google-site-verification" content="Qxa9yWa5h9Bo50pYc6dNZfem6xkZ9YlCMUr3dH5AvM0" />
 
     <title>Afro Service Cameroun | Site de vente en ligne </title>
@@ -320,6 +322,7 @@
             --bg-body: #f8fafc;
             --star-color: #ffffff;
             --star-height: 2px;
+            color-scheme: light dark;
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); transition: background 0.3s, color 0.3s; }
         
@@ -482,7 +485,15 @@
         input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
-<body class="text-slate-900 overflow-x-hidden">
+<body class="text-slate-900 dark:text-slate-100 overflow-x-hidden">
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
+        }
+    </script>
 
     <div class="shooting-star"></div>
 
@@ -677,7 +688,7 @@
         window.categories = window.categories || [{ name: "CHARGEMENT...", subs: [] }];
         let cart = []; window.stock = []; window.editId = null;
 
-        // MODE SOMBRE : Logique
+        // MODE SOMBRE : Logique améliorée
         function toggleDarkMode() {
             const body = document.body;
             const isDark = document.getElementById('darkModeToggle').checked;
@@ -690,10 +701,10 @@
             }
         }
 
-        // Vérifier le thème au chargement
+        // Vérifier le thème au chargement (en plus du script en haut du body)
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
-            if(savedTheme === 'dark') {
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.getElementById('darkModeToggle').checked = true;
                 document.body.classList.add('dark');
             }
@@ -708,7 +719,6 @@
                 const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
                 
-                // On garde ta mise en avant aléatoire (index 3)
                 if(index === 3 && randomV) { 
                     html += `<div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl"><div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110"><img src="${randomV.imgs[0]}" class="w-full h-full object-cover"></div><div class="relative z-10"><p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p><h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3><button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button></div></div>`; 
                 }
