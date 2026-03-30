@@ -828,7 +828,12 @@
             if(link) link.href = `https://wa.me/237658562104?text=${encodeURIComponent(msg)}`;
         }
 
-        function openAdmin() { if(prompt("Code d'accès Admin :") === "afro2026") { document.getElementById('adminModal').classList.remove('hidden'); renderVisualManager(); renderAdminStock(); } }
+        function openAdmin() { 
+            // Accès direct sans demander le code afro2026
+            document.getElementById('adminModal').classList.remove('hidden'); 
+            renderVisualManager(); 
+            renderAdminStock(); 
+        }
 
         window.renderVisualManager = function() {
             const container = document.getElementById('visualCatsManager');
