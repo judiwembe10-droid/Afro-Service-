@@ -213,30 +213,61 @@
 
         window.saveProductToFirebase = function() {
             if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return alert("Action non autorisée");
+            
             const name = document.getElementById('admName').value.trim();
             const price = document.getElementById('admPrice').value;
+            const oldPrice = document.getElementById('admOld').value;
+            const description = document.getElementById('admDesc').value.trim();
+            const category = document.getElementById('admCat').value;
+            const subCategory = document.getElementById('admSub').value;
+            const subSubCategory = document.getElementById('admSubSub').value;
+            const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
+            const colors = document.getElementById('admColors').value.trim();
+            const memory = document.getElementById('admMem').value.trim();
+
             if(!name || !price) return alert("Nom et prix requis");
-            const p = {
-                name: name, price: price,
-                old: document.getElementById('admOld').value,
-                desc: document.getElementById('admDesc').value,
-                cat: document.getElementById('admCat').value,
-                sub: document.getElementById('admSub').value,
-                subsub: document.getElementById('admSubSub').value,
-                imgs: document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== ""),
-                colors: document.getElementById('admColors').value,
-                memory: document.getElementById('admMem').value
+
+            const productData = {
+                name: name,
+                price: price,
+                old: oldPrice || null,
+                desc: description || "",
+                cat: category,
+                sub: subCategory,
+                subsub: subSubCategory || "",
+                imgs: images,
+                colors: colors || "",
+                memory: memory || ""
             };
+
             if(window.editId) {
-                update(ref(db, 'stock/' + window.editId), p);
-                window.editId = null;
-                alert("Article mis à jour !");
+                update(ref(db, 'stock/' + window.editId), productData)
+                .then(() => {
+                    alert("Article mis à jour !");
+                    window.editId = null;
+                    document.getElementById('admTitle').innerText = "📦 Gestion Produit";
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur de mise à jour: " + e.message));
             } else {
-                push(stockRef, p);
-                alert("Article ajouté avec succès !");
+                push(stockRef, productData)
+                .then(() => {
+                    alert("Article ajouté avec succès !");
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur d'ajout: " + e.message));
             }
-            closeAdmin();
         };
+
+        function resetAdminForm() {
+            document.getElementById('admName').value = "";
+            document.getElementById('admPrice').value = "";
+            document.getElementById('admOld').value = "";
+            document.getElementById('admDesc').value = "";
+            document.getElementById('admImgs').value = "";
+            document.getElementById('admColors').value = "";
+            document.getElementById('admMem').value = "";
+        }
 
         window.deleteProductFromFirebase = function(id) {
             if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
@@ -361,6 +392,7 @@
             border: 1px solid #e2e8f0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
+            cursor: pointer;
         }
 
         .product-card-inner {
@@ -450,7 +482,6 @@
             .banner-item { flex: 0 0 60%; }
         }
 
-        /* STYLES RETOUR EN HAUT */
         #backToTop {
             transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s;
         }
@@ -654,7 +685,7 @@
                     <div class="grid grid-cols-2 gap-3"><input id="admPrice" type="number" placeholder="Prix Vente" class="border p-3 rounded-xl text-sm text-red-600 font-bold"><input id="admOld" type="number" placeholder="Ancien Prix" class="border p-3 rounded-xl text-sm"></div>
                     <div class="grid grid-cols-3 gap-2">
                         <select id="admCat" onchange="updateAdminSubs()" class="border p-2 rounded-xl text-[10px]"></select>
-                        <select id="admSub" onchange="updateAdminSubs()" class="border p-2 rounded-xl text-[10px]"></select>
+                        <select id="admSub" onchange="updateAdminSubSubs()" class="border p-2 rounded-xl text-[10px]"></select>
                         <select id="admSubSub" class="border p-2 rounded-xl text-[10px]"></select>
                     </div>
                     <input id="admImgs" type="text" placeholder="Liens images (virgule)" class="border p-3 rounded-xl text-xs">
@@ -706,7 +737,6 @@
             updateWALink();
         });
 
-        // GESTION DU SCROLL POUR LE BOUTON RETOUR EN HAUT
         window.addEventListener('scroll', () => {
             const btt = document.getElementById('backToTop');
             if (window.scrollY > 300) {
@@ -796,7 +826,7 @@
             const content = document.getElementById('detailContent'); 
             const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
             updateWALink(p.name);
-            content.innerHTML = `<div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100"><div id="slideTrack" class="flex transition-transform duration-500">${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover">`).join('')}</div>${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">‹</button><button onclick="moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">›</button></div>` : ''}</div><h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2><div class="flex items-center gap-4 mb-4"><span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}</div><p class="text-[9px] font-black text-slate-400 uppercase mb-8 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p><div class="space-y-4">${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}<input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm"></div><button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
+            content.innerHTML = `<div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100"><div id="slideTrack" class="flex transition-transform duration-500">${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover">`).join('')}</div>${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">‹</button><button onclick="moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">›</button></div>` : ''}</div><h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2><div class="flex items-center gap-4 mb-4"><span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}</div><p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p><p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p><div class="space-y-4">${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}<input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm"></div><button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
             document.getElementById('detailModal').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden');
         }
 
@@ -829,7 +859,6 @@
         }
 
         function openAdmin() { 
-            // Accès direct sans demander le code afro2026
             document.getElementById('adminModal').classList.remove('hidden'); 
             renderVisualManager(); 
             renderAdminStock(); 
@@ -883,6 +912,7 @@
             window.editId = id; const p = window.stock.find(x => x.id === id); if(!p) return;
             document.getElementById('admName').value = p.name; document.getElementById('admPrice').value = p.price; 
             document.getElementById('admOld').value = p.old || ''; document.getElementById('admImgs').value = p.imgs.join(','); 
+            document.getElementById('admDesc').value = p.desc || '';
             document.getElementById('admCat').value = p.cat; updateAdminSubs(); 
             document.getElementById('admSub').value = p.sub; updateAdminSubSubs(); 
             document.getElementById('admSubSub').value = p.subsub || ''; 
@@ -894,7 +924,7 @@
         function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
-        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; resetAdminForm(); }
         function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); }
         function quickSearch(q) { renderProducts(window.stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()))); }
     </script>
