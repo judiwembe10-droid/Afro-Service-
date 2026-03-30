@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light">
     
     <meta name="google-site-verification" content="Qxa9yWa5h9Bo50pYc6dNZfem6xkZ9YlCMUr3dH5AvM0" />
 
@@ -322,7 +322,7 @@
             --bg-body: #f8fafc;
             --star-color: #ffffff;
             --star-height: 2px;
-            color-scheme: light dark;
+            /* On supprime color-scheme ici aussi pour éviter le forçage système */
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); transition: background 0.3s, color 0.3s; }
         
@@ -374,7 +374,6 @@
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        /* LOOK PROFESSIONNEL DES CARTES */
         .product-card-container {
             border-radius: 24px;
             background: white;
@@ -403,7 +402,6 @@
             border-color: #cbd5e1;
         }
 
-        /* BULLES DE CATÉGORIES OPTIMISÉES */
         .category-bubble {
             flex: 0 0 auto;
             width: 85px;
@@ -445,7 +443,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* PRIX ET TYPO */
         .price-tag {
             color: var(--afro-red);
             font-weight: 900;
@@ -453,7 +450,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* ÉTOILE FILANTE STYLES */
         .shooting-star {
             position: fixed;
             left: -250px;
@@ -476,7 +472,6 @@
         }
         .animate-star { animation: shoot 1s linear forwards; }
 
-        /* SWITCH STYLES */
         .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -488,10 +483,8 @@
 <body class="text-slate-900 dark:text-slate-100 overflow-x-hidden">
 
     <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark');
-        } else {
-            document.body.classList.remove('dark');
         }
     </script>
 
@@ -688,26 +681,32 @@
         window.categories = window.categories || [{ name: "CHARGEMENT...", subs: [] }];
         let cart = []; window.stock = []; window.editId = null;
 
-        // MODE SOMBRE : Logique améliorée
+        // MODE SOMBRE : Logique Manuelle Exclusive
         function toggleDarkMode() {
-            const body = document.body;
             const isDark = document.getElementById('darkModeToggle').checked;
             if(isDark) {
-                body.classList.add('dark');
+                document.body.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             } else {
-                body.classList.remove('dark');
+                document.body.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
             }
         }
 
-        // Vérifier le thème au chargement (en plus du script en haut du body)
+        // Synchronisation du bouton switch au chargement
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.getElementById('darkModeToggle').checked = true;
+            const toggle = document.getElementById('darkModeToggle');
+            if (savedTheme === 'dark') {
+                if(toggle) toggle.checked = true;
                 document.body.classList.add('dark');
+            } else {
+                if(toggle) toggle.checked = false;
+                document.body.classList.remove('dark');
             }
+            renderMenu(); 
+            renderCategoryBubbles(); 
+            updateWALink();
         });
 
         function renderProducts(data) {
@@ -916,8 +915,6 @@
         setTimeout(launchUltraRandomStar, 1500);
 
         setInterval(() => { const s = document.getElementById('heroSlider'); if(s && s.children.length > 1) { let idx = (parseInt(s.dataset.idx) || 0) + 1; if(idx >= s.children.length) idx = 0; s.style.transform = `translateX(-${idx * 100}%)`; s.dataset.idx = idx; } }, 5000);
-        
-        window.addEventListener('DOMContentLoaded', () => { renderMenu(); renderCategoryBubbles(); updateWALink(); });
     </script>
 </body>
 </html>
