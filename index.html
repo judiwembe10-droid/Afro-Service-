@@ -193,6 +193,7 @@
             renderProducts(window.stock);
             if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
             generateHero();
+            renderCategoryBubbles(); // Appelé quand le stock change
         });
 
         onValue(catsRef, (snapshot) => {
@@ -200,6 +201,7 @@
             if(data) {
                 window.categories = data;
                 renderMenu(); 
+                renderCategoryBubbles(); // Appelé quand les categories changent
                 if(!document.getElementById('adminModal').classList.contains('hidden')) {
                     if (typeof renderVisualManager === "function") renderVisualManager();
                     if (typeof syncAdminMenus === "function") syncAdminMenus();
@@ -406,6 +408,48 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+
+        /* Style pour les bulles de catégorie */
+        .category-bubble {
+            flex: 0 0 auto;
+            width: 85px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .category-bubble:active { transform: scale(0.9); }
+        .bubble-img-container {
+            width: 70px;
+            height: 70px;
+            border-radius: 24px;
+            background: white;
+            padding: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1.5px solid #f1f5f9;
+            overflow: hidden;
+        }
+        .bubble-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .bubble-text {
+            font-size: 10px;
+            font-weight: 800;
+            text-align: center;
+            color: #101944;
+            text-transform: uppercase;
+            line-height: 1.1;
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
@@ -450,6 +494,11 @@
 
     <section class="relative h-[220px] md:h-[450px] bg-slate-200 overflow-hidden">
         <div id="heroSlider" class="flex h-full transition-transform duration-700 ease-in-out"></div>
+    </section>
+
+    <section class="bg-white py-6 overflow-hidden border-b border-slate-100">
+        <div id="categoryBubbles" class="flex gap-5 overflow-x-auto px-6 no-scrollbar">
+            </div>
     </section>
 
     <main class="container mx-auto px-4 py-8 min-h-screen">
@@ -601,6 +650,26 @@
             grid.innerHTML = html;
         }
 
+        // FONCTION AJOUTÉE : Rendu des bulles de catégorie sous le slider
+        function renderCategoryBubbles() {
+            const container = document.getElementById('categoryBubbles');
+            if(!container || !window.categories || window.categories.length === 0) return;
+
+            container.innerHTML = window.categories.map(cat => {
+                // Trouver le premier produit du stock qui correspond à cette catégorie pour l'image
+                const firstProd = window.stock.find(p => p.cat === cat.name);
+                const imgSrc = (firstProd && firstProd.imgs && firstProd.imgs[0]) ? firstProd.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
+                
+                return `
+                <div class="category-bubble" onclick="filterItems('${cat.name}', '', '')">
+                    <div class="bubble-img-container">
+                        <img src="${imgSrc}" alt="${cat.name}">
+                    </div>
+                    <span class="bubble-text">${cat.name}</span>
+                </div>`;
+            }).join('');
+        }
+
         function renderMenu() {
             const menu = document.getElementById('categoryMenu'); 
             if(!menu) return;
@@ -646,9 +715,16 @@
         };
 
         window.filterItems = (cat, sub, subsub) => { 
-            const filtered = window.stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
+            let filtered;
+            if(!sub && !subsub) {
+                filtered = window.stock.filter(p => p.cat === cat);
+            } else {
+                filtered = window.stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
+            }
             renderProducts(filtered); 
             closeMenus(); 
+            // Scroll to product grid to show results
+            document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function showDetail(id) {
@@ -768,7 +844,7 @@
 
         setInterval(() => { const s = document.getElementById('heroSlider'); if(s && s.children.length > 1) { let idx = (parseInt(s.dataset.idx) || 0) + 1; if(idx >= s.children.length) idx = 0; s.style.transform = `translateX(-${idx * 100}%)`; s.dataset.idx = idx; } }, 5000);
         
-        window.addEventListener('DOMContentLoaded', () => { renderMenu(); updateWALink(); });
+        window.addEventListener('DOMContentLoaded', () => { renderMenu(); renderCategoryBubbles(); updateWALink(); });
     </script>
 </body>
 </html>
