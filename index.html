@@ -317,10 +317,11 @@
         :root { 
             --afro-blue: #101944; 
             --afro-red: #bd1e24; 
+            --bg-body: #f8fafc;
             --star-color: #ffffff;
             --star-height: 2px;
         }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); transition: background 0.3s, color 0.3s; }
         
         /* Dark Mode Transitions */
         body.dark { background-color: #0f172a; color: white; }
@@ -338,7 +339,7 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         #sideNav, #sideCart, #detailModal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .promo-badge { background: linear-gradient(45deg, #bd1e24, #ff4d4d); }
+        .promo-badge { background: linear-gradient(45deg, #bd1e24, #ff4d4d); box-shadow: 0 4px 10px rgba(189,30,36,0.3); }
         .banner-shimmer { background: linear-gradient(90deg, #101944, #1d265e, #101944); background-size: 200% 100%; animation: shimmer 3s infinite linear; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
@@ -370,43 +371,23 @@
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
+        /* LOOK PROFESSIONNEL DES CARTES */
         .product-card-container {
-            position: relative;
-            border-radius: 1.5rem; 
-            overflow: hidden; 
-            padding: 2px; 
-            background: #e2e8f0; 
-            transition: all 0.3s ease;
-            opacity: 0; 
-            transform: translateY(20px);
+            border-radius: 24px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(15px);
             animation: fadeInProduct 0.5s ease forwards;
-        }
-
-        .product-card-container::before {
-            content: '';
-            position: absolute;
-            width: 150%; 
-            height: 150%;
-            background-image: conic-gradient(transparent, #bd1e24, transparent 30%, transparent 50%, #101944, transparent 80%);
-            top: -25%;
-            left: -25%;
-            animation: snakeRotate 4s linear infinite;
-            filter: blur(2px);
-            box-shadow: 0 0 10px #bd1e24, 0 0 10px #101944;
+            overflow: hidden;
         }
 
         .product-card-inner {
-            position: relative;
-            background: white;
-            border-radius: calc(1.5rem - 2px); 
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
             height: 100%;
-            width: 100%;
-            z-index: 1; 
-        }
-
-        @keyframes snakeRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         @keyframes fadeInProduct {
@@ -414,65 +395,60 @@
         }
         
         .product-card-container:hover {
-            box-shadow: 0 10px 30px -10px rgba(189, 30, 36, 0.3), 0 10px 30px -10px rgba(16, 25, 68, 0.3);
-            transform: scale(1.02);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
 
+        /* BULLES DE CATÉGORIES OPTIMISÉES */
         .category-bubble {
             flex: 0 0 auto;
-            width: 80px;
+            width: 85px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
             transition: transform 0.2s ease;
         }
-        .category-bubble:active { transform: scale(0.9); }
         .bubble-img-container {
-            width: 65px;
-            height: 65px;
-            border-radius: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
             background: white;
-            padding: 3px;
-            box-shadow: 0 4px 12px rgba(16, 25, 68, 0.08);
-            border: 1px solid #f1f5f9;
+            padding: 2px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
             overflow: hidden;
+        }
+        .category-bubble:hover .bubble-img-container {
+            border-color: var(--afro-red);
+            transform: scale(1.05);
         }
         .bubble-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 17px;
+            border-radius: 19px;
         }
         .bubble-text {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 800;
             text-align: center;
-            color: #101944;
+            color: var(--afro-blue);
             text-transform: uppercase;
-            line-height: 1.1;
-            letter-spacing: 0.02em;
+            line-height: 1.2;
+            letter-spacing: 0.05em;
         }
 
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
+        /* PRIX ET TYPO */
+        .price-tag {
+            color: var(--afro-red);
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: -0.5px;
         }
-
-        /* TOGGLE SWITCH STYLES */
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #bd1e24; }
-        input:checked + .slider:before { transform: translateX(20px); }
 
         /* ÉTOILE FILANTE STYLES */
         .shooting-star {
@@ -489,18 +465,6 @@
             pointer-events: none;
             transform: rotate(-35deg);
         }
-        .shooting-star::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, var(--star-color) 15%, transparent 15%) center / 8px 8px;
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%);
-            mask-image: linear-gradient(to right, transparent 0%, black 100%);
-            opacity: 0;
-        }
         @keyframes shoot {
             0% { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
             15% { opacity: 1; }
@@ -508,11 +472,14 @@
             100% { transform: translate(130vw, 80vh) rotate(-35deg); opacity: 0; }
         }
         .animate-star { animation: shoot 1s linear forwards; }
-        .animate-star::after { animation: trail-sparkle 0.05s linear infinite; opacity: 1; }
-        @keyframes trail-sparkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
+
+        /* SWITCH STYLES */
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #bd1e24; }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
@@ -740,11 +707,28 @@
             data.forEach((p, index) => {
                 const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
+                
+                // On garde ta mise en avant aléatoire (index 3)
                 if(index === 3 && randomV) { 
-                    html += `<div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-3xl p-4 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-lg"><div class="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"><img src="${randomV.imgs[0]}" class="w-full h-full object-cover"></div><div class="relative z-10"><p class="text-[9px] font-black uppercase opacity-70">Top Vente</p><h3 class="text-sm font-black uppercase leading-tight">${randomV.name}</h3><button class="mt-2 bg-white text-red-600 text-[8px] font-black py-1 px-3 rounded-full uppercase">Découvrir</button></div></div>`; 
+                    html += `<div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl"><div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110"><img src="${randomV.imgs[0]}" class="w-full h-full object-cover"></div><div class="relative z-10"><p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p><h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3><button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button></div></div>`; 
                 }
-                const animationDelay = Math.min(index * 0.1, 2);
-                html += `<div class="product-card-container shadow-sm dark:bg-slate-800" style="animation-delay: ${animationDelay}s" onclick="showDetail('${p.id}')"><div class="product-card-inner p-4 dark:bg-slate-800">${promo > 0 ? `<span class="absolute top-4 left-4 promo-badge text-white text-[9px] font-black px-3 py-1.5 rounded-full z-10">⚡ -${promo}%</span>` : ''}<div class="aspect-square overflow-hidden rounded-2xl mb-4 bg-slate-50 dark:bg-slate-700"><img src="${img}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"></div><h3 class="text-[10px] font-black uppercase line-clamp-2 h-8 leading-tight text-slate-700 dark:text-slate-300">${p.name}</h3><div class="mt-3"><span class="text-red-600 font-black text-sm">${parseInt(p.price).toLocaleString()} F</span></div></div></div>`;
+                
+                const animationDelay = Math.min(index * 0.08, 1.5);
+                html += `
+                <div class="product-card-container group" style="animation-delay: ${animationDelay}s" onclick="showDetail('${p.id}')">
+                    <div class="product-card-inner">
+                        ${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}
+                        <div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50 dark:bg-slate-700">
+                            <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </div>
+                        <h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800 dark:text-slate-100">
+                            ${p.name}
+                        </h3>
+                        <div class="mt-auto pt-2 flex items-center justify-between">
+                            <span class="price-tag">${parseInt(p.price).toLocaleString()} F</span>
+                        </div>
+                    </div>
+                </div>`;
             });
             grid.innerHTML = html;
         }
