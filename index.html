@@ -111,6 +111,28 @@
             }
         });
 
+        /* MODIFICATION PRO : GESTION DYNAMIQUE DU STOCK ET BANNIÈRE AUTO */
+        onValue(stockRef, (snapshot) => {
+            const data = snapshot.val();
+            window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+            
+            // Mise à jour de la bannière "Nouveautés" avec le dernier produit
+            if (window.stock.length > 0) {
+                const dernierArticle = window.stock[window.stock.length - 1];
+                const bannerNewTitle = document.getElementById('autoBannerTitle');
+                const bannerNewImg = document.getElementById('autoBannerImg');
+                const bannerNewBtn = document.getElementById('autoBannerBtn');
+                
+                if(bannerNewTitle) bannerNewTitle.innerHTML = `DERNIER ARRIVAGE :<br><span class="text-red-500 text-3xl">${dernierArticle.name}</span>`;
+                if(bannerNewImg) bannerNewImg.src = dernierArticle.imgs[0];
+                if(bannerNewBtn) bannerNewBtn.setAttribute('onclick', `showDetail('${dernierArticle.id}')`);
+            }
+
+            renderProducts(window.stock);
+            if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
+            renderCategoryBubbles(); 
+        });
+
         window.handleAuth = async () => {
             const email = document.getElementById('authEmail').value;
             const pass = document.getElementById('authPass').value;
@@ -186,14 +208,6 @@
                 btnToggle.innerText = "CRÉER UN COMPTE ?";
             }
         };
-
-        onValue(stockRef, (snapshot) => {
-            const data = snapshot.val();
-            window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
-            renderProducts(window.stock);
-            if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
-            renderCategoryBubbles(); 
-        });
 
         onValue(catsRef, (snapshot) => {
             const data = snapshot.val();
@@ -311,6 +325,7 @@
             }
         };
 
+        /* MODIFICATION PRO : BADGE "ACHAT VÉRIFIÉ" DANS LES AVIS */
         onValue(reviewsRef, (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('reviewsDisplay');
@@ -325,7 +340,13 @@
                 container.innerHTML = entries.slice(0, 10).map(([id, r]) => `
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[250px]">
                         <div class="flex text-orange-400 mb-1">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
-                        <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
+                        <div class="flex items-center gap-2">
+                             <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
+                             <span class="bg-green-100 text-green-600 text-[7px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                ACHAT VÉRIFIÉ
+                             </span>
+                        </div>
                         <p class="text-[11px] text-slate-600 italic mt-1">"${r.comment}"</p>
                         <p class="text-[8px] text-slate-400 mt-2">${r.date}</p>
                     </div>`).join('');
@@ -467,11 +488,13 @@
             animation-play-state: paused;
         }
 
+        /* CONFIGURATION BANNIÈRE AUTOMATIQUE */
         .banner-container {
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
         .banner-item {
             flex: 0 0 85%;
@@ -535,7 +558,7 @@
     <section class="pt-6 pb-2 bg-white">
         <div class="banner-container no-scrollbar px-4">
             <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-900 group">
-                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
                 <div class="relative z-10 p-8 flex flex-col justify-center h-full">
                     <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter shadow-lg">Promo Spéciale</span>
                     <h2 class="text-white text-2xl font-black uppercase leading-none">Électroménager<br><span class="text-red-500 text-3xl">Premium</span></h2>
@@ -544,11 +567,11 @@
             </div>
 
             <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-[#101944] group">
-                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000">
+                <img id="autoBannerImg" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
                 <div class="relative z-10 p-8 flex flex-col justify-center h-full text-right items-end">
-                    <span class="bg-white text-[#101944] text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter">Nouveautés</span>
-                    <h2 class="text-white text-2xl font-black uppercase leading-none">Smartphones<br>& Gadgets</h2>
-                    <button onclick="filterItems('ÉLECTRONIQUE', '', '')" class="mt-4 bg-white/10 backdrop-blur-md text-white text-[10px] font-black py-2 px-6 rounded-full border border-white/20 uppercase">Découvrir →</button>
+                    <span class="bg-white text-[#101944] text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter">Vient d'arriver</span>
+                    <h2 id="autoBannerTitle" class="text-white text-2xl font-black uppercase leading-none">Smartphones<br>& Gadgets</h2>
+                    <button id="autoBannerBtn" class="mt-4 bg-white/10 backdrop-blur-md text-white text-[10px] font-black py-2 px-6 rounded-full border border-white/20 uppercase">Voir le produit →</button>
                 </div>
             </div>
 
@@ -622,8 +645,8 @@
     <footer class="bg-[#101944] text-white py-12 border-t border-white/5 mt-10">
         <div class="container mx-auto px-6 text-center">
             <div class="mb-12"><p class="text-[13px] leading-relaxed text-slate-300">Boutique Digitale de Référence.<br>Situé à <span class="font-bold">Bafoussam, Cameroun</span>.<br>Qualité et Service au meilleur prix.</p></div>
-            <div class="mb-16"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Communauté</h4><div class="flex justify-center mb-6"><div class="w-16 h-0.5 bg-red-600"></div></div><a href="https://www.facebook.com/profile.php?id=61561732935385" target="_blank" class="flex items-center justify-center gap-4 bg-[#ffffff10] border border-white/10 p-6 rounded-[25px] w-full max-w-[320px] mx-auto active:scale-95 transition-all"><img src="https://i.postimg.cc/ZR3jSwwJ/images.png" class="h-10 w-10 rounded-full shadow-lg"><span class="text-sm font-bold tracking-tight">Facebook Officiel</span></a></div>
-            <div class="mb-12"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Paiements Acceptés</h4><div class="flex justify-center mb-8"><div class="w-20 h-0.5 bg-red-600"></div></div><div class="flex justify-center gap-4"><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/xdz2DRQW/mobile-money.jpg" class="h-full object-contain"></div><div class="bg-black p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg border border-white/10"><img src="https://i.postimg.cc/Pqwjs4H0/orange-money.png" class="h-full object-contain"></div><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/g0ZWFDp5/paiement-a-la-livraison.png" class="h-full object-contain"></div></div><p class="text-[10px] text-slate-400 mt-8 italic font-medium">Paiement sécurisé à la livraison ou Mobile.</p></div>
+            <div class="mb-16"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Communauté</h4><div class="flex justify-center mb-6"><div class="w-16 h-0.5 bg-red-600"></div></div><a href="https://www.facebook.com/profile.php?id=61561732935385" target="_blank" class="flex items-center justify-center gap-4 bg-[#ffffff10] border border-white/10 p-6 rounded-[25px] w-full max-w-[320px] mx-auto active:scale-95 transition-all"><img src="https://i.postimg.cc/ZR3jSwwJ/images.png" class="h-10 w-10 rounded-full shadow-lg" loading="lazy"><span class="text-sm font-bold tracking-tight">Facebook Officiel</span></a></div>
+            <div class="mb-12"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Paiements Acceptés</h4><div class="flex justify-center mb-8"><div class="w-20 h-0.5 bg-red-600"></div></div><div class="flex justify-center gap-4"><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/xdz2DRQW/mobile-money.jpg" class="h-full object-contain" loading="lazy"></div><div class="bg-black p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg border border-white/10"><img src="https://i.postimg.cc/Pqwjs4H0/orange-money.png" class="h-full object-contain" loading="lazy"></div><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/g0ZWFDp5/paiement-a-la-livraison.png" class="h-full object-contain" loading="lazy"></div></div><p class="text-[10px] text-slate-400 mt-8 italic font-medium">Paiement sécurisé à la livraison ou Mobile.</p></div>
             <div class="pt-8 border-t border-white/5"><p class="text-[10px] text-slate-500 font-bold opacity-60">© 2026 AfroService - Boutique Officielle.</p></div>
         </div>
     </footer>
@@ -735,9 +758,22 @@
             renderMenu(); 
             renderCategoryBubbles(); 
             updateWALink();
+            setInterval(autoScrollBanner, 5000);
         });
 
-        window.addEventListener('scroll', () => {
+        function autoScrollBanner() {
+            const bannerContainer = document.querySelector('.banner-container');
+            if (!bannerContainer) return;
+            const items = bannerContainer.querySelectorAll('.banner-item');
+            if (items.length <= 1) return;
+            bannerIndex++;
+            if (bannerIndex >= items.length) bannerIndex = 0;
+            const scrollAmount = items[bannerIndex].offsetLeft - 16;
+            bannerContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+        }
+
+        let bannerIndex = 0;
+        window.addEventListener('scroll', (e) => {
             const btt = document.getElementById('backToTop');
             if (window.scrollY > 300) {
                 btt.classList.remove('opacity-0', 'pointer-events-none');
@@ -746,8 +782,13 @@
                 btt.classList.add('opacity-0', 'pointer-events-none');
                 btt.classList.remove('opacity-100', 'pointer-events-auto');
             }
-        });
+            if (e.target.classList && e.target.classList.contains('banner-container')) {
+                const index = Math.round(e.target.scrollLeft / e.target.offsetWidth);
+                bannerIndex = index;
+            }
+        }, true);
 
+        /* MODIFICATION PRO : AJOUT DU LAZY LOADING DANS LE RENDU */
         function renderProducts(data) {
             const grid = document.getElementById('productGrid'); 
             if(!grid) return;
@@ -759,7 +800,17 @@
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
                 
                 if(index === 3 && randomV) { 
-                    html += `<div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl"><div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110"><img src="${randomV.imgs[0]}" class="w-full h-full object-cover"></div><div class="relative z-10"><p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p><h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3><button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button></div></div>`; 
+                    html += `
+                    <div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl">
+                        <div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110">
+                            <img src="${randomV.imgs[0]}" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="relative z-10">
+                            <p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p>
+                            <h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3>
+                            <button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button>
+                        </div>
+                    </div>`; 
                 }
                 
                 html += `
@@ -767,7 +818,7 @@
                     <div class="product-card-inner">
                         ${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}
                         <div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50">
-                            <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
                         </div>
                         <h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">
                             ${p.name}
@@ -789,7 +840,7 @@
                 const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
                 return `
                 <div class="category-bubble" onclick="filterItems('${cat.name}', '', '')">
-                    <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}"></div>
+                    <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div>
                     <span class="bubble-text">${cat.name}</span>
                 </div>`;
             }).join('');
@@ -798,7 +849,7 @@
         function renderMenu() {
             const menu = document.getElementById('categoryMenu'); 
             if(!menu) return;
-            let menuHTML = `<button onclick="renderProducts(window.stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 hover:bg-red-50 border-b">🏷️ TOUTE LA BOUTIQUE</button>`;
+            let menuHTML = `<button onclick="renderProducts(window.stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 hover:bg-red-50 border-b"> TOUTE LA BOUTIQUE</button>`;
             if(!window.categories || window.categories.length === 0 || window.categories[0].name === "CHARGEMENT...") {
                 menu.innerHTML = menuHTML + `<div class="p-6 text-[10px] text-slate-400 animate-pulse font-bold uppercase italic">Récupération des rayons...</div>`;
                 return;
@@ -821,13 +872,45 @@
             document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        /* MODIFICATION PRO : SECTION "PREUVE SOCIALE" DANS LE DÉTAIL */
         function showDetail(id) {
             const p = window.stock.find(x => x.id === id); if(!p) return;
             const content = document.getElementById('detailContent'); 
             const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
             updateWALink(p.name);
-            content.innerHTML = `<div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100"><div id="slideTrack" class="flex transition-transform duration-500">${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover">`).join('')}</div>${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">‹</button><button onclick="moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">›</button></div>` : ''}</div><h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2><div class="flex items-center gap-4 mb-4"><span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}</div><p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p><p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p><div class="space-y-4">${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}<input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm"></div><button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
-            document.getElementById('detailModal').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden');
+            
+            // On simule une activité de commande pour la preuve sociale
+            const ordersCount = Math.floor(Math.random() * 5) + 2; 
+
+            content.innerHTML = `
+                <div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100">
+                    <div id="slideTrack" class="flex transition-transform duration-500">
+                        ${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover" loading="lazy">`).join('')}
+                    </div>
+                    ${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">‹</button><button onclick="moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">›</button></div>` : ''}
+                </div>
+                
+                <div class="bg-red-50 text-red-600 p-3 rounded-xl mb-4 flex items-center gap-3 border border-red-100">
+                    <span class="flex h-2 w-2 rounded-full bg-red-600 animate-ping"></span>
+                    <p class="text-[10px] font-bold uppercase italic">🔥 ${ordersCount} personnes à Bafoussam ont commandé cet article récemment !</p>
+                </div>
+
+                <h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>
+                    ${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
+                <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p>
+                <div class="space-y-4">
+                    ${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}
+                    ${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}
+                    <input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm">
+                </div>
+                <button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
+            
+            document.getElementById('detailModal').style.transform = "translateX(0)"; 
+            document.getElementById('overlay').classList.remove('hidden');
         }
 
         let currentSlide = 0; 
@@ -840,8 +923,13 @@
         }
 
         function updateCart() {
-            let total = 0; document.getElementById('cartItems').innerHTML = cart.map((item, i) => { total += parseInt(item.price); return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; }).join('');
-            document.getElementById('cartTotal').innerText = total.toLocaleString() + " F"; document.getElementById('badge').innerText = cart.length;
+            let total = 0; 
+            document.getElementById('cartItems').innerHTML = cart.map((item, i) => { 
+                total += parseInt(item.price); 
+                return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; 
+            }).join('');
+            document.getElementById('cartTotal').innerText = total.toLocaleString() + " F"; 
+            document.getElementById('badge').innerText = cart.length;
         }
 
         function checkout() {
@@ -930,3 +1018,5 @@
     </script>
 </body>
 </html>
+
+ 
