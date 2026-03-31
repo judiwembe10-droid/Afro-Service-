@@ -229,35 +229,65 @@
         </div>
     </aside>
 
-    <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] overflow-y-auto">
-        <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-50"><button onclick="window.closeAdmin && window.closeAdmin()" class="font-bold text-[#101944]">← FERMER</button><h2 class="font-black uppercase text-red-600 italic">Administration AfroService</h2></div>
-        <div class="max-w-4xl mx-auto p-6 space-y-12 pb-12">
-            <div class="bg-slate-50 p-6 rounded-3xl border">
-                <div class="flex justify-between items-center mb-6"><h3 class="font-black uppercase text-xs text-[#101944]">🏗️ Structure des Rayons</h3><button onclick="window.addNewCategory && window.addNewCategory()" class="bg-green-600 text-white text-[9px] px-4 py-2 rounded-full font-black uppercase">+ Nouveau Rayon</button></div>
-                <div id="visualCatsManager" class="space-y-4 mb-6"></div>
-                <div class="flex gap-4"><button onclick="window.saveCategoriesToFirebase && window.saveCategoriesToFirebase()" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-black uppercase text-[10px]">Enregistrer la structure</button></div>
-            </div>
-            <div class="bg-slate-50 p-8 rounded-3xl border">
-                <h3 id="admTitle" class="font-black uppercase text-xs mb-6 text-red-600">📦 Gestion Produit</h3>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <input id="admName" type="text" placeholder="Nom de l'article" class="border p-3 rounded-xl text-sm">
-                    <div class="grid grid-cols-2 gap-3"><input id="admPrice" type="number" placeholder="Prix Vente" class="border p-3 rounded-xl text-sm text-red-600 font-bold"><input id="admOld" type="number" placeholder="Ancien Prix" class="border p-3 rounded-xl text-sm"></div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <select id="admCat" onchange="window.updateAdminSubs && window.updateAdminSubs()" class="border p-2 rounded-xl text-[10px]"></select>
-                        <select id="admSub" onchange="window.updateAdminSubSubs && window.updateAdminSubSubs()" class="border p-2 rounded-xl text-[10px]"></select>
-                        <select id="admSubSub" class="border p-2 rounded-xl text-[10px]"></select>
+    <!-- ADMIN MODAL AVEC ONGLETS (VERSION UNIFIÉE) -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] flex flex-col">
+        <div class="p-4 border-b flex justify-between items-center bg-white shrink-0">
+            <button onclick="window.closeAdmin()" class="font-bold text-[#101944] text-xs uppercase tracking-widest">← Quitter</button>
+            <h2 class="font-black uppercase text-red-600 italic text-sm">Dashboard AfroService</h2>
+        </div>
+
+        <div class="flex border-b bg-slate-50 shrink-0">
+            <button onclick="window.switchAdminTab('products')" id="tab-products" class="flex-1 py-4 text-[10px] font-black uppercase border-b-4 border-red-600 text-red-600 transition-all">📦 Articles</button>
+            <button onclick="window.switchAdminTab('categories')" id="tab-categories" class="flex-1 py-4 text-[10px] font-black uppercase border-b-4 border-transparent text-slate-400 transition-all">🏗️ Rayons</button>
+            <button onclick="window.switchAdminTab('reviews')" id="tab-reviews" class="flex-1 py-4 text-[10px] font-black uppercase border-b-4 border-transparent text-slate-400 transition-all">⭐ Avis</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100/30">
+            
+            <div id="panel-products" class="admin-panel space-y-6">
+                <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                    <h3 id="admTitle" class="font-black uppercase text-xs mb-6 text-red-600">Ajouter un article</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input id="admName" type="text" placeholder="Nom de l'article" class="border p-3 rounded-xl text-sm">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input id="admPrice" type="number" placeholder="Prix Vente" class="border p-3 rounded-xl text-sm text-red-600 font-bold">
+                            <input id="admOld" type="number" placeholder="Ancien Prix" class="border p-3 rounded-xl text-sm">
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <select id="admCat" onchange="window.updateAdminSubs()" class="border p-2 rounded-xl text-[10px]"></select>
+                            <select id="admSub" onchange="window.updateAdminSubSubs()" class="border p-2 rounded-xl text-[10px]"></select>
+                            <select id="admSubSub" class="border p-2 rounded-xl text-[10px]"></select>
+                        </div>
+                        <input id="admImgs" type="text" placeholder="Liens images (virgule)" class="border p-3 rounded-xl text-xs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input id="admColors" type="text" placeholder="Couleurs" class="border p-3 rounded-xl text-xs">
+                            <input id="admMem" type="text" placeholder="Mémoire" class="border p-3 rounded-xl text-xs">
+                        </div>
+                        <textarea id="admDesc" placeholder="Description..." class="md:col-span-2 border p-4 rounded-xl text-sm h-24"></textarea>
+                        <button onclick="window.saveProductToFirebase()" class="md:col-span-2 bg-[#101944] text-white py-4 rounded-xl font-black uppercase shadow-lg active:scale-95 transition-all">Enregistrer l'article</button>
                     </div>
-                    <input id="admImgs" type="text" placeholder="Liens images (virgule)" class="border p-3 rounded-xl text-xs">
-                    <div class="grid grid-cols-2 gap-3"><input id="admColors" type="text" placeholder="Couleurs" class="border p-3 rounded-xl text-xs"><input id="admMem" type="text" placeholder="Mémoire" class="border p-3 rounded-xl text-xs"></div>
-                    <textarea id="admDesc" placeholder="Description..." class="md:col-span-2 border p-4 rounded-xl text-sm h-24"></textarea>
-                    <button onclick="window.saveProductToFirebase && window.saveProductToFirebase()" class="md:col-span-2 bg-[#101944] text-white py-4 rounded-xl font-black uppercase">Enregistrer l'article</button>
+                </div>
+                <div id="stockList" class="grid gap-2"></div>
+            </div>
+
+            <div id="panel-categories" class="admin-panel hidden space-y-6">
+                <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-black uppercase text-xs text-[#101944]">Structure des Rayons</h3>
+                        <button onclick="window.addNewCategory()" class="bg-green-600 text-white text-[9px] px-4 py-2 rounded-full font-black uppercase shadow-md">+ Nouveau Rayon</button>
+                    </div>
+                    <div id="visualCatsManager" class="space-y-4 mb-6"></div>
+                    <button onclick="window.saveCategoriesToFirebase()" class="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-[10px] shadow-lg">Enregistrer la structure</button>
                 </div>
             </div>
-            <div id="stockList" class="grid gap-2"></div>
-            <div class="bg-slate-50 p-6 rounded-3xl border mt-8">
-                <h3 class="font-black uppercase text-xs mb-6 text-orange-600 italic">⭐ Modération des Avis</h3>
-                <div id="adminReviewsList" class="space-y-2 max-h-60 overflow-y-auto pr-2 no-scrollbar"></div>
+
+            <div id="panel-reviews" class="admin-panel hidden space-y-6">
+                <div class="bg-white p-6 rounded-3xl border shadow-sm">
+                    <h3 class="font-black uppercase text-xs mb-6 text-orange-600 italic">Modération des Avis</h3>
+                    <div id="adminReviewsList" class="space-y-2 pr-2"></div>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -296,7 +326,7 @@
     <script type="module">
         // ============================================================
         // AFRO SERVICE CAMEROUN - APPLICATION E-COMMERCE UNIFIÉE
-        // Version avec gestion corrigée des variantes (subsubs)
+        // Version avec onglets d'administration (Articles / Rayons / Avis)
         // Interface premium avec labels ergonomiques
         // ============================================================
         
@@ -712,7 +742,7 @@
                 update(ref(db, 'stock/' + editId), productData).then(() => {
                     alert("Article mis à jour !");
                     editId = null;
-                    document.getElementById('admTitle').innerText = "📦 Gestion Produit";
+                    document.getElementById('admTitle').innerText = "Ajouter un article";
                     resetAdminForm();
                 }).catch(e => alert("Erreur: " + e.message));
             } else {
@@ -743,7 +773,7 @@
                     </div>
                 </div>
             `).join('');
-            window.syncAdminMenus();
+            syncAdminMenus();
         }
 
         function syncAdminMenus() {
@@ -754,7 +784,7 @@
             window.updateAdminSubs();
         }
 
-        // ==================== GESTION DES VARIANTES (CORRIGÉE) ====================
+        // ==================== GESTION DES VARIANTES ====================
         function renderVisualManager() {
             const container = document.getElementById('visualCatsManager');
             if (!container) return;
@@ -789,7 +819,6 @@
             `).join('');
         }
 
-        // Fonctions corrigées pour la gestion des variantes
         window.updateCatName = (c, val) => { 
             categories[c].name = val.toUpperCase(); 
             syncAdminMenus(); 
@@ -818,15 +847,13 @@
             syncAdminMenus(); 
         };
         
-        // CORRECTION CRITIQUE : Fonction addSubSub sécurisée avec initialisation et re-rendu
         window.addSubSub = (c, s) => {
-            // Initialisation sécurisée si le tableau subsubs n'existe pas encore
             if (!categories[c].subs[s].subsubs) {
                 categories[c].subs[s].subsubs = [];
             }
             categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); 
-            renderVisualManager(); // <--- CRITIQUE : Relance le rendu visuel
-            syncAdminMenus();      // Synchronise les listes déroulantes
+            renderVisualManager();
+            syncAdminMenus();
         };
         
         window.deleteCat = (c) => { 
@@ -853,7 +880,6 @@
             if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
             if (!categories || categories.length === 0) return alert("Rien à enregistrer");
             
-            // Nettoyer les tableaux vides pour éviter les problèmes Firebase
             const cleanCategories = categories.map(cat => ({
                 ...cat,
                 subs: cat.subs ? cat.subs.map(sub => ({
@@ -1092,16 +1118,33 @@
             updateWALink();
         };
         
+        // Gestion des onglets admin
+        window.switchAdminTab = function(tabName) {
+            document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden'));
+            document.querySelectorAll('[id^="tab-"]').forEach(tab => {
+                tab.classList.remove('border-red-600', 'text-red-600');
+                tab.classList.add('border-transparent', 'text-slate-400');
+            });
+        
+            document.getElementById(`panel-${tabName}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.remove('border-transparent', 'text-slate-400');
+            activeTab.classList.add('border-red-600', 'text-red-600');
+            
+            if (tabName === 'categories') renderVisualManager();
+            if (tabName === 'products') renderAdminStock();
+        };
+        
         window.openAdmin = function() {
             document.getElementById('adminModal').classList.remove('hidden');
-            renderVisualManager();
+            window.switchAdminTab('products');
             renderAdminStock();
         };
         
         window.closeAdmin = function() {
             document.getElementById('adminModal').classList.add('hidden');
             editId = null;
-            document.getElementById('admTitle').innerText = "📦 Gestion Produit";
+            document.getElementById('admTitle').innerText = "Ajouter un article";
             resetAdminForm();
         };
 
@@ -1116,13 +1159,14 @@
             
             updateDynamicBanners(stock);
             renderProducts(stock);
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden')) renderAdminStock();
+            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-products') && !document.getElementById('panel-products').classList.contains('hidden')) {
+                renderAdminStock();
+            }
             renderCategoryBubbles();
         });
 
         onValue(catsRef, (snapshot) => {
             const data = snapshot.val();
-            // Nettoyer les données reçues pour s'assurer que subsubs existe toujours
             categories = data ? data.map(cat => ({
                 ...cat,
                 subs: cat.subs ? cat.subs.map(sub => ({
@@ -1132,7 +1176,7 @@
             })) : [];
             renderMenu();
             renderCategoryBubbles();
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden')) {
+            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-categories') && !document.getElementById('panel-categories').classList.contains('hidden')) {
                 renderVisualManager();
                 syncAdminMenus();
             }
@@ -1199,7 +1243,7 @@
                 container.innerHTML = html;
             }
             
-            if (adminContainer) {
+            if (adminContainer && document.getElementById('panel-reviews') && !document.getElementById('panel-reviews').classList.contains('hidden')) {
                 adminContainer.innerHTML = entries.map(([id, r]) => `
                     <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
                         <div class="flex flex-col">
