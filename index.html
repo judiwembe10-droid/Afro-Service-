@@ -87,6 +87,10 @@
 
         #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
         #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
+
+        .banner-gradient-overlay {
+            background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
+        }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
@@ -128,37 +132,10 @@
         </div>
     </header>
 
-    <!-- BANNIÈRES -->
+    <!-- BANNIÈRES DYNAMIQUES -->
     <section class="pt-6 pb-2 bg-white">
-        <div class="banner-container no-scrollbar px-4">
-            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-900 group">
-                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
-                <div class="relative z-10 p-8 flex flex-col justify-center h-full">
-                    <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter shadow-lg">Promo Spéciale</span>
-                    <h2 class="text-white text-2xl font-black uppercase leading-none">Électroménager<br><span class="text-red-500 text-3xl">Premium</span></h2>
-                    <p class="text-white/80 text-[11px] font-bold mt-2 uppercase italic tracking-widest">Qualité garantie • Garantie 1 an</p>
-                </div>
-            </div>
-
-            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-[#101944] group">
-                <img id="autoBannerImg" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
-                <div class="relative z-10 p-8 flex flex-col justify-center h-full text-right items-end">
-                    <span class="bg-white text-[#101944] text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter">Vient d'arriver</span>
-                    <h2 id="autoBannerTitle" class="text-white text-2xl font-black uppercase leading-none">Smartphones<br>& Gadgets</h2>
-                    <button id="autoBannerBtn" class="mt-4 bg-white/10 backdrop-blur-md text-white text-[10px] font-black py-2 px-6 rounded-full border border-white/20 uppercase">Voir le produit →</button>
-                </div>
-            </div>
-
-            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-red-600 group">
-                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-                <div class="relative z-10 p-8 flex flex-col justify-center h-full items-center text-center">
-                    <div class="bg-white/20 backdrop-blur-xl p-4 rounded-3xl mb-3 shadow-inner">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <h2 class="text-white text-2xl font-black uppercase leading-tight">Livraison Rapide</h2>
-                    <p class="text-white/90 text-[11px] font-bold uppercase tracking-[0.2em] mt-1">À domicile dans tout Bafoussam</p>
-                </div>
-            </div>
+        <div id="dynamicBanners" class="banner-container no-scrollbar px-4">
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>
         </div>
     </section>
 
@@ -319,6 +296,7 @@
     <script type="module">
         // ============================================================
         // AFRO SERVICE CAMEROUN - APPLICATION E-COMMERCE UNIFIÉE
+        // Version avec bannières dynamiques automatiques
         // ============================================================
         
         import { initializeApp } from "firebase/app";
@@ -395,6 +373,78 @@
             document.getElementById('admImgs').value = "";
             document.getElementById('admColors').value = "";
             document.getElementById('admMem').value = "";
+        }
+
+        // ==================== BANNIÈRES DYNAMIQUES AUTOMATIQUES ====================
+        function updateDynamicBanners(products) {
+            const container = document.getElementById('dynamicBanners');
+            if (!container || !products || products.length === 0) {
+                if (container) {
+                    container.innerHTML = `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>`;
+                }
+                return;
+            }
+
+            // 1. Trouver la meilleure promo (plus gros pourcentage de réduction)
+            const promoItems = [...products].filter(p => p.old && p.old > p.price)
+                .sort((a, b) => {
+                    const percentA = ((a.old - a.price) / a.old) * 100;
+                    const percentB = ((b.old - b.price) / b.old) * 100;
+                    return percentB - percentA;
+                });
+            const bestPromo = promoItems[0] || products[0];
+
+            // 2. Le dernier arrivé (article le plus récent ajouté)
+            const latest = products[products.length - 1];
+
+            // 3. Un article au hasard pour la découverte
+            const random = products[Math.floor(Math.random() * products.length)];
+
+            const banners = [
+                {
+                    title: "Offre Imbattable",
+                    subtitle: bestPromo.name,
+                    tag: bestPromo.old ? `-${Math.round(((bestPromo.old - bestPromo.price) / bestPromo.old) * 100)}%` : "MEILLEUR PRIX",
+                    img: bestPromo.imgs && bestPromo.imgs[0] ? bestPromo.imgs[0] : 'https://via.placeholder.com/800x400',
+                    color: "bg-red-600",
+                    id: bestPromo.id,
+                    desc: bestPromo.old ? `Économisez ${(bestPromo.old - bestPromo.price).toLocaleString()} F` : "Qualité Premium"
+                },
+                {
+                    title: "Nouvel Arrivage",
+                    subtitle: latest.name,
+                    tag: "EXCLUSIVITÉ",
+                    img: latest.imgs && latest.imgs[0] ? latest.imgs[0] : 'https://via.placeholder.com/800x400',
+                    color: "bg-[#101944]",
+                    id: latest.id,
+                    desc: "Disponible dès maintenant"
+                },
+                {
+                    title: "Sélection du Jour",
+                    subtitle: random.name,
+                    tag: "COUP DE COEUR",
+                    img: random.imgs && random.imgs[0] ? random.imgs[0] : 'https://via.placeholder.com/800x400',
+                    color: "bg-slate-900",
+                    id: random.id,
+                    desc: "Qualité Premium Garantie"
+                }
+            ];
+
+            container.innerHTML = banners.map(b => `
+                <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" 
+                     onclick="window.showDetail('${b.id}')">
+                    <img src="${b.img}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-1000" loading="lazy">
+                    <div class="absolute inset-0 banner-gradient-overlay"></div>
+                    <div class="relative z-10 p-8 flex flex-col justify-center h-full">
+                        <span class="bg-white text-slate-900 text-[9px] font-black px-3 py-1 rounded-full w-fit mb-2 uppercase tracking-tighter shadow-lg">
+                            ${b.tag}
+                        </span>
+                        <h2 class="text-white text-xl font-black uppercase leading-none mb-1">${b.title}</h2>
+                        <p class="text-red-400 text-lg font-black uppercase leading-tight line-clamp-1">${b.subtitle}</p>
+                        <p class="text-white/80 text-[10px] font-bold mt-2 uppercase italic tracking-widest">${b.desc}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ==================== FONCTIONS PANIER ====================
@@ -499,7 +549,11 @@
         };
 
         window.quickSearch = function(q) {
-            renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
+            if (!q.trim()) {
+                renderProducts(stock);
+            } else {
+                renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
+            }
         };
 
         // ==================== GESTION CATÉGORIES ====================
@@ -550,7 +604,7 @@
             document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        // ==================== GESTION ADMIN (AVEC CORRECTION SCOPE) ====================
+        // ==================== GESTION ADMIN ====================
         window.updateAdminSubs = function() {
             const catSelect = document.getElementById('admCat');
             if (!catSelect) return;
@@ -626,7 +680,7 @@
                 cat: category, 
                 sub: subCategory, 
                 subsub: subSubCategory || "", 
-                imgs: images, 
+                imgs: images.length ? images : ['https://via.placeholder.com/300'], 
                 colors: colors || "", 
                 memory: memory || "" 
             };
@@ -975,15 +1029,8 @@
             stock = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
             window.stock = stock;
             
-            if (stock.length > 0) {
-                const dernierArticle = stock[stock.length - 1];
-                const bannerNewTitle = document.getElementById('autoBannerTitle');
-                const bannerNewImg = document.getElementById('autoBannerImg');
-                const bannerNewBtn = document.getElementById('autoBannerBtn');
-                if (bannerNewTitle) bannerNewTitle.innerHTML = `DERNIER ARRIVAGE :<br><span class="text-red-500 text-3xl">${dernierArticle.name}</span>`;
-                if (bannerNewImg) bannerNewImg.src = dernierArticle.imgs[0];
-                if (bannerNewBtn) bannerNewBtn.setAttribute('onclick', `window.showDetail('${dernierArticle.id}')`);
-            }
+            // Mise à jour des bannières dynamiques automatiques
+            updateDynamicBanners(stock);
             
             renderProducts(stock);
             if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden')) renderAdminStock();
@@ -1081,9 +1128,10 @@
             renderCategoryBubbles();
             updateWALink();
             
+            // Défilement automatique des bannières
             let bannerIndex = 0;
             setInterval(() => {
-                const bannerContainer = document.querySelector('.banner-container');
+                const bannerContainer = document.querySelector('#dynamicBanners');
                 if (!bannerContainer) return;
                 const items = bannerContainer.querySelectorAll('.banner-item');
                 if (items.length <= 1) return;
