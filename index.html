@@ -229,7 +229,7 @@
         </div>
     </aside>
 
-    <!-- ADMIN MODAL AVEC ONGLETS (VERSION UNIFIÉE) -->
+    <!-- ADMIN MODAL AVEC ONGLETS -->
     <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] flex flex-col">
         <div class="p-4 border-b flex justify-between items-center bg-white shrink-0">
             <button onclick="window.closeAdmin()" class="font-bold text-[#101944] text-xs uppercase tracking-widest">← Quitter</button>
@@ -326,8 +326,7 @@
     <script type="module">
         // ============================================================
         // AFRO SERVICE CAMEROUN - APPLICATION E-COMMERCE UNIFIÉE
-        // Version avec onglets d'administration (Articles / Rayons / Avis)
-        // Interface premium avec labels ergonomiques
+        // Version avec correction des avis admin (mise à jour en temps réel)
         // ============================================================
         
         import { initializeApp } from "firebase/app";
@@ -406,7 +405,7 @@
             document.getElementById('admMem').value = "";
         }
 
-        // ==================== BANNIÈRES DYNAMIQUES AUTOMATIQUES ====================
+        // ==================== BANNIÈRES DYNAMIQUES ====================
         function updateDynamicBanners(products) {
             const container = document.getElementById('dynamicBanners');
             if (!container || !products || products.length === 0) {
@@ -519,7 +518,7 @@
             grid.innerHTML = html;
         }
 
-        // ==================== SHOW DETAIL AVEC LABELS PREMIUM ====================
+        // ==================== SHOW DETAIL ====================
         window.showDetail = function(id) {
             const p = stock.find(x => x.id === id);
             if (!p) return;
@@ -547,7 +546,6 @@
                 <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
                 <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p>
                 
-                <!-- SECTION OPTIONS AVEC LABELS PREMIUM -->
                 <div class="space-y-6 mt-6">
                     ${p.colors ? `
                         <div class="space-y-2">
@@ -895,7 +893,7 @@
             }).catch(e => alert("Erreur: " + e.message));
         };
 
-        // ==================== GESTION AVIS ====================
+        // ==================== GESTION AVIS (CORRECTION INTÉGRÉE) ====================
         window.sendReview = async function() {
             if (!currentUser) return alert("Connectez-vous pour laisser une note !");
             if (!currentUser.emailVerified) return alert("Vérifiez votre email avant de noter.");
@@ -1118,7 +1116,7 @@
             updateWALink();
         };
         
-        // Gestion des onglets admin
+        // Gestion des onglets admin (version corrigée)
         window.switchAdminTab = function(tabName) {
             document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden'));
             document.querySelectorAll('[id^="tab-"]').forEach(tab => {
@@ -1131,8 +1129,10 @@
             activeTab.classList.remove('border-transparent', 'text-slate-400');
             activeTab.classList.add('border-red-600', 'text-red-600');
             
+            // Forcer le rendu selon l'onglet
             if (tabName === 'categories') renderVisualManager();
             if (tabName === 'products') renderAdminStock();
+            // Le panneau "reviews" se met à jour automatiquement via le listener Firebase
         };
         
         window.openAdmin = function() {
@@ -1182,6 +1182,7 @@
             }
         });
 
+        // ==================== LISTENER AVIS (CORRECTION INTÉGRÉE) ====================
         onValue(reviewsRef, async (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('reviewsDisplay');
@@ -1195,12 +1196,12 @@
             
             const entries = Object.entries(data).reverse();
             
+            // --- Rendu Public (Slider) ---
             if (container) {
                 let html = "";
                 for (const [id, r] of entries.slice(0, 10)) {
                     const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
                     const badge = await getCustomerBadge(r.userId);
-                    
                     html += `
                         <div class="bg-white p-6 rounded-[24px] shadow-sm border border-slate-100 min-w-[300px] max-w-[350px] relative transition-all hover:shadow-md">
                             <div class="flex justify-between items-center mb-3">
@@ -1243,15 +1244,35 @@
                 container.innerHTML = html;
             }
             
-            if (adminContainer && document.getElementById('panel-reviews') && !document.getElementById('panel-reviews').classList.contains('hidden')) {
+            // --- Rendu Dashboard Admin (CORRECTION : pas de condition de visibilité) ---
+            if (adminContainer) {
                 adminContainer.innerHTML = entries.map(([id, r]) => `
-                    <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
-                        <div class="flex flex-col">
-                            <span class="font-black text-[9px] uppercase text-[#101944]">${r.name} (${r.note}/5) 👍 ${r.likeCount || 0}</span>
-                            <span class="text-[10px] text-slate-500 italic">"${r.comment}"</span>
-                            ${r.adminReply ? `<span class="text-[8px] text-blue-600 mt-1">📝 Répondu</span>` : ''}
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span>
+                                    <span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span>
+                                    <span class="text-[9px] text-slate-400">👍 ${r.likeCount || 0}</span>
+                                </div>
+                                <p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p>
+                                ${r.adminReply ? `
+                                    <div class="bg-blue-50 p-2 rounded-lg border border-blue-100 mb-2">
+                                        <p class="text-[8px] font-black text-blue-800 uppercase">Ma Réponse :</p>
+                                        <p class="text-[10px] text-blue-600">${r.adminReply}</p>
+                                    </div>
+                                ` : ''}
+                                <div class="flex gap-2">
+                                    <button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline">
+                                        ${r.adminReply ? 'Modifier la réponse' : 'Répondre'}
+                                    </button>
+                                    <button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline">
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="text-[8px] text-slate-400 font-bold">${r.date}</span>
                         </div>
-                        <button onclick="window.deleteReviewFromFirebase('${id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase">Supprimer</button>
                     </div>`).join('');
             }
         });
