@@ -1,1 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="color-scheme" content="light">
+    
+    <meta name="google-site-verification" content="Qxa9yWa5h9Bo50pYc6dNZfem6xkZ9YlCMUr3dH5AvM0" />
 
+    <title>Afro Service Cameroun | Site de vente en ligne </title>
+    <meta name="description" content="Trouvez et achetez facilement avec Afro Service, l'un des meilleurs sites de vente en ligne au Cameroun. Produits authentiques avec garantie au meilleur prix.">
+    <meta name="keywords" content="Vente en ligne Cameroun, Afro Service, Bafoussam Shopping, E-commerce Cameroun, Livraison rapide Cameroun">
+    <meta name="author" content="Afro Service">
+    
+    <link rel="icon" href="https://i.postimg.cc/9QB2XQRM/20260329-213515.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/9QB2XQRM/20260329-213515.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "name": "Afro Service Cameroun",
+      "url": "https://judiwembe10-droid.github.io/Afro-Service/",
+      "logo": "https://i.postimg.cc/9QB2XQRM/20260329-213515.png",
+      "image": "https://i.postimg.cc/9QB2XQRM/20260329-213515.png",
+      "description": "Trouvez et achetez facilement avec Afro Service, l'un des meilleurs site de vente en ligne au Cameroun.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bafoussam",
+        "addressCountry": "CM"
+      },
+      "telephone": "+237658562104"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://judiwembe10-droid.github.io/Afro-Service/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://judiwembe10-droid.github.io/Afro-Service/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.postimg.cc/9QB2XQRM/20260329-213515.png">
+    <meta property="og:url" content="https://judiwembe10-droid.github.io/Afro-Service/">
+    <meta property="og:site_name" content="Afro Service">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0NF5a7jhUyuA1FTIjK1Iw_x3eGHcrykY",
+            authDomain: "afro-service-b8999.firebaseapp.com",
+            databaseURL: "https://afro-service-b8999-default-rtdb.firebaseio.com",
+            projectId: "afro-service-b8999",
+            storageBucket: "afro-service-b8999.firebasestorage.app",
+            messagingSenderId: "324669731674",
+            appId: "1:324669731674:web:8257262c8e1f7b7d7ab963"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        const stockRef = ref(db, 'stock');
+        const catsRef = ref(db, 'categories');
+        const reviewsRef = ref(db, 'reviews');
+
+        window.db = db; 
+        window.currentUser = null;
+
+        const adminEmails = [
+            "kuewembejudicael@gmail.com",
+            "kuewembejudicael237@gmail.com",
+            "judiwembe10@gmail.com"
+        ];
+
+        onAuthStateChanged(auth, (user) => {
+            window.currentUser = user;
+            const btn = document.getElementById('authBtn');
+            const adminBtn = document.getElementById('adminBtn');
+
+            if (user) {
+                if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+                    adminBtn.classList.remove('hidden'); 
+                } else {
+                    adminBtn.classList.add('hidden');
+                }
+
+                if(!user.emailVerified) {
+                    btn.classList.add('text-orange-500');
+                } else {
+                    btn.classList.add('text-green-500');
+                }
+                if(document.getElementById('cName')) document.getElementById('cName').value = user.displayName || "";
+            } else {
+                btn.classList.remove('text-green-500', 'text-orange-500');
+                btn.classList.add('text-white');
+                adminBtn.classList.add('hidden');
+            }
+        });
+
+        /* MODIFICATION PRO : GESTION DYNAMIQUE DU STOCK ET BANNIÈRE AUTO */
+        onValue(stockRef, (snapshot) => {
+            const data = snapshot.val();
+            window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+            
+            // Mise à jour de la bannière "Nouveautés" avec le dernier produit
+            if (window.stock.length > 0) {
+                const dernierArticle = window.stock[window.stock.length - 1];
+                const bannerNewTitle = document.getElementById('autoBannerTitle');
+                const bannerNewImg = document.getElementById('autoBannerImg');
+                const bannerNewBtn = document.getElementById('autoBannerBtn');
+                
+                if(bannerNewTitle) bannerNewTitle.innerHTML = `DERNIER ARRIVAGE :<br><span class="text-red-500 text-3xl">${dernierArticle.name}</span>`;
+                if(bannerNewImg) bannerNewImg.src = dernierArticle.imgs[0];
+                if(bannerNewBtn) bannerNewBtn.setAttribute('onclick', `showDetail('${dernierArticle.id}')`);
+            }
+
+            renderProducts(window.stock);
+            if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
+            renderCategoryBubbles(); 
+        });
+
+        window.handleAuth = async () => {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPass').value;
+            const name = document.getElementById('authName').value;
+            const isLogin = document.getElementById('authTitle').innerText === "CONNEXION";
+            
+            try {
+                if(isLogin) { 
+                    const res = await signInWithEmailAndPassword(auth, email, pass);
+                    if(!res.user.emailVerified) {
+                        alert("Veuillez vérifier votre adresse e-mail. Un lien vous a été envoyé lors de l'inscription.");
+                    }
+                }
+                else { 
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    await updateProfile(res.user, { displayName: name });
+                    await sendEmailVerification(res.user);
+                    alert("Compte créé ! Un e-mail de vérification a été envoyé à " + email + ". Veuillez confirmer votre adresse avant de commander.");
+                }
+                closeAuth();
+            } catch (e) { alert("Erreur : " + e.message); }
+        };
+
+        window.forgotPassword = async () => {
+            const email = document.getElementById('authEmail').value;
+            if(!email) return alert("Entrez votre adresse e-mail dans le champ pour recevoir le lien de réinitialisation.");
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Un lien de réinitialisation a été envoyé à : " + email + ". Vérifiez vos courriers indésirables (spams) si besoin.");
+            } catch (e) {
+                alert("Erreur : " + e.message);
+            }
+        };
+
+        window.viewHistory = function() {
+            if (!window.currentUser) return alert("Connectez-vous pour voir votre historique");
+            const userOrderRef = ref(db, `orders/${window.currentUser.uid}`);
+            onValue(userOrderRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('historyContent');
+                if (!data) {
+                    container.innerHTML = "<p class='text-center text-slate-400 py-10 text-[10px] font-bold uppercase italic'>Aucune commande passée</p>";
+                } else {
+                    container.innerHTML = Object.values(data).reverse().map(order => `
+                        <div class="bg-slate-50 p-4 rounded-2xl border mb-3">
+                            <p class="text-[9px] font-black text-red-600 mb-1 uppercase">${order.date}</p>
+                            <div class="text-[10px] font-bold text-slate-700 leading-tight">${order.items.replace(/%0A/g, '<br>')}</div>
+                            <div class="mt-2 pt-2 border-t flex justify-between font-black text-[#1d265e]">
+                                <span class="text-[9px]">TOTAL</span> <span class="text-xs">${order.total}</span>
+                            </div>
+                        </div>`).join('');
+                }
+                document.getElementById('historyModal').classList.remove('hidden');
+            });
+        };
+
+        window.openAuth = () => { window.currentUser ? (confirm("Voulez-vous vous déconnecter ?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden'); };
+        window.closeAuth = () => document.getElementById('authModal').classList.add('hidden');
+        window.closeHistory = () => document.getElementById('historyModal').classList.add('hidden');
+        
+        window.toggleAuthMode = () => {
+            const title = document.getElementById('authTitle');
+            const signUpDiv = document.getElementById('signUpOnly');
+            const btnToggle = event.target; 
+            if (title.innerText === "CONNEXION") {
+                title.innerText = "INSCRIPTION";
+                signUpDiv.classList.remove('hidden');
+                btnToggle.innerText = "DÉJÀ UN COMPTE ? SE CONNECTER";
+            } else {
+                title.innerText = "CONNEXION";
+                signUpDiv.classList.add('hidden');
+                btnToggle.innerText = "CRÉER UN COMPTE ?";
+            }
+        };
+
+        onValue(catsRef, (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                window.categories = data;
+                renderMenu(); 
+                renderCategoryBubbles(); 
+                if(!document.getElementById('adminModal').classList.contains('hidden')) {
+                    if (typeof renderVisualManager === "function") renderVisualManager();
+                    if (typeof syncAdminMenus === "function") syncAdminMenus();
+                }
+            } else {
+                window.categories = [];
+                renderMenu();
+            }
+        });
+
+        window.saveProductToFirebase = function() {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return alert("Action non autorisée");
+            
+            const name = document.getElementById('admName').value.trim();
+            const price = document.getElementById('admPrice').value;
+            const oldPrice = document.getElementById('admOld').value;
+            const description = document.getElementById('admDesc').value.trim();
+            const category = document.getElementById('admCat').value;
+            const subCategory = document.getElementById('admSub').value;
+            const subSubCategory = document.getElementById('admSubSub').value;
+            const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
+            const colors = document.getElementById('admColors').value.trim();
+            const memory = document.getElementById('admMem').value.trim();
+
+            if(!name || !price) return alert("Nom et prix requis");
+
+            const productData = {
+                name: name,
+                price: price,
+                old: oldPrice || null,
+                desc: description || "",
+                cat: category,
+                sub: subCategory,
+                subsub: subSubCategory || "",
+                imgs: images,
+                colors: colors || "",
+                memory: memory || ""
+            };
+
+            if(window.editId) {
+                update(ref(db, 'stock/' + window.editId), productData)
+                .then(() => {
+                    alert("Article mis à jour !");
+                    window.editId = null;
+                    document.getElementById('admTitle').innerText = "📦 Gestion Produit";
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur de mise à jour: " + e.message));
+            } else {
+                push(stockRef, productData)
+                .then(() => {
+                    alert("Article ajouté avec succès !");
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur d'ajout: " + e.message));
+            }
+        };
+
+        function resetAdminForm() {
+            document.getElementById('admName').value = "";
+            document.getElementById('admPrice').value = "";
+            document.getElementById('admOld').value = "";
+            document.getElementById('admDesc').value = "";
+            document.getElementById('admImgs').value = "";
+            document.getElementById('admColors').value = "";
+            document.getElementById('admMem').value = "";
+        }
+
+        window.deleteProductFromFirebase = function(id) {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
+            if(confirm("Supprimer définitivement cet article ?")) { remove(ref(db, 'stock/' + id)); }
+        };
+
+        window.saveCategoriesToFirebase = function() {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) {
+                return alert("Désolé, seul l'administrateur peut modifier la structure.");
+            }
+            if(!window.categories || window.categories.length === 0) return alert("Rien à enregistrer");
+            const cleanData = JSON.parse(JSON.stringify(window.categories));
+            set(catsRef, cleanData).then(() => {
+                alert("✅ Structure enregistrée avec succès !");
+                renderMenu();
+            }).catch(e => alert("Erreur: " + e.message));
+        };
+
+        window.sendReview = async function() {
+            if (!window.currentUser) return alert("Connectez-vous pour laisser une note !");
+            if (!window.currentUser.emailVerified) return alert("Veuillez vérifier votre email avant de noter.");
+            const note = document.getElementById('revStars').value;
+            const comment = document.getElementById('revText').value.trim();
+            if(!comment) return alert("Laissez un petit mot !");
+            const newReview = {
+                name: window.currentUser.displayName || "Client AfroService",
+                note: parseInt(note),
+                comment: comment,
+                date: new Date().toLocaleDateString('fr-FR')
+            };
+            await push(reviewsRef, newReview);
+            document.getElementById('revText').value = "";
+            alert("Merci pour votre avis !");
+        };
+
+        window.deleteReviewFromFirebase = function(id) {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
+            if(confirm("Supprimer définitivement cet avis client ?")) { 
+                remove(ref(db, 'reviews/' + id)); 
+                alert("Avis supprimé.");
+            }
+        };
+
+        /* MODIFICATION PRO : BADGE "ACHAT VÉRIFIÉ" DANS LES AVIS */
+        onValue(reviewsRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('reviewsDisplay');
+            const adminContainer = document.getElementById('adminReviewsList');
+            if(!data) {
+                if(container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
+                if(adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
+                return;
+            }
+            const entries = Object.entries(data).reverse();
+            if(container) {
+                container.innerHTML = entries.slice(0, 10).map(([id, r]) => `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[250px]">
+                        <div class="flex text-orange-400 mb-1">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
+                        <div class="flex items-center gap-2">
+                             <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
+                             <span class="bg-green-100 text-green-600 text-[7px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                ACHAT VÉRIFIÉ
+                             </span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 italic mt-1">"${r.comment}"</p>
+                        <p class="text-[8px] text-slate-400 mt-2">${r.date}</p>
+                    </div>`).join('');
+            }
+            if(adminContainer) {
+                adminContainer.innerHTML = entries.map(([id, r]) => `
+                    <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
+                        <div class="flex flex-col">
+                            <span class="font-black text-[9px] uppercase text-[#101944]">${r.name} (${r.note}/5)</span>
+                            <span class="text-[10px] text-slate-500 italic">"${r.comment}"</span>
+                        </div>
+                        <button onclick="deleteReviewFromFirebase('${id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase">Supprimer</button>
+                    </div>`).join('');
+            }
+        });
+    </script>
+
+    <style>
+        :root { 
+            --afro-blue: #101944; 
+            --afro-red: #bd1e24; 
+            --bg-body: #f8fafc;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: #0f172a; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        #sideNav, #sideCart, #detailModal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .promo-badge { background: linear-gradient(45deg, #bd1e24, #ff4d4d); box-shadow: 0 4px 10px rgba(189,30,36,0.3); }
+        .banner-shimmer { background: linear-gradient(90deg, #101944, #1d265e, #101944); background-size: 200% 100%; animation: shimmer 3s infinite linear; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        .ticker-wrap { width: 100%; overflow: hidden; background: #bd1e24; color: white; padding: 8px 0; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .ticker { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; }
+        .ticker__item { display: inline-block; padding: 0 30px; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50px;
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: pulse-whatsapp 2s infinite;
+        }
+        @keyframes pulse-whatsapp {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        .product-card-container {
+            position: relative;
+            border-radius: 24px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .product-card-inner {
+            position: relative;
+            z-index: 2;
+            background: white;
+            border-radius: 23px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .category-bubble {
+            flex: 0 0 auto;
+            width: 85px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .bubble-img-container {
+            width: 70px;
+            height: 70px;
+            border-radius: 22px;
+            background: white;
+            padding: 2px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .category-bubble:hover .bubble-img-container {
+            border-color: var(--afro-red);
+            transform: scale(1.05);
+        }
+        .bubble-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 19px;
+        }
+        .bubble-text {
+            font-size: 10px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--afro-blue);
+            text-transform: uppercase;
+            line-height: 1.2;
+            letter-spacing: 0.05em;
+        }
+
+        .price-tag {
+            color: var(--afro-red);
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* CONFIGURATION BANNIÈRE AUTOMATIQUE */
+        .banner-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .banner-item {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+            margin-right: 15px;
+        }
+        @media (min-width: 768px) {
+            .banner-item { flex: 0 0 60%; }
+        }
+
+        #backToTop {
+            transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.3s;
+        }
+        #backToTop:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #bd1e24;
+        }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden">
+
+    <h1 class="sr-only">Afro Service Cameroun : Boutique de vente en ligne et livraison à Bafoussam</h1>
+
+    <div id="overlay" onclick="closeMenus()" class="hidden fixed inset-0 bg-black/70 z-[90] backdrop-blur-sm"></div>
+
+    <header class="bg-[#101944] text-white sticky top-0 z-[100] shadow-xl border-b border-red-900/50">
+        <div class="container mx-auto px-4 pt-4 pb-2 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="openNav()" class="text-3xl text-red-600 active:scale-95 transition-transform">☰</button>
+                <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" class="h-10 rounded-lg bg-white p-0.5" alt="Afro Service Logo">
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="authBtn" onclick="openAuth()" class="relative p-2 rounded-full hover:bg-white/5 transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                </button>
+                <button onclick="openCart()" class="relative p-2 rounded-full hover:bg-white/5 transition-all">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span id="badge" class="absolute -top-1 -right-2 bg-red-600 text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-[#101944] shadow-md">0</span>
+                </button>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 pb-4">
+            <div class="relative group">
+                <input id="fastSearch" type="text" oninput="quickSearch(this.value)" placeholder="Que cherchez-vous chez AfroService ?" class="w-full bg-white/10 text-white rounded-xl py-3 px-5 pr-12 text-sm font-medium outline-none border border-red-900/50 focus:border-red-600 focus:bg-white focus:text-slate-900 transition-all">
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-red-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+            </div>
+        </div>
+        
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <div class="ticker__item"> Livraison Rapide à Bafoussam et environs</div>
+                <div class="ticker__item"> Qualité Garantie sur tous nos produits</div>
+                <div class="ticker__item">📞 Service Client 24h/7j sur WhatsApp</div>
+                <div class="ticker__item"> Nouvel arrivage chaque semaine !</div>
+                <div class="ticker__item"> Paiement sécurisé à la livraison</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="pt-6 pb-2 bg-white">
+        <div class="banner-container no-scrollbar px-4">
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-900 group">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full">
+                    <span class="bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter shadow-lg">Promo Spéciale</span>
+                    <h2 class="text-white text-2xl font-black uppercase leading-none">Électroménager<br><span class="text-red-500 text-3xl">Premium</span></h2>
+                    <p class="text-white/80 text-[11px] font-bold mt-2 uppercase italic tracking-widest">Qualité garantie • Garantie 1 an</p>
+                </div>
+            </div>
+
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-[#101944] group">
+                <img id="autoBannerImg" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000" loading="lazy">
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full text-right items-end">
+                    <span class="bg-white text-[#101944] text-[10px] font-black px-4 py-1.5 rounded-full w-fit mb-3 uppercase tracking-tighter">Vient d'arriver</span>
+                    <h2 id="autoBannerTitle" class="text-white text-2xl font-black uppercase leading-none">Smartphones<br>& Gadgets</h2>
+                    <button id="autoBannerBtn" class="mt-4 bg-white/10 backdrop-blur-md text-white text-[10px] font-black py-2 px-6 rounded-full border border-white/20 uppercase">Voir le produit →</button>
+                </div>
+            </div>
+
+            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-red-600 group">
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                <div class="relative z-10 p-8 flex flex-col justify-center h-full items-center text-center">
+                    <div class="bg-white/20 backdrop-blur-xl p-4 rounded-3xl mb-3 shadow-inner">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h2 class="text-white text-2xl font-black uppercase leading-tight">Livraison Rapide</h2>
+                    <p class="text-white/90 text-[11px] font-bold uppercase tracking-[0.2em] mt-1">À domicile dans tout Bafoussam</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-6 overflow-hidden border-b border-slate-100">
+        <div id="categoryBubbles" class="flex gap-6 overflow-x-auto px-6 no-scrollbar"></div>
+    </section>
+
+    <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
+        <div class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
+            <div class="flex items-center gap-10 px-6">
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
+                    <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.477.859h4z"></path></svg>
+                    Nouvel arrivage Électroménager
+                </span>
+                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 012.49-2.33c.756 0 1.444.304 1.943.793.468.459.785 1.14.785 1.916 0 .717-.282 1.368-.735 1.849a2.127 2.127 0 01-1.547.651c-.131 0-.259-.01-.383-.031a5.617 5.617 0 00-1.883 1.011 5.628 5.628 0 00-1.123 1.228l-.13.19a1 1 0 00.174 1.36 1 1 0 001.314-.055l.135-.13c.222-.213.46-.412.711-.595.304-.222.634-.413.978-.57.34-.155.706-.279 1.09-.37a5.12 5.12 0 001.077-.336 5.132 5.132 0 001.55-.953c.691-.645 1.252-1.503 1.252-2.583 0-1.016-.403-1.928-1.047-2.593a4.63 4.63 0 00-3.32-1.356c-.052 0-.103.002-.154.004a25.135 25.135 0 01.52-2.188c.11-.42.23-.787.361-1.093.13-.306.273-.55.42-.716.148-.166.216-.179.231-.18a1 1 0 00.613-1.646z" clip-rule="evenodd"></path></svg>
+                    -25% sur les TV Smart
+                </span>
+                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
+                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v4.5h2.39l.75-2H14V7z"></path></svg>
+                    Livraison Rapide à Bafoussam
+                </span>
+                <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
+            </div>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8 min-h-screen">
+        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+
+        <section class="py-10 mt-10 border-t border-slate-200">
+            <h3 class="font-black text-xs uppercase tracking-widest text-[#101944] mb-6">⭐ Avis de la Communauté</h3>
+            <div id="reviewsDisplay" class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+                <p class="text-xs text-slate-400">Chargement des avis...</p>
+            </div>
+            <div class="bg-slate-900 rounded-[32px] p-8 text-white mt-4 border border-white/5">
+                <h4 class="font-black italic text-sm mb-4 uppercase">Laissez une note à AfroService</h4>
+                <div class="grid gap-4">
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-bold">NOTE :</span>
+                        <select id="revStars" class="bg-white/10 border border-white/20 rounded-lg p-2 text-xs outline-none text-white">
+                            <option value="5" class="bg-slate-800">⭐⭐⭐⭐⭐ (Excellent)</option>
+                            <option value="4" class="bg-slate-800">⭐⭐⭐⭐ (Très Bien)</option>
+                            <option value="3" class="bg-slate-800">⭐⭐⭐ (Bien)</option>
+                            <option value="2" class="bg-slate-800">⭐⭐ (Moyen)</option>
+                            <option value="1" class="bg-slate-800">⭐ (Déçu)</option>
+                        </select>
+                    </div>
+                    <textarea id="revText" placeholder="Votre expérience avec nous..." class="w-full bg-white/10 border border-white/20 rounded-2xl p-4 text-xs outline-none focus:border-red-600 h-20 text-white"></textarea>
+                    <button onclick="sendReview()" class="bg-red-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase shadow-lg active:scale-95 transition-all">Envoyer mon avis</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#101944] text-white py-12 border-t border-white/5 mt-10">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-12"><p class="text-[13px] leading-relaxed text-slate-300">Boutique Digitale de Référence.<br>Situé à <span class="font-bold">Bafoussam, Cameroun</span>.<br>Qualité et Service au meilleur prix.</p></div>
+            <div class="mb-16"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Communauté</h4><div class="flex justify-center mb-6"><div class="w-16 h-0.5 bg-red-600"></div></div><a href="https://www.facebook.com/profile.php?id=61561732935385" target="_blank" class="flex items-center justify-center gap-4 bg-[#ffffff10] border border-white/10 p-6 rounded-[25px] w-full max-w-[320px] mx-auto active:scale-95 transition-all"><img src="https://i.postimg.cc/ZR3jSwwJ/images.png" class="h-10 w-10 rounded-full shadow-lg" loading="lazy"><span class="text-sm font-bold tracking-tight">Facebook Officiel</span></a></div>
+            <div class="mb-12"><h4 class="font-black text-[12px] uppercase tracking-[0.2em] mb-2">Paiements Acceptés</h4><div class="flex justify-center mb-8"><div class="w-20 h-0.5 bg-red-600"></div></div><div class="flex justify-center gap-4"><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/xdz2DRQW/mobile-money.jpg" class="h-full object-contain" loading="lazy"></div><div class="bg-black p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg border border-white/10"><img src="https://i.postimg.cc/Pqwjs4H0/orange-money.png" class="h-full object-contain" loading="lazy"></div><div class="bg-white p-2 rounded-xl h-14 w-20 flex items-center justify-center shadow-lg"><img src="https://i.postimg.cc/g0ZWFDp5/paiement-a-la-livraison.png" class="h-full object-contain" loading="lazy"></div></div><p class="text-[10px] text-slate-400 mt-8 italic font-medium">Paiement sécurisé à la livraison ou Mobile.</p></div>
+            <div class="pt-8 border-t border-white/5"><p class="text-[10px] text-slate-500 font-bold opacity-60">© 2026 AfroService - Boutique Officielle.</p></div>
+        </div>
+    </footer>
+
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+        class="fixed bottom-28 right-6 bg-white/20 backdrop-blur-md border border-slate-200 text-slate-500 w-12 h-12 rounded-full flex items-center justify-center z-[400] opacity-0 transition-all duration-500 pointer-events-none shadow-sm">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path>
+        </svg>
+    </button>
+
+    <a href="#" id="dynamicWA" target="_blank" class="whatsapp-float">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.445 0 .081 5.391.079 11.99c0 2.112.553 4.177 1.6 6.002L0 24l6.163-1.617a11.831 11.831 0 005.883 1.562h.005c6.604 0 11.967-5.391 11.97-11.991a11.856 11.856 0 00-3.486-8.452z"/></svg>
+    </a>
+
+    <div id="detailModal" class="fixed inset-y-0 right-0 w-full max-w-md bg-white z-[150] shadow-2xl translate-x-full flex flex-col">
+        <div class="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10"><button onclick="closeDetail()" class="font-black text-[#101944] flex items-center gap-2">← RETOUR</button><span class="text-[10px] font-black text-slate-400">DÉTAILS</span></div>
+        <div id="detailContent" class="flex-1 overflow-y-auto p-6 no-scrollbar"></div>
+    </div>
+
+    <aside id="sideNav" class="fixed inset-y-0 left-0 w-[280px] bg-white z-[110] shadow-2xl -translate-x-full overflow-y-auto">
+        <div class="p-6 bg-[#101944] text-white flex justify-between items-center sticky top-0"><span class="font-black italic">RAYONS</span><button onclick="closeMenus()" class="text-2xl">&times;</button></div>
+        
+        <div id="categoryMenu" class="py-4 space-y-1"></div>
+        <div class="p-4 border-t mt-4 space-y-2">
+            <button onclick="viewHistory()" class="w-full bg-[#101944] text-white py-3 rounded-xl font-black text-[10px] uppercase italic">📜 Mes Commandes</button>
+            <button id="adminBtn" onclick="openAdmin()" class="hidden w-full bg-slate-100 py-3 rounded-xl font-black text-[10px] uppercase text-[#101944] border border-dashed border-slate-300 italic">🔐 Gestion Stock</button>
+        </div>
+    </aside>
+
+    <aside id="sideCart" class="fixed inset-y-0 right-0 w-[320px] bg-white z-[110] shadow-2xl translate-x-full flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50"><h2 class="font-black text-[#101944] uppercase italic">Mon Panier</h2><button onclick="closeMenus()" class="text-2xl">&times;</button></div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-100/50"></div>
+        <div class="p-6 border-t shadow-inner space-y-4">
+            <div id="clientInfo" class="space-y-2">
+                <input id="cName" type="text" placeholder="Nom Complet" class="w-full border p-2 text-xs rounded-lg outline-none">
+                <input id="cTel" type="tel" placeholder="N° de Téléphone" class="w-full border p-2 text-xs rounded-lg outline-none">
+                <input id="cQuartier" type="text" placeholder="Ville et Quartier" class="w-full border p-2 text-xs rounded-lg outline-none">
+            </div>
+            <div class="flex justify-between items-center font-black"><span class="text-xs text-slate-400 uppercase">Total</span><span id="cartTotal" class="text-xl text-red-600">0 F</span></div>
+            <button onclick="checkout()" class="w-full bg-[#101944] text-white py-4 rounded-xl font-black uppercase text-xs">Commander sur WhatsApp</button>
+        </div>
+    </aside>
+
+    <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] overflow-y-auto">
+        <div class="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-50"><button onclick="closeAdmin()" class="font-bold text-[#101944]">← FERMER</button><h2 class="font-black uppercase text-red-600 italic">Administration AfroService</h2></div>
+        
+        <div class="max-w-4xl mx-auto p-6 space-y-12 pb-12">
+            <div class="bg-slate-50 p-6 rounded-3xl border">
+                <div class="flex justify-between items-center mb-6"><h3 class="font-black uppercase text-xs text-[#101944]">🏗️ Structure des Rayons</h3><button onclick="addNewCategory()" class="bg-green-600 text-white text-[9px] px-4 py-2 rounded-full font-black uppercase">+ Nouveau Rayon</button></div>
+                <div id="visualCatsManager" class="space-y-4 mb-6"></div>
+                <div class="flex gap-4"><button onclick="saveCategoriesToFirebase()" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-black uppercase text-[10px]">Enregistrer la structure</button></div>
+            </div>
+
+            <div class="bg-slate-50 p-8 rounded-3xl border">
+                <h3 id="admTitle" class="font-black uppercase text-xs mb-6 text-red-600">📦 Gestion Produit</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input id="admName" type="text" placeholder="Nom de l'article" class="border p-3 rounded-xl text-sm">
+                    <div class="grid grid-cols-2 gap-3"><input id="admPrice" type="number" placeholder="Prix Vente" class="border p-3 rounded-xl text-sm text-red-600 font-bold"><input id="admOld" type="number" placeholder="Ancien Prix" class="border p-3 rounded-xl text-sm"></div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <select id="admCat" onchange="updateAdminSubs()" class="border p-2 rounded-xl text-[10px]"></select>
+                        <select id="admSub" onchange="updateAdminSubSubs()" class="border p-2 rounded-xl text-[10px]"></select>
+                        <select id="admSubSub" class="border p-2 rounded-xl text-[10px]"></select>
+                    </div>
+                    <input id="admImgs" type="text" placeholder="Liens images (virgule)" class="border p-3 rounded-xl text-xs">
+                    <div class="grid grid-cols-2 gap-3"><input id="admColors" type="text" placeholder="Couleurs" class="border p-3 rounded-xl text-xs"><input id="admMem" type="text" placeholder="Mémoire" class="border p-3 rounded-xl text-xs"></div>
+                    <textarea id="admDesc" placeholder="Description..." class="md:col-span-2 border p-4 rounded-xl text-sm h-24"></textarea>
+                    <button onclick="saveProductToFirebase()" class="md:col-span-2 bg-[#101944] text-white py-4 rounded-xl font-black uppercase">Enregistrer l'article</button>
+                </div>
+            </div>
+            <div id="stockList" class="grid gap-2"></div>
+
+            <div class="bg-slate-50 p-6 rounded-3xl border mt-8">
+                <h3 class="font-black uppercase text-xs mb-6 text-orange-600 italic">⭐ Modération des Avis</h3>
+                <div id="adminReviewsList" class="space-y-2 max-h-60 overflow-y-auto pr-2 no-scrollbar">
+                    <p class="text-[10px] text-slate-400 uppercase italic font-bold">Chargement des avis...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="authModal" class="hidden fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-8 space-y-4 text-center">
+            <h2 id="authTitle" class="text-xl font-black text-[#101944] uppercase italic">CONNEXION</h2>
+            <div id="signUpOnly" class="hidden"><input id="authName" type="text" placeholder="Nom Complet" class="w-full border-2 p-4 rounded-2xl text-sm mb-2"></div>
+            <input id="authEmail" type="email" placeholder="Email Admin" class="w-full border-2 p-4 rounded-2xl text-sm">
+            <input id="authPass" type="password" placeholder="Mot de passe" class="w-full border-2 p-4 rounded-2xl text-sm">
+            <button onclick="handleAuth()" class="w-full bg-[#bd1e24] text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all">Valider</button>
+            <div class="flex flex-col gap-3 mt-4">
+                <button onclick="toggleAuthMode()" class="text-[10px] font-bold text-slate-500 underline uppercase">Créer un compte ?</button>
+                <button onclick="forgotPassword()" class="text-[10px] font-bold text-red-600 underline uppercase italic">Mot de passe oublié ?</button>
+            </div>
+            <button onclick="closeAuth()" class="block w-full text-[10px] text-slate-300 uppercase mt-4">Fermer</button>
+        </div>
+    </div>
+
+    <div id="historyModal" class="hidden fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-[32px] flex flex-col max-h-[75vh] overflow-hidden">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50"><h2 class="font-black text-[#101944] uppercase italic">Mon Historique</h2><button onclick="closeHistory()" class="text-2xl font-black">&times;</button></div>
+            <div id="historyContent" class="flex-1 overflow-y-auto p-6 no-scrollbar"></div>
+        </div>
+    </div>
+
+    <script>
+        window.categories = window.categories || [{ name: "CHARGEMENT...", subs: [] }];
+        let cart = []; window.stock = []; window.editId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMenu(); 
+            renderCategoryBubbles(); 
+            updateWALink();
+            setInterval(autoScrollBanner, 5000);
+        });
+
+        function autoScrollBanner() {
+            const bannerContainer = document.querySelector('.banner-container');
+            if (!bannerContainer) return;
+            const items = bannerContainer.querySelectorAll('.banner-item');
+            if (items.length <= 1) return;
+            bannerIndex++;
+            if (bannerIndex >= items.length) bannerIndex = 0;
+            const scrollAmount = items[bannerIndex].offsetLeft - 16;
+            bannerContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+        }
+
+        let bannerIndex = 0;
+        window.addEventListener('scroll', (e) => {
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                btt.classList.remove('opacity-0', 'pointer-events-none');
+                btt.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                btt.classList.add('opacity-0', 'pointer-events-none');
+                btt.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+            if (e.target.classList && e.target.classList.contains('banner-container')) {
+                const index = Math.round(e.target.scrollLeft / e.target.offsetWidth);
+                bannerIndex = index;
+            }
+        }, true);
+
+        /* MODIFICATION PRO : AJOUT DU LAZY LOADING DANS LE RENDU */
+        function renderProducts(data) {
+            const grid = document.getElementById('productGrid'); 
+            if(!grid) return;
+            let html = "";
+            const randomV = data.length > 1 ? data[Math.floor(Math.random()*data.length)] : null;
+            
+            data.forEach((p, index) => {
+                const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
+                const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
+                
+                if(index === 3 && randomV) { 
+                    html += `
+                    <div onclick="showDetail('${randomV.id}')" class="row-span-2 bg-[#bd1e24] rounded-[32px] p-5 flex flex-col justify-end text-white cursor-pointer relative overflow-hidden group shadow-xl">
+                        <div class="absolute inset-0 opacity-40 transition-transform duration-700 group-hover:scale-110">
+                            <img src="${randomV.imgs[0]}" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="relative z-10">
+                            <p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p>
+                            <h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3>
+                            <button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button>
+                        </div>
+                    </div>`; 
+                }
+                
+                html += `
+                <div class="product-card-container group" onclick="showDetail('${p.id}')">
+                    <div class="product-card-inner">
+                        ${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}
+                        <div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50">
+                            <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
+                        </div>
+                        <h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">
+                            ${p.name}
+                        </h3>
+                        <div class="mt-auto pt-2 flex items-center justify-between">
+                            <span class="price-tag">${parseInt(p.price).toLocaleString()} F</span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        }
+
+        function renderCategoryBubbles() {
+            const container = document.getElementById('categoryBubbles');
+            if(!container || !window.categories || window.categories.length === 0 || window.categories[0].name === "CHARGEMENT...") return;
+            container.innerHTML = window.categories.map(cat => {
+                const prod = window.stock.find(p => p.cat === cat.name);
+                const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
+                return `
+                <div class="category-bubble" onclick="filterItems('${cat.name}', '', '')">
+                    <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div>
+                    <span class="bubble-text">${cat.name}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function renderMenu() {
+            const menu = document.getElementById('categoryMenu'); 
+            if(!menu) return;
+            let menuHTML = `<button onclick="renderProducts(window.stock);closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 hover:bg-red-50 border-b"> TOUTE LA BOUTIQUE</button>`;
+            if(!window.categories || window.categories.length === 0 || window.categories[0].name === "CHARGEMENT...") {
+                menu.innerHTML = menuHTML + `<div class="p-6 text-[10px] text-slate-400 animate-pulse font-bold uppercase italic">Récupération des rayons...</div>`;
+                return;
+            }
+            window.categories.forEach((c, index) => {
+                const catId = `cat-${index}`; 
+                menuHTML += `<div class="border-b"><div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50" onclick="toggleSub('${catId}')"><span class="font-black text-xs text-[#101944] uppercase tracking-wide">${c.name}</span><span class="text-[10px] text-slate-400">▼</span></div><div id="${catId}" class="hidden bg-slate-50/50 pb-2">${c.subs ? c.subs.map((s, si) => { const subId = `sub-${index}-${si}`; return `<div class="pl-6"><div class="flex items-center justify-between py-2 pr-6 cursor-pointer" onclick="toggleSub('${subId}')"><span class="text-[10px] font-bold text-slate-600">• ${s.name}</span><span class="text-[8px] text-slate-300">▶</span></div><div id="${subId}" class="hidden pl-4 border-l-2 border-slate-200 mb-2">${s.subsubs ? s.subsubs.map(ss => `<button onclick="filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">${ss}</button>`).join('') : ''}</div></div>`; }).join('') : ''}</div></div>`;
+            });
+            menu.innerHTML = menuHTML;
+        }
+
+        window.toggleSub = (id) => { const el = document.getElementById(id); if(el) el.classList.toggle('hidden'); };
+
+        window.filterItems = (cat, sub, subsub) => { 
+            let filtered;
+            if(!sub && !subsub) { filtered = window.stock.filter(p => p.cat === cat); } 
+            else { filtered = window.stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub)); }
+            renderProducts(filtered); 
+            closeMenus(); 
+            document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        /* MODIFICATION PRO : SECTION "PREUVE SOCIALE" DANS LE DÉTAIL */
+        function showDetail(id) {
+            const p = window.stock.find(x => x.id === id); if(!p) return;
+            const content = document.getElementById('detailContent'); 
+            const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
+            updateWALink(p.name);
+            
+            // On simule une activité de commande pour la preuve sociale
+            const ordersCount = Math.floor(Math.random() * 5) + 2; 
+
+            content.innerHTML = `
+                <div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100">
+                    <div id="slideTrack" class="flex transition-transform duration-500">
+                        ${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover" loading="lazy">`).join('')}
+                    </div>
+                    ${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">‹</button><button onclick="moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full font-black shadow-lg">›</button></div>` : ''}
+                </div>
+                
+                <div class="bg-red-50 text-red-600 p-3 rounded-xl mb-4 flex items-center gap-3 border border-red-100">
+                    <span class="flex h-2 w-2 rounded-full bg-red-600 animate-ping"></span>
+                    <p class="text-[10px] font-bold uppercase italic">🔥 ${ordersCount} personnes à Bafoussam ont commandé cet article récemment !</p>
+                </div>
+
+                <h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2>
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>
+                    ${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
+                <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p>
+                <div class="space-y-4">
+                    ${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}
+                    ${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}
+                    <input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm">
+                </div>
+                <button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
+            
+            document.getElementById('detailModal').style.transform = "translateX(0)"; 
+            document.getElementById('overlay').classList.remove('hidden');
+        }
+
+        let currentSlide = 0; 
+        function moveSlide(dir, total) { currentSlide = (currentSlide + dir + total) % total; document.getElementById('slideTrack').style.transform = `translateX(-${currentSlide * 100}%)`; }
+
+        function addToCart(id) {
+            const p = window.stock.find(x => x.id === id); const qty = parseInt(document.getElementById('vQty').value);
+            for(let i=0; i<qty; i++) { cart.push({ name: p.name, price: p.price, img: p.imgs[0] }); }
+            updateCart(); closeDetail(); openCart();
+        }
+
+        function updateCart() {
+            let total = 0; 
+            document.getElementById('cartItems').innerHTML = cart.map((item, i) => { 
+                total += parseInt(item.price); 
+                return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; 
+            }).join('');
+            document.getElementById('cartTotal').innerText = total.toLocaleString() + " F"; 
+            document.getElementById('badge').innerText = cart.length;
+        }
+
+        function checkout() {
+            if(window.currentUser && !window.currentUser.emailVerified) return alert("Veuillez confirmer votre adresse e-mail avant de passer commande.");
+            const name = document.getElementById('cName').value.trim(); const tel = document.getElementById('cTel').value.trim(); const loc = document.getElementById('cQuartier').value.trim();
+            if(!name || !tel || !loc || !cart.length) return alert("Veuillez remplir vos informations.");
+            const msg = `*COMMANDE AFRO SERVICE*%0A%0A*Client:* ${name}%0A*Tél:* ${tel}%0A*Lieu:* ${loc}%0A%0A*Articles:*%0A${cart.map(x => `- ${x.name}`).join('%0A')}%0A%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
+            window.open(`https://wa.me/237658562104?text=${msg}`, '_blank');
+        }
+
+        function updateWALink(prodName = null) {
+            const msg = prodName ? `Bonjour AfroService, j'aimerais des infos sur : *${prodName}*` : "Bonjour AfroService, je parcours votre boutique et j'ai une question.";
+            const link = document.getElementById('dynamicWA');
+            if(link) link.href = `https://wa.me/237658562104?text=${encodeURIComponent(msg)}`;
+        }
+
+        function openAdmin() { 
+            document.getElementById('adminModal').classList.remove('hidden'); 
+            renderVisualManager(); 
+            renderAdminStock(); 
+        }
+
+        window.renderVisualManager = function() {
+            const container = document.getElementById('visualCatsManager');
+            if(!container) return;
+            container.innerHTML = window.categories.map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${cat.subs ? cat.subs.map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${sub.subsubs ? sub.subsubs.map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('') : ''}<button onclick="addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1">+</button></div></div>`).join('') : ''}<button onclick="addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
+        };
+
+        window.updateCatName = (c, val) => { window.categories[c].name = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubName = (c, s, val) => { window.categories[c].subs[s].name = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubSubName = (c, s, ss, val) => { window.categories[c].subs[s].subsubs[ss] = val.toUpperCase(); syncAdminMenus(); };
+        window.addNewCategory = () => { window.categories.push({name: "NOUVEAU", subs: []}); renderVisualManager(); syncAdminMenus(); };
+        window.addNewSub = (cIdx) => { window.categories[cIdx].subs.push({name: "SOUS-CAT", subsubs: []}); renderVisualManager(); syncAdminMenus(); };
+        window.addSubSub = (c, s) => { window.categories[c].subs[s].subsubs.push("VARIANTE"); renderVisualManager(); syncAdminMenus(); };
+        window.deleteCat = (c) => { if(confirm("Supprimer ?")) { window.categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); }};
+        window.deleteSub = (c, s) => { window.categories[c].subs.splice(s, 1); renderVisualManager(); syncAdminMenus(); };
+        window.deleteSubSub = (c, s, ss) => { window.categories[c].subs[s].subsubs.splice(ss, 1); renderVisualManager(); syncAdminMenus(); };
+
+        function syncAdminMenus() {
+            const catSelect = document.getElementById('admCat'); if(!catSelect) return;
+            const currentVal = catSelect.value;
+            catSelect.innerHTML = window.categories.map(c => `<option value="${c.name}" ${c.name === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
+            updateAdminSubs();
+        }
+
+        function renderAdminStock() {
+            const stockList = document.getElementById('stockList'); if(!stockList) return;
+            stockList.innerHTML = window.stock.map(p => `<div class="flex items-center justify-between bg-white p-4 rounded-2xl border mb-2 shadow-sm"><div class="flex flex-col"><span class="font-black uppercase text-[10px] text-[#101944]">${p.name}</span><span class="text-red-600 font-bold text-xs">${parseInt(p.price).toLocaleString()} F</span></div><div class="flex gap-2"><button onclick="editItem('${p.id}')" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Modifier</button><button onclick="deleteProductFromFirebase('${p.id}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Suppr.</button></div></div>`).join('');
+            syncAdminMenus();
+        }
+
+        function updateAdminSubs() { 
+            const catSelect = document.getElementById('admCat'); if(!catSelect) return;
+            const cat = window.categories.find(c => c.name === catSelect.value); 
+            const subSelect = document.getElementById('admSub');
+            if(subSelect) { subSelect.innerHTML = cat && cat.subs ? cat.subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('') : ''; updateAdminSubSubs(); }
+        }
+        function updateAdminSubSubs() { 
+            const catSelect = document.getElementById('admCat'); const subSelect = document.getElementById('admSub');
+            if(!catSelect || !subSelect) return;
+            const cat = window.categories.find(c => c.name === catSelect.value); 
+            const sub = cat && cat.subs ? cat.subs.find(s => s.name === subSelect.value) : null; 
+            const subSubSelect = document.getElementById('admSubSub');
+            if(subSubSelect) { subSubSelect.innerHTML = sub && sub.subsubs ? sub.subsubs.map(ss => `<option value="${ss}">${ss}</option>`).join('') : ''; }
+        }
+
+        function editItem(id) {
+            window.editId = id; const p = window.stock.find(x => x.id === id); if(!p) return;
+            document.getElementById('admName').value = p.name; document.getElementById('admPrice').value = p.price; 
+            document.getElementById('admOld').value = p.old || ''; document.getElementById('admImgs').value = p.imgs.join(','); 
+            document.getElementById('admDesc').value = p.desc || '';
+            document.getElementById('admCat').value = p.cat; updateAdminSubs(); 
+            document.getElementById('admSub').value = p.sub; updateAdminSubSubs(); 
+            document.getElementById('admSubSub').value = p.subsub || ''; 
+            document.getElementById('admColors').value = p.colors || ''; document.getElementById('admMem').value = p.memory || ''; 
+            document.getElementById('admTitle').innerText = "MODE ÉDITION : " + p.name; 
+            document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
+        function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
+        function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; resetAdminForm(); }
+        function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); }
+        function quickSearch(q) { renderProducts(window.stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()))); }
+    </script>
+</body>
+</html>
+
+ 
