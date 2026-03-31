@@ -76,6 +76,8 @@
         const stockRef = ref(db, 'stock');
         const catsRef = ref(db, 'categories');
         const reviewsRef = ref(db, 'reviews');
+        const repliesRef = ref(db, 'replies');
+        const likesRef = ref(db, 'likes');
 
         window.db = db; 
         window.currentUser = null;
@@ -306,11 +308,28 @@
             const note = document.getElementById('revStars').value;
             const comment = document.getElementById('revText').value.trim();
             if(!comment) return alert("Laissez un petit mot !");
+            
+            // Compter le nombre d'avis déjà laissés pour déterminer le badge
+            let userReviewCount = 0;
+            const allReviewsSnapshot = await new Promise((resolve) => {
+                onValue(reviewsRef, (snap) => resolve(snap), { onlyOnce: true });
+            });
+            const allReviews = allReviewsSnapshot.val();
+            if(allReviews) {
+                userReviewCount = Object.values(allReviews).filter(r => r.userId === window.currentUser.uid).length;
+            }
+            
+            let userBadge = "nouveau";
+            if(userReviewCount >= 3) userBadge = "fidele";
+            else if(userReviewCount >= 1) userBadge = "regulier";
+            
             const newReview = {
                 name: window.currentUser.displayName || "Client AfroService",
                 note: parseInt(note),
                 comment: comment,
-                date: new Date().toLocaleDateString('fr-FR')
+                date: new Date().toLocaleDateString('fr-FR'),
+                userId: window.currentUser.uid,
+                userBadge: userBadge
             };
             await push(reviewsRef, newReview);
             document.getElementById('revText').value = "";
@@ -324,39 +343,155 @@
                 alert("Avis supprimé.");
             }
         };
+        
+        // Fonction pour liker un avis
+        window.likeReview = async function(reviewId) {
+            if (!window.currentUser) return alert("Connectez-vous pour liker un avis !");
+            if (!window.currentUser.emailVerified) return alert("Veuillez vérifier votre email avant de liker.");
+            
+            const userLikeRef = ref(db, `likes/${reviewId}/${window.currentUser.uid}`);
+            const likeCountRef = ref(db, `reviews/${reviewId}/likesCount`);
+            
+            // Vérifier si l'utilisateur a déjà liké
+            onValue(userLikeRef, (snapshot) => {
+                if(snapshot.exists()) {
+                    // Déjà liké, on retire le like
+                    remove(userLikeRef);
+                    onValue(likeCountRef, (countSnap) => {
+                        const currentCount = countSnap.val() || 0;
+                        set(likeCountRef, currentCount - 1);
+                    }, { onlyOnce: true });
+                } else {
+                    // Ajouter le like
+                    set(userLikeRef, true);
+                    onValue(likeCountRef, (countSnap) => {
+                        const currentCount = countSnap.val() || 0;
+                        set(likeCountRef, currentCount + 1);
+                    }, { onlyOnce: true });
+                }
+            }, { onlyOnce: true });
+        };
+        
+        // Fonction pour l'admin pour répondre aux avis
+        window.sendReply = async function(reviewId) {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) {
+                return alert("Seul l'administrateur peut répondre aux avis.");
+            }
+            const replyText = document.getElementById(`reply-${reviewId}`).value.trim();
+            if(!replyText) return alert("Veuillez écrire une réponse.");
+            
+            const replyData = {
+                text: replyText,
+                date: new Date().toLocaleDateString('fr-FR'),
+                adminName: window.currentUser.displayName || "Administrateur",
+                adminEmail: window.currentUser.email
+            };
+            
+            await set(ref(db, `replies/${reviewId}`), replyData);
+            document.getElementById(`reply-${reviewId}`).value = "";
+            alert("Réponse envoyée avec succès !");
+        };
+        
+        // Fonction pour obtenir le badge client
+        function getUserBadge(badgeType) {
+            if(badgeType === "fidele") {
+                return `<span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">🏆 CLIENT FIDÈLE</span>`;
+            } else if(badgeType === "regulier") {
+                return `<span class="bg-blue-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">⭐ CLIENT RÉGULIER</span>`;
+            } else {
+                return `<span class="bg-green-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">🆕 NOUVEAU CLIENT</span>`;
+            }
+        }
 
-        /* MODIFICATION PRO : BADGE "ACHAT VÉRIFIÉ" DANS LES AVIS */
+        // Affichage des avis avec réponses et likes
         onValue(reviewsRef, (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('reviewsDisplay');
             const adminContainer = document.getElementById('adminReviewsList');
+            
             if(!data) {
                 if(container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
                 if(adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
                 return;
             }
+            
             const entries = Object.entries(data).reverse();
+            
+            // Charger les réponses et les likes pour chaque avis
             if(container) {
-                container.innerHTML = entries.slice(0, 10).map(([id, r]) => `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[250px]">
-                        <div class="flex text-orange-400 mb-1">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
-                        <div class="flex items-center gap-2">
-                             <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
-                             <span class="bg-green-100 text-green-600 text-[7px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
-                                <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                ACHAT VÉRIFIÉ
-                             </span>
+                Promise.all(entries.map(async ([id, r]) => {
+                    // Récupérer la réponse admin
+                    const replySnap = await new Promise((resolve) => {
+                        onValue(ref(db, `replies/${id}`), (snap) => resolve(snap), { onlyOnce: true });
+                    });
+                    const reply = replySnap.val();
+                    
+                    // Vérifier si l'utilisateur actuel a liké
+                    let userLiked = false;
+                    if(window.currentUser) {
+                        const likeSnap = await new Promise((resolve) => {
+                            onValue(ref(db, `likes/${id}/${window.currentUser.uid}`), (snap) => resolve(snap), { onlyOnce: true });
+                        });
+                        userLiked = likeSnap.exists();
+                    }
+                    
+                    const likesCount = r.likesCount || 0;
+                    
+                    return `
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[280px]">
+                            <div class="flex text-orange-400 mb-1">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
+                                    ${getUserBadge(r.userBadge || "nouveau")}
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-600 italic mt-1">"${r.comment}"</p>
+                            <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-100">
+                                <p class="text-[8px] text-slate-400">${r.date}</p>
+                                <button onclick="likeReview('${id}')" class="flex items-center gap-1 transition-all ${userLiked ? 'text-red-500' : 'text-slate-300 hover:text-red-400'}">
+                                    <svg class="w-4 h-4" fill="${userLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span class="text-[10px] font-bold">${likesCount}</span>
+                                </button>
+                            </div>
+                            ${reply ? `
+                            <div class="mt-3 bg-blue-50 p-3 rounded-xl border-l-4 border-blue-500">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-black text-[9px] text-blue-600 uppercase flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        RÉPONSE ADMIN ✓ CERTIFIÉ
+                                    </span>
+                                </div>
+                                <p class="text-[10px] text-slate-700 italic">"${reply.text}"</p>
+                                <p class="text-[7px] text-slate-400 mt-1">${reply.date}</p>
+                            </div>
+                            ` : (window.currentUser && adminEmails.includes(window.currentUser.email?.toLowerCase()) ? `
+                            <div class="mt-3">
+                                <textarea id="reply-${id}" placeholder="Répondre à ce client..." class="w-full border rounded-xl p-2 text-[10px] outline-none focus:border-blue-500" rows="2"></textarea>
+                                <button onclick="sendReply('${id}')" class="mt-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase w-full">Répondre</button>
+                            </div>
+                            ` : '')}
                         </div>
-                        <p class="text-[11px] text-slate-600 italic mt-1">"${r.comment}"</p>
-                        <p class="text-[8px] text-slate-400 mt-2">${r.date}</p>
-                    </div>`).join('');
+                    `;
+                })).then(htmls => {
+                    container.innerHTML = htmls.join('');
+                });
             }
+            
             if(adminContainer) {
                 adminContainer.innerHTML = entries.map(([id, r]) => `
                     <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
-                        <div class="flex flex-col">
-                            <span class="font-black text-[9px] uppercase text-[#101944]">${r.name} (${r.note}/5)</span>
+                        <div class="flex flex-col flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-black text-[9px] uppercase text-[#101944]">${r.name} (${r.note}/5)</span>
+                                ${getUserBadge(r.userBadge || "nouveau")}
+                            </div>
                             <span class="text-[10px] text-slate-500 italic">"${r.comment}"</span>
+                            <span class="text-[8px] text-slate-400 mt-1">${r.date} | ❤️ ${r.likesCount || 0} likes</span>
                         </div>
                         <button onclick="deleteReviewFromFirebase('${id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase">Supprimer</button>
                     </div>`).join('');
@@ -488,7 +623,6 @@
             animation-play-state: paused;
         }
 
-        /* CONFIGURATION BANNIÈRE AUTOMATIQUE */
         .banner-container {
             display: flex;
             overflow-x: auto;
@@ -788,7 +922,6 @@
             }
         }, true);
 
-        /* MODIFICATION PRO : AJOUT DU LAZY LOADING DANS LE RENDU */
         function renderProducts(data) {
             const grid = document.getElementById('productGrid'); 
             if(!grid) return;
@@ -872,14 +1005,12 @@
             document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        /* MODIFICATION PRO : SECTION "PREUVE SOCIALE" DANS LE DÉTAIL */
         function showDetail(id) {
             const p = window.stock.find(x => x.id === id); if(!p) return;
             const content = document.getElementById('detailContent'); 
             const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
             updateWALink(p.name);
             
-            // On simule une activité de commande pour la preuve sociale
             const ordersCount = Math.floor(Math.random() * 5) + 2; 
 
             content.innerHTML = `
@@ -1005,18 +1136,17 @@
             document.getElementById('admSub').value = p.sub; updateAdminSubSubs(); 
             document.getElementById('admSubSub').value = p.subsub || ''; 
             document.getElementById('admColors').value = p.colors || ''; document.getElementById('admMem').value = p.memory || ''; 
-            document.getElementById('admTitle').innerText = "MODE ÉDITION : " + p.name; 
+            document.getElementById('admTitle').innerHTML = "✏️ ÉDITION : " + p.name; 
             document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
-        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; resetAdminForm(); }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerHTML = "📦 Gestion Produit"; resetAdminForm(); }
         function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); }
         function quickSearch(q) { renderProducts(window.stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()))); }
     </script>
 </body>
 </html>
-
- 
+```
