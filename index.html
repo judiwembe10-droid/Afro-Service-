@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="color-scheme" content="light">
-    
     <meta name="google-site-verification" content="Qxa9yWa5h9Bo50pYc6dNZfem6xkZ9YlCMUr3dH5AvM0" />
-
-    <title>Afro Service Cameroun | Site de vente en ligne </title>
+    <title>Afro Service Cameroun | Site de vente en ligne</title>
     <meta name="description" content="Trouvez et achetez facilement avec Afro Service, l'un des meilleurs sites de vente en ligne au Cameroun. Produits authentiques avec garantie au meilleur prix.">
     <meta name="keywords" content="Vente en ligne Cameroun, Afro Service, Bafoussam Shopping, E-commerce Cameroun, Livraison rapide Cameroun">
     <meta name="author" content="Afro Service">
@@ -55,450 +52,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB0NF5a7jhUyuA1FTIjK1Iw_x3eGHcrykY",
-            authDomain: "afro-service-b8999.firebaseapp.com",
-            databaseURL: "https://afro-service-b8999-default-rtdb.firebaseio.com",
-            projectId: "afro-service-b8999",
-            storageBucket: "afro-service-b8999.firebasestorage.app",
-            messagingSenderId: "324669731674",
-            appId: "1:324669731674:web:8257262c8e1f7b7d7ab963"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth(app);
-        const stockRef = ref(db, 'stock');
-        const catsRef = ref(db, 'categories');
-        const reviewsRef = ref(db, 'reviews');
-        const repliesRef = ref(db, 'replies');
-        const likesRef = ref(db, 'likes');
-
-        window.db = db; 
-        window.currentUser = null;
-
-        const adminEmails = [
-            "kuewembejudicael@gmail.com",
-            "kuewembejudicael237@gmail.com",
-            "judiwembe10@gmail.com"
-        ];
-
-        onAuthStateChanged(auth, (user) => {
-            window.currentUser = user;
-            const btn = document.getElementById('authBtn');
-            const adminBtn = document.getElementById('adminBtn');
-
-            if (user) {
-                if (user.email && adminEmails.includes(user.email.toLowerCase())) {
-                    adminBtn.classList.remove('hidden'); 
-                } else {
-                    adminBtn.classList.add('hidden');
-                }
-
-                if(!user.emailVerified) {
-                    btn.classList.add('text-orange-500');
-                } else {
-                    btn.classList.add('text-green-500');
-                }
-                if(document.getElementById('cName')) document.getElementById('cName').value = user.displayName || "";
-            } else {
-                btn.classList.remove('text-green-500', 'text-orange-500');
-                btn.classList.add('text-white');
-                adminBtn.classList.add('hidden');
-            }
-        });
-
-        /* MODIFICATION PRO : GESTION DYNAMIQUE DU STOCK ET BANNIÈRE AUTO */
-        onValue(stockRef, (snapshot) => {
-            const data = snapshot.val();
-            window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
-            
-            // Mise à jour de la bannière "Nouveautés" avec le dernier produit
-            if (window.stock.length > 0) {
-                const dernierArticle = window.stock[window.stock.length - 1];
-                const bannerNewTitle = document.getElementById('autoBannerTitle');
-                const bannerNewImg = document.getElementById('autoBannerImg');
-                const bannerNewBtn = document.getElementById('autoBannerBtn');
-                
-                if(bannerNewTitle) bannerNewTitle.innerHTML = `DERNIER ARRIVAGE :<br><span class="text-red-500 text-3xl">${dernierArticle.name}</span>`;
-                if(bannerNewImg) bannerNewImg.src = dernierArticle.imgs[0];
-                if(bannerNewBtn) bannerNewBtn.setAttribute('onclick', `showDetail('${dernierArticle.id}')`);
-            }
-
-            renderProducts(window.stock);
-            if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
-            renderCategoryBubbles(); 
-        });
-
-        window.handleAuth = async () => {
-            const email = document.getElementById('authEmail').value;
-            const pass = document.getElementById('authPass').value;
-            const name = document.getElementById('authName').value;
-            const isLogin = document.getElementById('authTitle').innerText === "CONNEXION";
-            
-            try {
-                if(isLogin) { 
-                    const res = await signInWithEmailAndPassword(auth, email, pass);
-                    if(!res.user.emailVerified) {
-                        alert("Veuillez vérifier votre adresse e-mail. Un lien vous a été envoyé lors de l'inscription.");
-                    }
-                }
-                else { 
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await updateProfile(res.user, { displayName: name });
-                    await sendEmailVerification(res.user);
-                    alert("Compte créé ! Un e-mail de vérification a été envoyé à " + email + ". Veuillez confirmer votre adresse avant de commander.");
-                }
-                closeAuth();
-            } catch (e) { alert("Erreur : " + e.message); }
-        };
-
-        window.forgotPassword = async () => {
-            const email = document.getElementById('authEmail').value;
-            if(!email) return alert("Entrez votre adresse e-mail dans le champ pour recevoir le lien de réinitialisation.");
-            
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Un lien de réinitialisation a été envoyé à : " + email + ". Vérifiez vos courriers indésirables (spams) si besoin.");
-            } catch (e) {
-                alert("Erreur : " + e.message);
-            }
-        };
-
-        window.viewHistory = function() {
-            if (!window.currentUser) return alert("Connectez-vous pour voir votre historique");
-            const userOrderRef = ref(db, `orders/${window.currentUser.uid}`);
-            onValue(userOrderRef, (snapshot) => {
-                const data = snapshot.val();
-                const container = document.getElementById('historyContent');
-                if (!data) {
-                    container.innerHTML = "<p class='text-center text-slate-400 py-10 text-[10px] font-bold uppercase italic'>Aucune commande passée</p>";
-                } else {
-                    container.innerHTML = Object.values(data).reverse().map(order => `
-                        <div class="bg-slate-50 p-4 rounded-2xl border mb-3">
-                            <p class="text-[9px] font-black text-red-600 mb-1 uppercase">${order.date}</p>
-                            <div class="text-[10px] font-bold text-slate-700 leading-tight">${order.items.replace(/%0A/g, '<br>')}</div>
-                            <div class="mt-2 pt-2 border-t flex justify-between font-black text-[#1d265e]">
-                                <span class="text-[9px]">TOTAL</span> <span class="text-xs">${order.total}</span>
-                            </div>
-                        </div>`).join('');
-                }
-                document.getElementById('historyModal').classList.remove('hidden');
-            });
-        };
-
-        window.openAuth = () => { window.currentUser ? (confirm("Voulez-vous vous déconnecter ?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden'); };
-        window.closeAuth = () => document.getElementById('authModal').classList.add('hidden');
-        window.closeHistory = () => document.getElementById('historyModal').classList.add('hidden');
-        
-        window.toggleAuthMode = () => {
-            const title = document.getElementById('authTitle');
-            const signUpDiv = document.getElementById('signUpOnly');
-            const btnToggle = event.target; 
-            if (title.innerText === "CONNEXION") {
-                title.innerText = "INSCRIPTION";
-                signUpDiv.classList.remove('hidden');
-                btnToggle.innerText = "DÉJÀ UN COMPTE ? SE CONNECTER";
-            } else {
-                title.innerText = "CONNEXION";
-                signUpDiv.classList.add('hidden');
-                btnToggle.innerText = "CRÉER UN COMPTE ?";
-            }
-        };
-
-        onValue(catsRef, (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                window.categories = data;
-                renderMenu(); 
-                renderCategoryBubbles(); 
-                if(!document.getElementById('adminModal').classList.contains('hidden')) {
-                    if (typeof renderVisualManager === "function") renderVisualManager();
-                    if (typeof syncAdminMenus === "function") syncAdminMenus();
-                }
-            } else {
-                window.categories = [];
-                renderMenu();
-            }
-        });
-
-        window.saveProductToFirebase = function() {
-            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return alert("Action non autorisée");
-            
-            const name = document.getElementById('admName').value.trim();
-            const price = document.getElementById('admPrice').value;
-            const oldPrice = document.getElementById('admOld').value;
-            const description = document.getElementById('admDesc').value.trim();
-            const category = document.getElementById('admCat').value;
-            const subCategory = document.getElementById('admSub').value;
-            const subSubCategory = document.getElementById('admSubSub').value;
-            const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
-            const colors = document.getElementById('admColors').value.trim();
-            const memory = document.getElementById('admMem').value.trim();
-
-            if(!name || !price) return alert("Nom et prix requis");
-
-            const productData = {
-                name: name,
-                price: price,
-                old: oldPrice || null,
-                desc: description || "",
-                cat: category,
-                sub: subCategory,
-                subsub: subSubCategory || "",
-                imgs: images,
-                colors: colors || "",
-                memory: memory || ""
-            };
-
-            if(window.editId) {
-                update(ref(db, 'stock/' + window.editId), productData)
-                .then(() => {
-                    alert("Article mis à jour !");
-                    window.editId = null;
-                    document.getElementById('admTitle').innerText = "📦 Gestion Produit";
-                    resetAdminForm();
-                })
-                .catch(e => alert("Erreur de mise à jour: " + e.message));
-            } else {
-                push(stockRef, productData)
-                .then(() => {
-                    alert("Article ajouté avec succès !");
-                    resetAdminForm();
-                })
-                .catch(e => alert("Erreur d'ajout: " + e.message));
-            }
-        };
-
-        function resetAdminForm() {
-            document.getElementById('admName').value = "";
-            document.getElementById('admPrice').value = "";
-            document.getElementById('admOld').value = "";
-            document.getElementById('admDesc').value = "";
-            document.getElementById('admImgs').value = "";
-            document.getElementById('admColors').value = "";
-            document.getElementById('admMem').value = "";
-        }
-
-        window.deleteProductFromFirebase = function(id) {
-            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
-            if(confirm("Supprimer définitivement cet article ?")) { remove(ref(db, 'stock/' + id)); }
-        };
-
-        window.saveCategoriesToFirebase = function() {
-            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) {
-                return alert("Désolé, seul l'administrateur peut modifier la structure.");
-            }
-            if(!window.categories || window.categories.length === 0) return alert("Rien à enregistrer");
-            const cleanData = JSON.parse(JSON.stringify(window.categories));
-            set(catsRef, cleanData).then(() => {
-                alert("✅ Structure enregistrée avec succès !");
-                renderMenu();
-            }).catch(e => alert("Erreur: " + e.message));
-        };
-
-        window.sendReview = async function() {
-            if (!window.currentUser) return alert("Connectez-vous pour laisser une note !");
-            if (!window.currentUser.emailVerified) return alert("Veuillez vérifier votre email avant de noter.");
-            const note = document.getElementById('revStars').value;
-            const comment = document.getElementById('revText').value.trim();
-            if(!comment) return alert("Laissez un petit mot !");
-            
-            // Compter le nombre d'avis déjà laissés pour déterminer le badge
-            let userReviewCount = 0;
-            const allReviewsSnapshot = await new Promise((resolve) => {
-                onValue(reviewsRef, (snap) => resolve(snap), { onlyOnce: true });
-            });
-            const allReviews = allReviewsSnapshot.val();
-            if(allReviews) {
-                userReviewCount = Object.values(allReviews).filter(r => r.userId === window.currentUser.uid).length;
-            }
-            
-            let userBadge = "nouveau";
-            if(userReviewCount >= 3) userBadge = "fidele";
-            else if(userReviewCount >= 1) userBadge = "regulier";
-            
-            const newReview = {
-                name: window.currentUser.displayName || "Client AfroService",
-                note: parseInt(note),
-                comment: comment,
-                date: new Date().toLocaleDateString('fr-FR'),
-                userId: window.currentUser.uid,
-                userBadge: userBadge
-            };
-            await push(reviewsRef, newReview);
-            document.getElementById('revText').value = "";
-            alert("Merci pour votre avis !");
-        };
-
-        window.deleteReviewFromFirebase = function(id) {
-            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
-            if(confirm("Supprimer définitivement cet avis client ?")) { 
-                remove(ref(db, 'reviews/' + id)); 
-                alert("Avis supprimé.");
-            }
-        };
-        
-        // Fonction pour liker un avis
-        window.likeReview = async function(reviewId) {
-            if (!window.currentUser) return alert("Connectez-vous pour liker un avis !");
-            if (!window.currentUser.emailVerified) return alert("Veuillez vérifier votre email avant de liker.");
-            
-            const userLikeRef = ref(db, `likes/${reviewId}/${window.currentUser.uid}`);
-            const likeCountRef = ref(db, `reviews/${reviewId}/likesCount`);
-            
-            // Vérifier si l'utilisateur a déjà liké
-            onValue(userLikeRef, (snapshot) => {
-                if(snapshot.exists()) {
-                    // Déjà liké, on retire le like
-                    remove(userLikeRef);
-                    onValue(likeCountRef, (countSnap) => {
-                        const currentCount = countSnap.val() || 0;
-                        set(likeCountRef, currentCount - 1);
-                    }, { onlyOnce: true });
-                } else {
-                    // Ajouter le like
-                    set(userLikeRef, true);
-                    onValue(likeCountRef, (countSnap) => {
-                        const currentCount = countSnap.val() || 0;
-                        set(likeCountRef, currentCount + 1);
-                    }, { onlyOnce: true });
-                }
-            }, { onlyOnce: true });
-        };
-        
-        // Fonction pour l'admin pour répondre aux avis
-        window.sendReply = async function(reviewId) {
-            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) {
-                return alert("Seul l'administrateur peut répondre aux avis.");
-            }
-            const replyText = document.getElementById(`reply-${reviewId}`).value.trim();
-            if(!replyText) return alert("Veuillez écrire une réponse.");
-            
-            const replyData = {
-                text: replyText,
-                date: new Date().toLocaleDateString('fr-FR'),
-                adminName: window.currentUser.displayName || "Administrateur",
-                adminEmail: window.currentUser.email
-            };
-            
-            await set(ref(db, `replies/${reviewId}`), replyData);
-            document.getElementById(`reply-${reviewId}`).value = "";
-            alert("Réponse envoyée avec succès !");
-        };
-        
-        // Fonction pour obtenir le badge client
-        function getUserBadge(badgeType) {
-            if(badgeType === "fidele") {
-                return `<span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">🏆 CLIENT FIDÈLE</span>`;
-            } else if(badgeType === "regulier") {
-                return `<span class="bg-blue-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">⭐ CLIENT RÉGULIER</span>`;
-            } else {
-                return `<span class="bg-green-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full">🆕 NOUVEAU CLIENT</span>`;
-            }
-        }
-
-        // Affichage des avis avec réponses et likes
-        onValue(reviewsRef, (snapshot) => {
-            const data = snapshot.val();
-            const container = document.getElementById('reviewsDisplay');
-            const adminContainer = document.getElementById('adminReviewsList');
-            
-            if(!data) {
-                if(container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
-                if(adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
-                return;
-            }
-            
-            const entries = Object.entries(data).reverse();
-            
-            // Charger les réponses et les likes pour chaque avis
-            if(container) {
-                Promise.all(entries.map(async ([id, r]) => {
-                    // Récupérer la réponse admin
-                    const replySnap = await new Promise((resolve) => {
-                        onValue(ref(db, `replies/${id}`), (snap) => resolve(snap), { onlyOnce: true });
-                    });
-                    const reply = replySnap.val();
-                    
-                    // Vérifier si l'utilisateur actuel a liké
-                    let userLiked = false;
-                    if(window.currentUser) {
-                        const likeSnap = await new Promise((resolve) => {
-                            onValue(ref(db, `likes/${id}/${window.currentUser.uid}`), (snap) => resolve(snap), { onlyOnce: true });
-                        });
-                        userLiked = likeSnap.exists();
-                    }
-                    
-                    const likesCount = r.likesCount || 0;
-                    
-                    return `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[280px]">
-                            <div class="flex text-orange-400 mb-1">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <p class="text-[10px] font-black uppercase text-[#101944]">${r.name}</p>
-                                    ${getUserBadge(r.userBadge || "nouveau")}
-                                </div>
-                            </div>
-                            <p class="text-[11px] text-slate-600 italic mt-1">"${r.comment}"</p>
-                            <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-100">
-                                <p class="text-[8px] text-slate-400">${r.date}</p>
-                                <button onclick="likeReview('${id}')" class="flex items-center gap-1 transition-all ${userLiked ? 'text-red-500' : 'text-slate-300 hover:text-red-400'}">
-                                    <svg class="w-4 h-4" fill="${userLiked ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                    </svg>
-                                    <span class="text-[10px] font-bold">${likesCount}</span>
-                                </button>
-                            </div>
-                            ${reply ? `
-                            <div class="mt-3 bg-blue-50 p-3 rounded-xl border-l-4 border-blue-500">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-black text-[9px] text-blue-600 uppercase flex items-center gap-1">
-                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                        </svg>
-                                        RÉPONSE ADMIN ✓ CERTIFIÉ
-                                    </span>
-                                </div>
-                                <p class="text-[10px] text-slate-700 italic">"${reply.text}"</p>
-                                <p class="text-[7px] text-slate-400 mt-1">${reply.date}</p>
-                            </div>
-                            ` : (window.currentUser && adminEmails.includes(window.currentUser.email?.toLowerCase()) ? `
-                            <div class="mt-3">
-                                <textarea id="reply-${id}" placeholder="Répondre à ce client..." class="w-full border rounded-xl p-2 text-[10px] outline-none focus:border-blue-500" rows="2"></textarea>
-                                <button onclick="sendReply('${id}')" class="mt-1 bg-blue-600 text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase w-full">Répondre</button>
-                            </div>
-                            ` : '')}
-                        </div>
-                    `;
-                })).then(htmls => {
-                    container.innerHTML = htmls.join('');
-                });
-            }
-            
-            if(adminContainer) {
-                adminContainer.innerHTML = entries.map(([id, r]) => `
-                    <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
-                        <div class="flex flex-col flex-1">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="font-black text-[9px] uppercase text-[#101944]">${r.name} (${r.note}/5)</span>
-                                ${getUserBadge(r.userBadge || "nouveau")}
-                            </div>
-                            <span class="text-[10px] text-slate-500 italic">"${r.comment}"</span>
-                            <span class="text-[8px] text-slate-400 mt-1">${r.date} | ❤️ ${r.likesCount || 0} likes</span>
-                        </div>
-                        <button onclick="deleteReviewFromFirebase('${id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase">Supprimer</button>
-                    </div>`).join('');
-            }
-        });
-    </script>
-
     <style>
         :root { 
             --afro-blue: #101944; 
@@ -646,6 +199,16 @@
             transform: translateY(-5px);
             background-color: rgba(255, 255, 255, 0.9);
             color: #bd1e24;
+        }
+
+        /* Animations pour les likes */
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .like-animation {
+            animation: heartBeat 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -884,7 +447,456 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, update, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0NF5a7jhUyuA1FTIjK1Iw_x3eGHcrykY",
+            authDomain: "afro-service-b8999.firebaseapp.com",
+            databaseURL: "https://afro-service-b8999-default-rtdb.firebaseio.com",
+            projectId: "afro-service-b8999",
+            storageBucket: "afro-service-b8999.firebasestorage.app",
+            messagingSenderId: "324669731674",
+            appId: "1:324669731674:web:8257262c8e1f7b7d7ab963"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        const stockRef = ref(db, 'stock');
+        const catsRef = ref(db, 'categories');
+        const reviewsRef = ref(db, 'reviews');
+        const ordersRef = ref(db, 'orders');
+
+        window.db = db; 
+        window.currentUser = null;
+
+        const adminEmails = [
+            "kuewembejudicael@gmail.com",
+            "kuewembejudicael237@gmail.com",
+            "judiwembe10@gmail.com"
+        ];
+
+        // ==================== BADGES DE FIDÉLITÉ ====================
+        async function getCustomerBadge(uid) {
+            if(!uid) return null;
+            return new Promise((resolve) => {
+                onValue(ref(db, `orders/${uid}`), (snapshot) => {
+                    const orders = snapshot.val();
+                    if (!orders) {
+                        resolve({ label: "Nouveau Client", color: "bg-blue-100 text-blue-600" });
+                        return;
+                    }
+                    const count = Object.keys(orders).length;
+                    if (count >= 10) resolve({ label: "Client Fidèle", color: "bg-amber-100 text-amber-600" });
+                    else if (count >= 3) resolve({ label: "Client Régulier", color: "bg-purple-100 text-purple-600" });
+                    else resolve({ label: "Nouveau Client", color: "bg-blue-100 text-blue-600" });
+                }, { onlyOnce: true });
+            });
+        }
+
+        // ==================== FONCTION LIKE (CŒUR ROUGE) ====================
+        window.likeReview = async function(reviewId) {
+            if (!auth.currentUser) {
+                alert("Connectez-vous pour liker !");
+                return;
+            }
+            const likeRef = ref(db, `reviews/${reviewId}/likes/${auth.currentUser.uid}`);
+            const countRef = ref(db, `reviews/${reviewId}/likeCount`);
+            
+            // Vérifier si l'utilisateur a déjà liké
+            const likeSnapshot = await new Promise(resolve => {
+                onValue(likeRef, resolve, { onlyOnce: true });
+            });
+            
+            if (likeSnapshot.exists()) {
+                alert("Vous avez déjà liké cet avis !");
+                return;
+            }
+            
+            runTransaction(countRef, (currentCount) => {
+                return (currentCount || 0) + 1;
+            });
+            await set(likeRef, true);
+            
+            // Animation sur le bouton
+            const btn = document.querySelector(`button[onclick="likeReview('${reviewId}')"] span:first-child`);
+            if(btn) btn.classList.add('like-animation');
+            setTimeout(() => {
+                if(btn) btn.classList.remove('like-animation');
+            }, 300);
+        };
+
+        // ==================== RÉPONSE ADMIN ====================
+        window.replyToReview = async function(reviewId) {
+            if (!auth.currentUser || !adminEmails.includes(auth.currentUser.email.toLowerCase())) {
+                alert("Vous n'êtes pas autorisé à répondre.");
+                return;
+            }
+            const reply = prompt("Votre réponse en tant qu'administrateur :");
+            if (!reply) return;
+            
+            await update(ref(db, `reviews/${reviewId}`), {
+                adminReply: reply,
+                adminName: auth.currentUser.displayName || "Admin Afro Service",
+                adminReplyDate: new Date().toLocaleDateString('fr-FR')
+            });
+            alert("Réponse ajoutée avec succès !");
+        };
+
+        // ==================== AFFICHAGE DES AVIS AVEC LIKES, BADGES ET RÉPONSES ADMIN ====================
+        onValue(reviewsRef, async (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('reviewsDisplay');
+            const adminContainer = document.getElementById('adminReviewsList');
+            
+            if(!data) {
+                if(container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
+                if(adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
+                return;
+            }
+            
+            const entries = Object.entries(data).reverse();
+            
+            // Affichage public avec toutes les fonctionnalités
+            if(container) {
+                let html = "";
+                for (const [id, r] of entries) {
+                    const isLiked = r.likes && auth.currentUser && r.likes[auth.currentUser.uid];
+                    const likeCount = r.likeCount || 0;
+                    const badge = await getCustomerBadge(r.userId);
+                    
+                    html += `
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 min-w-[280px] relative">
+                            <div class="flex justify-between items-start">
+                                <div class="flex text-orange-400 text-[10px]">${'★'.repeat(r.note)}${'☆'.repeat(5-r.note)}</div>
+                                <button onclick="likeReview('${id}')" class="flex items-center gap-1 transition-all hover:scale-110">
+                                    <span class="text-lg ${isLiked ? 'text-red-500' : 'text-slate-300'}">${isLiked ? '❤️' : '♡'}</span>
+                                    <span class="text-[10px] font-bold text-slate-400">${likeCount}</span>
+                                </button>
+                            </div>
+                            
+                            <div class="flex flex-col gap-1 mt-1">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <p class="text-[10px] font-black uppercase text-[#101944]">${escapeHtml(r.name)}</p>
+                                    ${badge ? `<span class="${badge.color} text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase">${badge.label}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <p class="text-[11px] text-slate-600 italic mt-2">"${escapeHtml(r.comment)}"</p>
+                            
+                            ${r.adminReply ? `
+                                <div class="mt-3 p-2 bg-slate-50 rounded-xl border-l-4 border-[#101944]">
+                                    <p class="text-[9px] font-black text-[#101944] flex items-center gap-1">
+                                        ${escapeHtml(r.adminName)} <span class="text-blue-500 text-[12px]">✅</span>
+                                    </p>
+                                    <p class="text-[10px] text-slate-500 mt-1">${escapeHtml(r.adminReply)}</p>
+                                    ${r.adminReplyDate ? `<p class="text-[7px] text-slate-400 mt-1">${r.adminReplyDate}</p>` : ''}
+                                </div>
+                            ` : ''}
+
+                            <div class="flex justify-between items-center mt-3">
+                                <p class="text-[8px] text-slate-400 uppercase font-bold">${r.date}</p>
+                                ${auth.currentUser && adminEmails.includes(auth.currentUser.email.toLowerCase()) ? 
+                                    `<button onclick="replyToReview('${id}')" class="text-[8px] font-black text-blue-600 uppercase underline hover:text-blue-800 transition-colors">Répondre</button>` : ''}
+                            </div>
+                        </div>`;
+                }
+                container.innerHTML = html;
+            }
+            
+            // Administration des avis
+            if(adminContainer) {
+                adminContainer.innerHTML = entries.map(([id, r]) => `
+                    <div class="flex items-center justify-between bg-white p-3 rounded-xl border mb-2">
+                        <div class="flex flex-col flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-black text-[9px] uppercase text-[#101944]">${escapeHtml(r.name)} (${r.note}/5)</span>
+                                ${r.userId ? `<span class="text-[7px] bg-slate-100 px-1.5 py-0.5 rounded-full">${r.userId.substring(0, 8)}...</span>` : ''}
+                            </div>
+                            <span class="text-[10px] text-slate-500 italic">"${escapeHtml(r.comment.substring(0, 80))}${r.comment.length > 80 ? '...' : ''}"</span>
+                            ${r.adminReply ? `<span class="text-[8px] text-green-600 mt-1">✓ Répondu</span>` : ''}
+                        </div>
+                        <button onclick="deleteReviewFromFirebase('${id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase hover:bg-red-100 transition-colors">Supprimer</button>
+                    </div>`).join('');
+            }
+        });
+
+        // Fonction utilitaire pour échapper le HTML
+        function escapeHtml(str) {
+            if(!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if(m === '&') return '&amp;';
+                if(m === '<') return '&lt;';
+                if(m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
+
+        // ==================== ENVOI D'AVIS AVEC USERID ====================
+        window.sendReview = async function() {
+            if (!auth.currentUser) {
+                alert("Connectez-vous pour laisser une note !");
+                return;
+            }
+            if (!auth.currentUser.emailVerified) {
+                alert("Veuillez vérifier votre email avant de noter.");
+                return;
+            }
+            const note = document.getElementById('revStars').value;
+            const comment = document.getElementById('revText').value.trim();
+            if(!comment) {
+                alert("Laissez un petit mot !");
+                return;
+            }
+            
+            const newReview = {
+                userId: auth.currentUser.uid,
+                name: auth.currentUser.displayName || "Client AfroService",
+                note: parseInt(note),
+                comment: comment,
+                date: new Date().toLocaleDateString('fr-FR'),
+                likeCount: 0
+            };
+            await push(reviewsRef, newReview);
+            document.getElementById('revText').value = "";
+            alert("Merci pour votre avis !");
+        };
+
+        // ==================== SUPPRESSION D'AVIS ====================
+        window.deleteReviewFromFirebase = function(id) {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
+            if(confirm("Supprimer définitivement cet avis client ?")) { 
+                remove(ref(db, 'reviews/' + id)); 
+                alert("Avis supprimé.");
+            }
+        };
+
+        // ==================== AUTHENTIFICATION ====================
+        onAuthStateChanged(auth, (user) => {
+            window.currentUser = user;
+            const btn = document.getElementById('authBtn');
+            const adminBtn = document.getElementById('adminBtn');
+
+            if (user) {
+                if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+                    adminBtn.classList.remove('hidden'); 
+                } else {
+                    adminBtn.classList.add('hidden');
+                }
+
+                if(!user.emailVerified) {
+                    btn.classList.add('text-orange-500');
+                    btn.classList.remove('text-green-500');
+                } else {
+                    btn.classList.add('text-green-500');
+                    btn.classList.remove('text-orange-500');
+                }
+                if(document.getElementById('cName')) document.getElementById('cName').value = user.displayName || "";
+            } else {
+                btn.classList.remove('text-green-500', 'text-orange-500');
+                btn.classList.add('text-white');
+                adminBtn.classList.add('hidden');
+            }
+            
+            // Recharger les avis pour mettre à jour les badges et likes
+            const reviewsSnapshot = onValue(reviewsRef, () => {}, { onlyOnce: false });
+        });
+
+        // ==================== GESTION DES PRODUITS ET STOCK ====================
+        onValue(stockRef, (snapshot) => {
+            const data = snapshot.val();
+            window.stock = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+            
+            if (window.stock.length > 0) {
+                const dernierArticle = window.stock[window.stock.length - 1];
+                const bannerNewTitle = document.getElementById('autoBannerTitle');
+                const bannerNewImg = document.getElementById('autoBannerImg');
+                const bannerNewBtn = document.getElementById('autoBannerBtn');
+                
+                if(bannerNewTitle) bannerNewTitle.innerHTML = `DERNIER ARRIVAGE :<br><span class="text-red-500 text-3xl">${escapeHtml(dernierArticle.name)}</span>`;
+                if(bannerNewImg && dernierArticle.imgs && dernierArticle.imgs[0]) bannerNewImg.src = dernierArticle.imgs[0];
+                if(bannerNewBtn) bannerNewBtn.setAttribute('onclick', `showDetail('${dernierArticle.id}')`);
+            }
+
+            renderProducts(window.stock);
+            if(document.getElementById('adminModal').classList.contains('hidden') === false) renderAdminStock();
+            renderCategoryBubbles(); 
+        });
+
+        // ==================== FONCTIONS ADMIN ET AUTRES ====================
+        window.handleAuth = async () => {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPass').value;
+            const name = document.getElementById('authName').value;
+            const isLogin = document.getElementById('authTitle').innerText === "CONNEXION";
+            
+            try {
+                if(isLogin) { 
+                    const res = await signInWithEmailAndPassword(auth, email, pass);
+                    if(!res.user.emailVerified) {
+                        alert("Veuillez vérifier votre adresse e-mail. Un lien vous a été envoyé lors de l'inscription.");
+                    }
+                }
+                else { 
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    await updateProfile(res.user, { displayName: name });
+                    await sendEmailVerification(res.user);
+                    alert("Compte créé ! Un e-mail de vérification a été envoyé à " + email + ". Veuillez confirmer votre adresse avant de commander.");
+                }
+                closeAuth();
+            } catch (e) { alert("Erreur : " + e.message); }
+        };
+
+        window.forgotPassword = async () => {
+            const email = document.getElementById('authEmail').value;
+            if(!email) return alert("Entrez votre adresse e-mail dans le champ pour recevoir le lien de réinitialisation.");
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Un lien de réinitialisation a été envoyé à : " + email + ". Vérifiez vos courriers indésirables (spams) si besoin.");
+            } catch (e) {
+                alert("Erreur : " + e.message);
+            }
+        };
+
+        window.viewHistory = function() {
+            if (!window.currentUser) return alert("Connectez-vous pour voir votre historique");
+            const userOrderRef = ref(db, `orders/${window.currentUser.uid}`);
+            onValue(userOrderRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('historyContent');
+                if (!data) {
+                    container.innerHTML = "<p class='text-center text-slate-400 py-10 text-[10px] font-bold uppercase italic'>Aucune commande passée</p>";
+                } else {
+                    container.innerHTML = Object.values(data).reverse().map(order => `
+                        <div class="bg-slate-50 p-4 rounded-2xl border mb-3">
+                            <p class="text-[9px] font-black text-red-600 mb-1 uppercase">${escapeHtml(order.date)}</p>
+                            <div class="text-[10px] font-bold text-slate-700 leading-tight">${escapeHtml(order.items).replace(/%0A/g, '<br>')}</div>
+                            <div class="mt-2 pt-2 border-t flex justify-between font-black text-[#1d265e]">
+                                <span class="text-[9px]">TOTAL</span> <span class="text-xs">${escapeHtml(order.total)}</span>
+                            </div>
+                        </div>`).join('');
+                }
+                document.getElementById('historyModal').classList.remove('hidden');
+            });
+        };
+
+        window.openAuth = () => { window.currentUser ? (confirm("Voulez-vous vous déconnecter ?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden'); };
+        window.closeAuth = () => document.getElementById('authModal').classList.add('hidden');
+        window.closeHistory = () => document.getElementById('historyModal').classList.add('hidden');
+        
+        window.toggleAuthMode = () => {
+            const title = document.getElementById('authTitle');
+            const signUpDiv = document.getElementById('signUpOnly');
+            const btnToggle = event.target; 
+            if (title.innerText === "CONNEXION") {
+                title.innerText = "INSCRIPTION";
+                signUpDiv.classList.remove('hidden');
+                btnToggle.innerText = "DÉJÀ UN COMPTE ? SE CONNECTER";
+            } else {
+                title.innerText = "CONNEXION";
+                signUpDiv.classList.add('hidden');
+                btnToggle.innerText = "CRÉER UN COMPTE ?";
+            }
+        };
+
+        onValue(catsRef, (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                window.categories = data;
+                renderMenu(); 
+                renderCategoryBubbles(); 
+                if(!document.getElementById('adminModal').classList.contains('hidden')) {
+                    if (typeof renderVisualManager === "function") renderVisualManager();
+                    if (typeof syncAdminMenus === "function") syncAdminMenus();
+                }
+            } else {
+                window.categories = [];
+                renderMenu();
+            }
+        });
+
+        window.saveProductToFirebase = function() {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return alert("Action non autorisée");
+            
+            const name = document.getElementById('admName').value.trim();
+            const price = document.getElementById('admPrice').value;
+            const oldPrice = document.getElementById('admOld').value;
+            const description = document.getElementById('admDesc').value.trim();
+            const category = document.getElementById('admCat').value;
+            const subCategory = document.getElementById('admSub').value;
+            const subSubCategory = document.getElementById('admSubSub').value;
+            const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
+            const colors = document.getElementById('admColors').value.trim();
+            const memory = document.getElementById('admMem').value.trim();
+
+            if(!name || !price) return alert("Nom et prix requis");
+
+            const productData = {
+                name: name,
+                price: price,
+                old: oldPrice || null,
+                desc: description || "",
+                cat: category,
+                sub: subCategory,
+                subsub: subSubCategory || "",
+                imgs: images,
+                colors: colors || "",
+                memory: memory || ""
+            };
+
+            if(window.editId) {
+                update(ref(db, 'stock/' + window.editId), productData)
+                .then(() => {
+                    alert("Article mis à jour !");
+                    window.editId = null;
+                    document.getElementById('admTitle').innerText = "📦 Gestion Produit";
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur de mise à jour: " + e.message));
+            } else {
+                push(stockRef, productData)
+                .then(() => {
+                    alert("Article ajouté avec succès !");
+                    resetAdminForm();
+                })
+                .catch(e => alert("Erreur d'ajout: " + e.message));
+            }
+        };
+
+        function resetAdminForm() {
+            document.getElementById('admName').value = "";
+            document.getElementById('admPrice').value = "";
+            document.getElementById('admOld').value = "";
+            document.getElementById('admDesc').value = "";
+            document.getElementById('admImgs').value = "";
+            document.getElementById('admColors').value = "";
+            document.getElementById('admMem').value = "";
+        }
+
+        window.deleteProductFromFirebase = function(id) {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) return;
+            if(confirm("Supprimer définitivement cet article ?")) { remove(ref(db, 'stock/' + id)); }
+        };
+
+        window.saveCategoriesToFirebase = function() {
+            if (!window.currentUser || !adminEmails.includes(window.currentUser.email.toLowerCase())) {
+                return alert("Désolé, seul l'administrateur peut modifier la structure.");
+            }
+            if(!window.categories || window.categories.length === 0) return alert("Rien à enregistrer");
+            const cleanData = JSON.parse(JSON.stringify(window.categories));
+            set(catsRef, cleanData).then(() => {
+                alert("✅ Structure enregistrée avec succès !");
+                renderMenu();
+            }).catch(e => alert("Erreur: " + e.message));
+        };
+
+        // ==================== FONCTIONS D'AFFICHAGE ====================
         window.categories = window.categories || [{ name: "CHARGEMENT...", subs: [] }];
         let cart = []; window.stock = []; window.editId = null;
 
@@ -900,13 +912,14 @@
             if (!bannerContainer) return;
             const items = bannerContainer.querySelectorAll('.banner-item');
             if (items.length <= 1) return;
+            let bannerIndex = parseInt(document.body.getAttribute('data-banner-index') || '0');
             bannerIndex++;
             if (bannerIndex >= items.length) bannerIndex = 0;
+            document.body.setAttribute('data-banner-index', bannerIndex);
             const scrollAmount = items[bannerIndex].offsetLeft - 16;
             bannerContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
         }
 
-        let bannerIndex = 0;
         window.addEventListener('scroll', (e) => {
             const btt = document.getElementById('backToTop');
             if (window.scrollY > 300) {
@@ -915,10 +928,6 @@
             } else {
                 btt.classList.add('opacity-0', 'pointer-events-none');
                 btt.classList.remove('opacity-100', 'pointer-events-auto');
-            }
-            if (e.target.classList && e.target.classList.contains('banner-container')) {
-                const index = Math.round(e.target.scrollLeft / e.target.offsetWidth);
-                bannerIndex = index;
             }
         }, true);
 
@@ -940,7 +949,7 @@
                         </div>
                         <div class="relative z-10">
                             <p class="text-[10px] font-black uppercase opacity-80 tracking-widest mb-1">Coup de cœur</p>
-                            <h3 class="text-lg font-black uppercase leading-tight">${randomV.name}</h3>
+                            <h3 class="text-lg font-black uppercase leading-tight">${escapeHtml(randomV.name)}</h3>
                             <button class="mt-3 bg-white text-red-600 text-[9px] font-black py-2 px-5 rounded-full uppercase shadow-md">Voir l'offre</button>
                         </div>
                     </div>`; 
@@ -954,7 +963,7 @@
                             <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
                         </div>
                         <h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">
-                            ${p.name}
+                            ${escapeHtml(p.name)}
                         </h3>
                         <div class="mt-auto pt-2 flex items-center justify-between">
                             <span class="price-tag">${parseInt(p.price).toLocaleString()} F</span>
@@ -974,7 +983,7 @@
                 return `
                 <div class="category-bubble" onclick="filterItems('${cat.name}', '', '')">
                     <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div>
-                    <span class="bubble-text">${cat.name}</span>
+                    <span class="bubble-text">${escapeHtml(cat.name)}</span>
                 </div>`;
             }).join('');
         }
@@ -989,7 +998,7 @@
             }
             window.categories.forEach((c, index) => {
                 const catId = `cat-${index}`; 
-                menuHTML += `<div class="border-b"><div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50" onclick="toggleSub('${catId}')"><span class="font-black text-xs text-[#101944] uppercase tracking-wide">${c.name}</span><span class="text-[10px] text-slate-400">▼</span></div><div id="${catId}" class="hidden bg-slate-50/50 pb-2">${c.subs ? c.subs.map((s, si) => { const subId = `sub-${index}-${si}`; return `<div class="pl-6"><div class="flex items-center justify-between py-2 pr-6 cursor-pointer" onclick="toggleSub('${subId}')"><span class="text-[10px] font-bold text-slate-600">• ${s.name}</span><span class="text-[8px] text-slate-300">▶</span></div><div id="${subId}" class="hidden pl-4 border-l-2 border-slate-200 mb-2">${s.subsubs ? s.subsubs.map(ss => `<button onclick="filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">${ss}</button>`).join('') : ''}</div></div>`; }).join('') : ''}</div></div>`;
+                menuHTML += `<div class="border-b"><div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50" onclick="toggleSub('${catId}')"><span class="font-black text-xs text-[#101944] uppercase tracking-wide">${escapeHtml(c.name)}</span><span class="text-[10px] text-slate-400">▼</span></div><div id="${catId}" class="hidden bg-slate-50/50 pb-2">${c.subs ? c.subs.map((s, si) => { const subId = `sub-${index}-${si}`; return `<div class="pl-6"><div class="flex items-center justify-between py-2 pr-6 cursor-pointer" onclick="toggleSub('${subId}')"><span class="text-[10px] font-bold text-slate-600">• ${escapeHtml(s.name)}</span><span class="text-[8px] text-slate-300">▶</span></div><div id="${subId}" class="hidden pl-4 border-l-2 border-slate-200 mb-2">${s.subsubs ? s.subsubs.map(ss => `<button onclick="filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">${escapeHtml(ss)}</button>`).join('') : ''}</div></div>`; }).join('') : ''}</div></div>`;
             });
             menu.innerHTML = menuHTML;
         }
@@ -1026,16 +1035,16 @@
                     <p class="text-[10px] font-bold uppercase italic">🔥 ${ordersCount} personnes à Bafoussam ont commandé cet article récemment !</p>
                 </div>
 
-                <h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2>
+                <h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${escapeHtml(p.name)}</h2>
                 <div class="flex items-center gap-4 mb-4">
                     <span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>
                     ${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} F</span>` : ''}
                 </div>
-                <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
-                <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p>
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${escapeHtml(p.cat)} / ${escapeHtml(p.sub)} / ${escapeHtml(p.subsub || '')}</p>
+                <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${escapeHtml(p.desc || 'Pas de description disponible.')}</p>
                 <div class="space-y-4">
-                    ${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`)}</select>` : ''}
-                    ${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`)}</select>` : ''}
+                    ${p.colors ? `<select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.colors.split(',').map(c => `<option>${escapeHtml(c.trim())}</option>`)}</select>` : ''}
+                    ${p.memory ? `<select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-xl text-xs font-black uppercase tracking-wider">${p.memory.split(',').map(m => `<option>${escapeHtml(m.trim())}</option>`)}</select>` : ''}
                     <input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-xl font-black text-sm">
                 </div>
                 <button onclick="addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-3xl font-black uppercase text-xs mt-10 shadow-lg">Ajouter au Panier</button>`;
@@ -1044,11 +1053,18 @@
             document.getElementById('overlay').classList.remove('hidden');
         }
 
+        window.showDetail = showDetail;
+
         let currentSlide = 0; 
-        function moveSlide(dir, total) { currentSlide = (currentSlide + dir + total) % total; document.getElementById('slideTrack').style.transform = `translateX(-${currentSlide * 100}%)`; }
+        window.moveSlide = function(dir, total) { 
+            currentSlide = (currentSlide + dir + total) % total; 
+            const track = document.getElementById('slideTrack');
+            if(track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        };
 
         function addToCart(id) {
-            const p = window.stock.find(x => x.id === id); const qty = parseInt(document.getElementById('vQty').value);
+            const p = window.stock.find(x => x.id === id); 
+            const qty = parseInt(document.getElementById('vQty').value) || 1;
             for(let i=0; i<qty; i++) { cart.push({ name: p.name, price: p.price, img: p.imgs[0] }); }
             updateCart(); closeDetail(); openCart();
         }
@@ -1057,7 +1073,7 @@
             let total = 0; 
             document.getElementById('cartItems').innerHTML = cart.map((item, i) => { 
                 total += parseInt(item.price); 
-                return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; 
+                return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${escapeHtml(item.name)}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="cart.splice(${i},1);updateCart()" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; 
             }).join('');
             document.getElementById('cartTotal').innerText = total.toLocaleString() + " F"; 
             document.getElementById('badge').innerText = cart.length;
@@ -1065,9 +1081,12 @@
 
         function checkout() {
             if(window.currentUser && !window.currentUser.emailVerified) return alert("Veuillez confirmer votre adresse e-mail avant de passer commande.");
-            const name = document.getElementById('cName').value.trim(); const tel = document.getElementById('cTel').value.trim(); const loc = document.getElementById('cQuartier').value.trim();
+            const name = document.getElementById('cName').value.trim(); 
+            const tel = document.getElementById('cTel').value.trim(); 
+            const loc = document.getElementById('cQuartier').value.trim();
             if(!name || !tel || !loc || !cart.length) return alert("Veuillez remplir vos informations.");
-            const msg = `*COMMANDE AFRO SERVICE*%0A%0A*Client:* ${name}%0A*Tél:* ${tel}%0A*Lieu:* ${loc}%0A%0A*Articles:*%0A${cart.map(x => `- ${x.name}`).join('%0A')}%0A%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
+            const itemsList = cart.map(x => `- ${x.name}`).join('%0A');
+            const msg = `*COMMANDE AFRO SERVICE*%0A%0A*Client:* ${name}%0A*Tél:* ${tel}%0A*Lieu:* ${loc}%0A%0A*Articles:*%0A${itemsList}%0A%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
             window.open(`https://wa.me/237658562104?text=${msg}`, '_blank');
         }
 
@@ -1086,7 +1105,7 @@
         window.renderVisualManager = function() {
             const container = document.getElementById('visualCatsManager');
             if(!container) return;
-            container.innerHTML = window.categories.map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${cat.subs ? cat.subs.map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${sub.subsubs ? sub.subsubs.map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('') : ''}<button onclick="addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1">+</button></div></div>`).join('') : ''}<button onclick="addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
+            container.innerHTML = window.categories.map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${escapeHtml(cat.name)}" oninput="updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${cat.subs ? cat.subs.map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${escapeHtml(sub.name)}" oninput="updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${sub.subsubs ? sub.subsubs.map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${escapeHtml(ss)}" oninput="updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('') : ''}<button onclick="addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1">+</button></div></div>`).join('') : ''}<button onclick="addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
         };
 
         window.updateCatName = (c, val) => { window.categories[c].name = val.toUpperCase(); syncAdminMenus(); };
@@ -1108,7 +1127,7 @@
 
         function renderAdminStock() {
             const stockList = document.getElementById('stockList'); if(!stockList) return;
-            stockList.innerHTML = window.stock.map(p => `<div class="flex items-center justify-between bg-white p-4 rounded-2xl border mb-2 shadow-sm"><div class="flex flex-col"><span class="font-black uppercase text-[10px] text-[#101944]">${p.name}</span><span class="text-red-600 font-bold text-xs">${parseInt(p.price).toLocaleString()} F</span></div><div class="flex gap-2"><button onclick="editItem('${p.id}')" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Modifier</button><button onclick="deleteProductFromFirebase('${p.id}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Suppr.</button></div></div>`).join('');
+            stockList.innerHTML = window.stock.map(p => `<div class="flex items-center justify-between bg-white p-4 rounded-2xl border mb-2 shadow-sm"><div class="flex flex-col"><span class="font-black uppercase text-[10px] text-[#101944]">${escapeHtml(p.name)}</span><span class="text-red-600 font-bold text-xs">${parseInt(p.price).toLocaleString()} F</span></div><div class="flex gap-2"><button onclick="editItem('${p.id}')" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Modifier</button><button onclick="deleteProductFromFirebase('${p.id}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Suppr.</button></div></div>`).join('');
             syncAdminMenus();
         }
 
@@ -1118,6 +1137,7 @@
             const subSelect = document.getElementById('admSub');
             if(subSelect) { subSelect.innerHTML = cat && cat.subs ? cat.subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('') : ''; updateAdminSubSubs(); }
         }
+        
         function updateAdminSubSubs() { 
             const catSelect = document.getElementById('admCat'); const subSelect = document.getElementById('admSub');
             if(!catSelect || !subSelect) return;
@@ -1136,17 +1156,26 @@
             document.getElementById('admSub').value = p.sub; updateAdminSubSubs(); 
             document.getElementById('admSubSub').value = p.subsub || ''; 
             document.getElementById('admColors').value = p.colors || ''; document.getElementById('admMem').value = p.memory || ''; 
-            document.getElementById('admTitle').innerHTML = "✏️ ÉDITION : " + p.name; 
+            document.getElementById('admTitle').innerText = "MODE ÉDITION : " + p.name; 
             document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function openNav() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function openCart() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); }
         function closeMenus() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"); document.getElementById('overlay').classList.add('hidden'); }
-        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerHTML = "📦 Gestion Produit"; resetAdminForm(); }
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); window.editId = null; document.getElementById('admTitle').innerText = "📦 Gestion Produit"; resetAdminForm(); }
         function closeDetail() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); }
         function quickSearch(q) { renderProducts(window.stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase()))); }
+        
+        window.openNav = openNav;
+        window.openCart = openCart;
+        window.closeMenus = closeMenus;
+        window.closeAdmin = closeAdmin;
+        window.closeDetail = closeDetail;
+        window.quickSearch = quickSearch;
+        window.addToCart = addToCart;
+        window.checkout = checkout;
+        window.updateWALink = updateWALink;
     </script>
 </body>
 </html>
-```
