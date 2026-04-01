@@ -57,35 +57,37 @@
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        /* BADGES MODERNISÉS - NOUVEAU DESIGN SANS EMOJIS */
-        
-        /* Badge Administrateur Certifié avec Blue Check */
-        .badge-admin-certified {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #0f172a;
-            border: 1px solid rgba(189, 30, 36, 0.3);
-            border-radius: 9999px;
-            padding-left: 0.25rem;
-            padding-right: 0.75rem;
-            padding-top: 0.25rem;
-            padding-bottom: 0.25rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .badge-admin-certified .admin-name {
-            font-weight: 700;
-            color: white;
-            font-size: 0.75rem;
-            line-height: 1;
-        }
-        
-        .badge-admin-certified .blue-check {
-            width: 1rem;
-            height: 1rem;
-            color: #3b82f6;
-        }
+        /* Badge Administrateur Certifié - Cercle Bleu avec Check Blanc */
+.admin-badge-certified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #0f172a;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.admin-badge-certified .admin-name {
+    font-weight: 700;
+    color: white;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    background: #1d9bf0;
+    border-radius: 50%;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 900;
+    flex-shrink: 0;
+}
         
         /* Badges de fidélité modernisés - Sans emojis */
         .badge-new {
