@@ -175,7 +175,18 @@
             color: #3b82f6;
             filter: drop-shadow(0 0 2px rgba(59,130,246,0.5));
         }
-/* Badge Équipe Afro Service - Style simple et professionnel */
+
+        .product-card-container {
+            position: relative;
+            border-radius: 24px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
+
+        .product-card-inner { position: relative;/* Badge Équipe Afro Service - Style simple et professionnel */
 .team-badge {
     display: inline-block;
     background: #1e293b;
@@ -188,7 +199,7 @@
     text-transform: uppercase;
 }
 
-/* Badges clients - Style simple et professionnel */
+/* Badges clients - Style simple */
 .badge-new {
     display: inline-block;
     background: #dbeafe;
@@ -220,18 +231,7 @@
     color: #b45309;
     font-size: 0.65rem;
     text-transform: uppercase;
-}
-        .product-card-container {
-            position: relative;
-            border-radius: 24px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-        .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
-
-        .product-card-inner { position: relative; background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
+            } background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
         
         .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
         .bubble-img-container { width: 70px; height: 70px; border-radius: 22px; background: white; padding: 2px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; }
