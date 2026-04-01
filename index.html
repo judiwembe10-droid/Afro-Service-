@@ -151,15 +151,15 @@
             100% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0); }
         }
 
-        /* ADMIN PROFILE BADGE - Correction appliquée */
+        /* ADMIN PROFILE BADGE - Blue Certification Check */
         .admin-profile-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             background: linear-gradient(135deg, #0f172a, #1e293b);
             border-radius: 9999px;
-            padding: 0.5rem 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
         .admin-profile-badge .admin-name {
@@ -169,185 +169,66 @@
             line-height: 1;
         }
 
+        /* Cercle bleu avec check blanc — style Twitter/Meta */
         .admin-profile-badge .blue-check-icon {
-            width: 1.25rem;
-            height: 1.25rem;
-            color: #3b82f6;
-            filter: drop-shadow(0 0 2px rgba(59,130,246,0.5));
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #1d9bf0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 2px rgba(29,155,240,0.3), 0 0 8px rgba(29,155,240,0.5);
+        }
+
+        .admin-profile-badge .blue-check-icon svg {
+            width: 0.85rem;
+            height: 0.85rem;
+            color: white;
         }
 
         .product-card-container {
             position: relative;
             border-radius: 24px;
             background: white;
-  <style>
-    :root { 
-        --afro-blue: #101944; 
-        --afro-red: #bd1e24; 
-        --bg-body: #f8fafc;
-    }
-    body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: #0f172a; }
-    
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    #sideNav, #sideCart, #detailModal { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .promo-badge { background: linear-gradient(45deg, #bd1e24, #ff4d4d); box-shadow: 0 4px 10px rgba(189,30,36,0.3); }
-    
-    .ticker-wrap { width: 100%; overflow: hidden; background: #bd1e24; color: white; padding: 8px 0; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-    .ticker { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; }
-    .ticker__item { display: inline-block; padding: 0 30px; }
-    @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
-
-    .whatsapp-float {
-        position: fixed;
-        bottom: 25px;
-        right: 20px;
-        background-color: #25d366;
-        color: #fff;
-        border-radius: 50px;
-        width: 65px;
-        height: 65px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 500;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-        animation: pulse-whatsapp 2s infinite;
-    }
-    @keyframes pulse-whatsapp {
-        0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-        70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-    }
-
-    /* Badge Équipe Afro Service - Style simple et professionnel */
-    .team-badge {
-        display: inline-block;
-        background: #1e293b;
-        border-radius: 20px;
-        padding: 0.2rem 0.9rem;
-        font-weight: 500;
-        color: white;
-        font-size: 0.65rem;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-    }
-
-    /* Badges clients - Style simple */
-    .badge-new {
-        display: inline-block;
-        background: #dbeafe;
-        border-radius: 20px;
-        padding: 0.2rem 0.7rem;
-        font-weight: 500;
-        color: #1e40af;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-    }
-
-    .badge-regular {
-        display: inline-block;
-        background: #f3e8ff;
-        border-radius: 20px;
-        padding: 0.2rem 0.7rem;
-        font-weight: 500;
-        color: #6b21a5;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-    }
-
-    .badge-loyal {
-        display: inline-block;
-        background: #fef3c7;
-        border-radius: 20px;
-        padding: 0.2rem 0.7rem;
-        font-weight: 500;
-        color: #b45309;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-    }
-
-    .badge-admin-glow {
-        animation: admin-pulse 2s infinite;
-    }
-    @keyframes admin-pulse {
-        0% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0.4); }
-        70% { box-shadow: 0 0 0 6px rgba(189, 30, 36, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0); }
-    }
-
-    /* ADMIN PROFILE BADGE - Correction appliquée */
-    .admin-profile-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        border-radius: 9999px;
-        padding: 0.5rem 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    .admin-profile-badge .admin-name {
-        font-weight: 900;
-        color: white;
-        font-size: 0.875rem;
-        line-height: 1;
-    }
-
-    .admin-profile-badge .blue-check-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-        color: #3b82f6;
-        filter: drop-shadow(0 0 2px rgba(59,130,246,0.5));
-    }
-
-    .product-card-container {
-        position: relative;
-        border-radius: 24px;
-        background: white;
-        border: 1px solid #e2e8f0;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-    }
-    .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
-
-    .product-card-inner { position: relative; background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
-    
-    .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
-    .bubble-img-container { width: 70px; height: 70px; border-radius: 22px; background: white; padding: 2px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; }
-    .category-bubble:hover .bubble-img-container { border-color: var(--afro-red); transform: scale(1.05); }
-    .bubble-img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 19px; }
-    .bubble-text { font-size: 10px; font-weight: 800; text-align: center; color: var(--afro-blue); text-transform: uppercase; line-height: 1.2; letter-spacing: 0.05em; }
-
-    .price-tag { color: var(--afro-red); font-weight: 900; font-size: 1.1rem; letter-spacing: -0.5px; }
-
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    .animate-marquee { display: flex; width: max-content; animation: marquee 25s linear infinite; }
-    .animate-marquee:hover { animation-play-state: paused; }
-
-    .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
-    .banner-item { flex: 0 0 85%; scroll-snap-align: center; margin-right: 15px; }
-    @media (min-width: 768px) { .banner-item { flex: 0 0 60%; } }
-
-    #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
-    #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
-
-    .banner-gradient-overlay {
-        background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
-    }
-    
-    .icon-outline {
-        stroke-width: 2;
-        stroke: currentColor;
-        fill: none;
-    }
-</style>          border: 1px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
         .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
 
+        .product-card-inner { position: relative; background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
+        
+        .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
+        .bubble-img-container { width: 70px; height: 70px; border-radius: 22px; background: white; padding: 2px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; }
+        .category-bubble:hover .bubble-img-container { border-color: var(--afro-red); transform: scale(1.05); }
+        .bubble-img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 19px; }
+        .bubble-text { font-size: 10px; font-weight: 800; text-align: center; color: var(--afro-blue); text-transform: uppercase; line-height: 1.2; letter-spacing: 0.05em; }
 
+        .price-tag { color: var(--afro-red); font-weight: 900; font-size: 1.1rem; letter-spacing: -0.5px; }
+
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
+
+        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+        .banner-item { flex: 0 0 85%; scroll-snap-align: center; margin-right: 15px; }
+        @media (min-width: 768px) { .banner-item { flex: 0 0 60%; } }
+
+        #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
+        #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
+
+        .banner-gradient-overlay {
+            background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
+        }
+        
+        .icon-outline {
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+        }
+    </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
 
@@ -545,10 +426,12 @@
                 Quitter
             </button>
             <div class="admin-profile-badge">
+                <div class="blue-check-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
                 <span class="admin-name">Afro Service</span>
-                <svg class="blue-check-icon" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812 3.066 3.066 0 00.723 1.745 3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
-                </svg>
             </div>
         </div>
 
@@ -1559,111 +1442,103 @@
         });
 
         // ==================== LISTENER AVIS AVEC BADGES MODERNISÉS ====================
-onValue(reviewsRef, (snapshot) => {
-    const data = snapshot.val();
-    const container = document.getElementById('reviewsDisplay');
-    const adminContainer = document.getElementById('adminReviewsList');
-    
-    if (!data) {
-        if (container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
-        if (adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
-        return;
-    }
-    
-    const entries = Object.entries(data).reverse();
-    
-    // --- Rendu Public avec badges modernisés ---
-    if (container) {
-        let html = "";
-        const SF = '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-        const SE = '<svg class="w-3 h-3 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-        
-        for (const [id, r] of entries.slice(0, 10)) {
-            if (!r || !r.name || !r.comment) continue;
-            const note = Math.min(5, Math.max(0, parseInt(r.note) || 5));
-            const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
+        onValue(reviewsRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('reviewsDisplay');
+            const adminContainer = document.getElementById('adminReviewsList');
             
-            let badgeHtml = '';
-            if (r.badge === 'Nouveau Client') {
-                badgeHtml = `<div class="badge-new mb-2">NOUVEAU CLIENT</div>`;
-            } else if (r.badge === 'Client Régulier') {
-                badgeHtml = `<div class="badge-regular mb-2">CLIENT RÉGULIER</div>`;
-            } else if (r.badge === 'Client Fidèle') {
-                badgeHtml = `<div class="badge-loyal mb-2">CLIENT FIDÈLE</div>`;
+            if (!data) {
+                if (container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
+                if (adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
+                return;
             }
             
-            html += `
-                <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 min-w-[220px] max-w-[260px] flex-shrink-0">
-                    ${badgeHtml}
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="flex text-orange-400 gap-0.5">${SF.repeat(note)}${SE.repeat(5 - note)}</div>
-                        <button onclick="window.likeReview('${id}')" class="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 hover:bg-slate-100 transition-all">
-                            <svg class="w-2.5 h-2.5 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                            <span class="text-[9px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span>
-                        </button>
-                    </div>
-                    <p class="text-[11px] font-black uppercase text-[#101944] mb-1">${r.name}</p>
-                    <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">"${r.comment}"</p>
-                    ${r.adminReply ? `
-                        <div class="mt-2 pt-2 border-t border-slate-100">
-                            <div class="team-badge mb-1">L'ÉQUIPE AFRO SERVICE</div>
-                            <p class="text-[10px] text-slate-600 italic">"${r.adminReply}"</p>
-                            <p class="text-[8px] text-slate-400 mt-0.5">${r.adminReplyDate || ''}</p>
-                        </div>
-                    ` : ''}
-                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
-                        <p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>
-                        ${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase hover:bg-red-600 transition-colors">RÉPONDRE</button>` : ''}
-                    </div>
-                </div>`;
-        }
-        container.innerHTML = html || "<p class='text-[10px] text-slate-400 italic px-1'>Aucun avis pour l'instant.</p>";
-    }
-    
-    // --- Rendu Dashboard Admin ---
-    if (adminContainer) {
-        adminContainer.innerHTML = entries.map(([id, r]) => `
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm">
-                <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1 flex-wrap">
-                            <span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span>
-                            ${r.badge === 'Nouveau Client' ? `<span class="badge-new text-[8px]">${r.badge}</span>` : ''}
-                            ${r.badge === 'Client Régulier' ? `<span class="badge-regular text-[8px]">${r.badge}</span>` : ''}
-                            ${r.badge === 'Client Fidèle' ? `<span class="badge-loyal text-[8px]">${r.badge}</span>` : ''}
-                            ${r.adminReply ? `<span class="bg-[#101944] text-white text-[7px] px-2 py-0.5 rounded-full font-black uppercase flex items-center gap-1"><svg class="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812 3.066 3.066 0 00.723 1.745 3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812z"></path></svg>RÉPONDU</span>` : ''}
-                            <span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span>
-                            <span class="text-[9px] text-slate-400 flex items-center gap-0.5">
-                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                                ${r.likeCount || 0}
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p>
-                        ${r.adminReply ? `
-                            <div class="bg-blue-50 p-2 rounded-lg border border-blue-100 mb-2">
-                                <p class="text-[8px] font-black text-blue-800 uppercase flex items-center gap-1">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                    Ma Réponse :
-                                </p>
-                                <p class="text-[10px] text-blue-600">${r.adminReply}</p>
+            const entries = Object.entries(data).reverse();
+            
+            // --- Rendu Public avec badges modernisés ---
+            if (container) {
+                let html = "";
+                const SF = '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                const SE = '<svg class="w-3 h-3 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                for (const [id, r] of entries.slice(0, 10)) {
+                    if (!r || !r.name || !r.comment) continue;
+                    const note = Math.min(5, Math.max(0, parseInt(r.note) || 5));
+                    const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
+                    
+                    let badgeHtml = '';
+                    if (r.badge === 'Nouveau Client') {
+                        badgeHtml = `<div class="badge-new mb-2"><svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Nouveau Client</div>`;
+                    } else if (r.badge === 'Client Régulier') {
+                        badgeHtml = `<div class="badge-regular mb-2"><svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Client Régulier</div>`;
+                    } else if (r.badge === 'Client Fidèle') {
+                        badgeHtml = `<div class="badge-loyal mb-2"><svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Client Fidèle</div>`;
+                    }
+                    
+                    html += `
+                        <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 min-w-[220px] max-w-[260px] flex-shrink-0">
+                            ${badgeHtml}
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex text-orange-400 gap-0.5">${SF.repeat(note)}${SE.repeat(5 - note)}</div>
+                                <button onclick="window.likeReview('${id}')" class="flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 hover:bg-slate-100 transition-all">
+                                    <svg class="w-2.5 h-2.5 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                    <span class="text-[9px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span>
+                                </button>
                             </div>
-                        ` : ''}
-                        <div class="flex gap-3 mt-2">
-                            <button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline flex items-center gap-1">
-                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                                ${r.adminReply ? 'Modifier' : 'Répondre'}
-                            </button>
-                            <button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline flex items-center gap-1">
-                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                Supprimer
-                            </button>
+                            <p class="text-[11px] font-black uppercase text-[#101944] mb-1">${r.name}</p>
+                            <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">"${r.comment}"</p>
+                            ${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5">↩ Afro Service</p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}
+                            <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
+                                <p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>
+                                ${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase hover:bg-red-600 transition-colors">RÉPONDRE</button>` : ''}
+                            </div>
+                        </div>`;
+                }
+                container.innerHTML = html || "<p class='text-[10px] text-slate-400 italic px-1'>Aucun avis pour l'instant.</p>";
+            }
+            
+            // --- Rendu Dashboard Admin ---
+            if (adminContainer) {
+                adminContainer.innerHTML = entries.map(([id, r]) => `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span>
+                                    ${r.badge === 'Nouveau Client' ? `<span class="badge-new text-[8px]">${r.badge}</span>` : ''}
+                                    ${r.badge === 'Client Régulier' ? `<span class="badge-regular text-[8px]">${r.badge}</span>` : ''}
+                                    ${r.badge === 'Client Fidèle' ? `<span class="badge-loyal text-[8px]">${r.badge}</span>` : ''}
+                                    <span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span>
+                                    <span class="text-[9px] text-slate-400 flex items-center gap-0.5">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                        ${r.likeCount || 0}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p>
+                                ${r.adminReply ? `
+                                    <div class="bg-blue-50 p-2 rounded-lg border border-blue-100 mb-2">
+                                        <p class="text-[8px] font-black text-blue-800 uppercase flex items-center gap-1">
+                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                            Ma Réponse :
+                                        </p>
+                                        <p class="text-[10px] text-blue-600">${r.adminReply}</p>
+                                    </div>
+                                ` : ''}
+                                <div class="flex gap-3">
+                                    <button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline flex items-center gap-1">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                        ${r.adminReply ? 'Modifier' : 'Répondre'}
+                                    </button>
+                                    <button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline flex items-center gap-1">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="text-[8px] text-slate-400 font-bold">${r.date}</span>
                         </div>
-                    </div>
-                    <span class="text-[8px] text-slate-400 font-bold">${r.date}</span>
-                </div>
-            </div>`).join('');
-    }
-});
+                    </div>`).join('');
+            }
+        });
 
         // ==================== INITIALISATION ====================
         window.addEventListener('DOMContentLoaded', () => {
