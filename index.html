@@ -1458,7 +1458,7 @@ onValue(reviewsRef, (snapshot) => {
             const isAdminReply = currentUser && adminEmails.includes(currentUser.email.toLowerCase());
             
             // Badge administrateur (pour la réponse)
-            ${r.adminReply ? `
+            if ${r.adminReply ? `
     <div class="mt-3 p-2.5 bg-gradient-to-r from-[#101944]/5 to-red-50 rounded-xl border-l-3 border-[#101944] shadow-sm">
         <div class="badge-admin-certified badge-admin-glow mb-2" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #0f172a; border-radius: 9999px; padding: 0.25rem 0.75rem;">
             <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" class="h-5 w-5 rounded-full object-cover" alt="Logo">
