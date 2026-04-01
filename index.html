@@ -151,14 +151,14 @@
             100% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0); }
         }
 
-        /* ADMIN PROFILE BADGE - Blue Certification Check */
+        /* ADMIN PROFILE BADGE - Blue Check style Instagram/Meta */
         .admin-profile-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             background: linear-gradient(135deg, #0f172a, #1e293b);
             border-radius: 9999px;
-            padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+            padding: 0.4rem 0.9rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
@@ -169,23 +169,19 @@
             line-height: 1;
         }
 
-        /* Cercle bleu avec check blanc — style Twitter/Meta */
-        .admin-profile-badge .blue-check-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            background: #1d9bf0;
-            border-radius: 50%;
-            display: flex;
+        /* Badge losange bleu style Instagram/Meta — réutilisable partout */
+        .meta-blue-check {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 1.1rem;
+            height: 1.1rem;
             flex-shrink: 0;
-            box-shadow: 0 0 0 2px rgba(29,155,240,0.3), 0 0 8px rgba(29,155,240,0.5);
         }
 
-        .admin-profile-badge .blue-check-icon svg {
-            width: 0.85rem;
-            height: 0.85rem;
-            color: white;
+        .meta-blue-check svg {
+            width: 1.1rem;
+            height: 1.1rem;
         }
 
         .product-card-container {
@@ -426,12 +422,13 @@
                 Quitter
             </button>
             <div class="admin-profile-badge">
-                <div class="blue-check-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                    </svg>
-                </div>
                 <span class="admin-name">Afro Service</span>
+                <span class="meta-blue-check">
+                    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.231-.66.284-1.368.154-2.057-.131-.69-.44-1.33-.898-1.858-.458-.528-1.048-.92-1.71-1.134-.661-.214-1.367-.237-2.042-.066-.24-.613-.63-1.162-1.14-1.594-.508-.433-1.115-.726-1.767-.85-.651-.124-1.323-.082-1.953.124-.63.205-1.19.573-1.628 1.067-.438-.494-.997-.861-1.627-1.067-.63-.206-1.302-.248-1.954-.124-.651.124-1.258.417-1.766.85-.51.432-.9.98-1.14 1.594-.675-.17-1.381-.148-2.042.066-.661.214-1.252.606-1.71 1.134-.458.529-.767 1.168-.898 1.858-.13.69-.077 1.397.153 2.057-.585.274-1.083.706-1.438 1.246-.354.541-.552 1.17-.57 1.816.019.647.217 1.276.57 1.817.355.54.853.972 1.438 1.245-.23.66-.284 1.369-.153 2.058.131.69.44 1.33.898 1.858.458.528 1.049.92 1.71 1.133.661.215 1.367.237 2.042.067.24.612.63 1.162 1.14 1.593.508.433 1.115.726 1.767.851.652.124 1.323.082 1.953-.124.63-.206 1.19-.574 1.628-1.067.438.493.997.861 1.627 1.067.63.206 1.302.248 1.953.124.652-.125 1.259-.418 1.767-.851.51-.431.9-.981 1.14-1.593.675.17 1.381.147 2.042-.067.661-.213 1.252-.605 1.71-1.133.458-.528.767-1.168.898-1.858.13-.69.077-1.398-.154-2.058.585-.273 1.083-.705 1.438-1.245.354-.541.552-1.17.57-1.817z" fill="#1877F2"/>
+                        <path d="M6.5 11.5l3 3 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
             </div>
         </div>
 
@@ -1486,7 +1483,7 @@
                             </div>
                             <p class="text-[11px] font-black uppercase text-[#101944] mb-1">${r.name}</p>
                             <p class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">"${r.comment}"</p>
-                            ${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5">↩ Afro Service</p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}
+                            ${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5 flex items-center gap-1">↩ Afro Service <span style="display:inline-flex;align-items:center;width:10px;height:10px;"><svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.231-.66.284-1.368.154-2.057-.131-.69-.44-1.33-.898-1.858-.458-.528-1.048-.92-1.71-1.134-.661-.214-1.367-.237-2.042-.066-.24-.613-.63-1.162-1.14-1.594-.508-.433-1.115-.726-1.767-.85-.651-.124-1.323-.082-1.953.124-.63.205-1.19.573-1.628 1.067-.438-.494-.997-.861-1.627-1.067-.63-.206-1.302-.248-1.954-.124-.651.124-1.258.417-1.766.85-.51.432-.9.98-1.14 1.594-.675-.17-1.381-.148-2.042.066-.661.214-1.252.606-1.71 1.134-.458.529-.767 1.168-.898 1.858-.13.69-.077 1.397.153 2.057-.585.274-1.083.706-1.438 1.246-.354.541-.552 1.17-.57 1.816.019.647.217 1.276.57 1.817.355.54.853.972 1.438 1.245-.23.66-.284 1.369-.153 2.058.131.69.44 1.33.898 1.858.458.528 1.049.92 1.71 1.133.661.215 1.367.237 2.042.067.24.612.63 1.162 1.14 1.593.508.433 1.115.726 1.767.851.652.124 1.323.082 1.953-.124.63-.206 1.19-.574 1.628-1.067.438.493.997.861 1.627 1.067.63.206 1.302.248 1.953.124.652-.125 1.259-.418 1.767-.851.51-.431.9-.981 1.14-1.593.675.17 1.381.147 2.042-.067.661-.213 1.252-.605 1.71-1.133.458-.528.767-1.168.898-1.858.13-.69.077-1.398-.154-2.058.585-.273 1.083-.705 1.438-1.245.354-.541.552-1.17.57-1.817z" fill="#1877F2"/><path d="M6.5 11.5l3 3 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}
                             <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
                                 <p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>
                                 ${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase hover:bg-red-600 transition-colors">RÉPONDRE</button>` : ''}
@@ -1518,7 +1515,9 @@
                                     <div class="bg-blue-50 p-2 rounded-lg border border-blue-100 mb-2">
                                         <p class="text-[8px] font-black text-blue-800 uppercase flex items-center gap-1">
                                             <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                            Ma Réponse :
+                                            Ma Réponse (Afro Service
+                                            <span style="display:inline-flex;align-items:center;width:10px;height:10px;"><svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.396 11c-.018-.646-.215-1.275-.57-1.816-.354-.54-.852-.972-1.438-1.246.231-.66.284-1.368.154-2.057-.131-.69-.44-1.33-.898-1.858-.458-.528-1.048-.92-1.71-1.134-.661-.214-1.367-.237-2.042-.066-.24-.613-.63-1.162-1.14-1.594-.508-.433-1.115-.726-1.767-.85-.651-.124-1.323-.082-1.953.124-.63.205-1.19.573-1.628 1.067-.438-.494-.997-.861-1.627-1.067-.63-.206-1.302-.248-1.954-.124-.651.124-1.258.417-1.766.85-.51.432-.9.98-1.14 1.594-.675-.17-1.381-.148-2.042.066-.661.214-1.252.606-1.71 1.134-.458.529-.767 1.168-.898 1.858-.13.69-.077 1.397.153 2.057-.585.274-1.083.706-1.438 1.246-.354.541-.552 1.17-.57 1.816.019.647.217 1.276.57 1.817.355.54.853.972 1.438 1.245-.23.66-.284 1.369-.153 2.058.131.69.44 1.33.898 1.858.458.528 1.049.92 1.71 1.133.661.215 1.367.237 2.042.067.24.612.63 1.162 1.14 1.593.508.433 1.115.726 1.767.851.652.124 1.323.082 1.953-.124.63-.206 1.19-.574 1.628-1.067.438.493.997.861 1.627 1.067.63.206 1.302.248 1.953.124.652-.125 1.259-.418 1.767-.851.51-.431.9-.981 1.14-1.593.675.17 1.381.147 2.042-.067.661-.213 1.252-.605 1.71-1.133.458-.528.767-1.168.898-1.858.13-.69.077-1.398-.154-2.058.585-.273 1.083-.705 1.438-1.245.354-.541.552-1.17.57-1.817z" fill="#1877F2"/><path d="M6.5 11.5l3 3 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                                            ) :
                                         </p>
                                         <p class="text-[10px] text-blue-600">${r.adminReply}</p>
                                     </div>
