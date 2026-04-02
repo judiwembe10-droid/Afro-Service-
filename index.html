@@ -65,9 +65,64 @@
         .admin-profile-badge { display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: 9999px; padding: 0.45rem 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
         .admin-profile-badge .admin-name { font-weight: 900; color: white; font-size: 0.875rem; letter-spacing: 0.01em; line-height: 1; }
 
-        .product-card-container { position: relative; border-radius: 24px; background: white; border: 1px solid #e2e8f0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
-        .product-card-inner { position: relative; background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
+        /* ============ CARTES PRODUITS — Design premium ============ */
+        .product-card-container {
+            position: relative;
+            border-radius: 20px;
+            background: white;
+            border: 1.5px solid #e8edf5;
+            box-shadow: 0 2px 12px rgba(16,25,68,0.07);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .product-card-container:active { transform: scale(0.97); box-shadow: 0 4px 18px rgba(16,25,68,0.13); }
+        .product-card-inner { position: relative; background: white; border-radius: 20px; padding: 0; display: flex; flex-direction: column; height: 100%; }
+
+        /* Zone image avec fond dégradé subtil */
+        .product-card-img-wrap {
+            position: relative;
+            background: linear-gradient(145deg, #f8faff 0%, #f0f4ff 100%);
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+        }
+        .product-card-img-wrap img {
+            width: 100%; height: 100%; object-fit: contain;
+            padding: 10px;
+            transition: transform 0.5s ease;
+        }
+        .product-card-container:active .product-card-img-wrap img { transform: scale(1.06); }
+
+        /* Zone texte */
+        .product-card-body {
+            padding: 10px 12px 12px;
+            display: flex; flex-direction: column; gap: 6px;
+            border-top: 1px solid #f0f3fa;
+        }
+        .product-card-name {
+            font-size: 11px; font-weight: 700;
+            color: #1e293b; line-height: 1.35;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+            min-height: 30px;
+        }
+        .product-card-price-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 4px; flex-wrap: wrap;
+        }
+        .product-card-price {
+            color: var(--afro-red); font-weight: 900; font-size: 1rem; letter-spacing: -0.5px; line-height: 1;
+        }
+        .product-card-oldprice {
+            color: #94a3b8; font-size: 9px; font-weight: 600; text-decoration: line-through; line-height: 1;
+        }
+        .product-card-promo {
+            background: linear-gradient(45deg, #bd1e24, #ff4d4d);
+            color: white; font-size: 9px; font-weight: 900;
+            padding: 3px 8px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(189,30,36,0.3);
+            white-space: nowrap;
+        }
         
         .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
         .bubble-img-container { width: 70px; height: 70px; border-radius: 22px; background: white; padding: 2px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; }
@@ -77,8 +132,33 @@
 
         .price-tag { color: var(--afro-red); font-weight: 900; font-size: 1.1rem; letter-spacing: -0.5px; }
 
+        /* ============ GRILLE PRODUITS — scroll horizontal auto + manuel ============ */
+        #productScrollWrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: auto;
+            cursor: grab;
+        }
+        #productScrollWrapper:active { cursor: grabbing; }
+        #productScrollTrack {
+            display: flex;
+            gap: 14px;
+            padding: 8px 16px 12px;
+            width: max-content;
+        }
+        #productScrollTrack .product-card-container {
+            flex: 0 0 160px;
+            width: 160px;
+        }
+        @media (min-width: 480px) {
+            #productScrollTrack .product-card-container { flex: 0 0 175px; width: 175px; }
+        }
+
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } }
         .animate-marquee { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+        .animate-marquee.reverse { animation-name: marquee-reverse; }
         .animate-marquee:hover { animation-play-state: paused; }
 
         .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
@@ -89,6 +169,57 @@
         #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
 
         .banner-gradient-overlay { background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%); }
+
+        /* ============ BANNIÈRES — Animation Ken Burns dynamique ============ */
+        @keyframes kenburns-1 {
+            0%   { transform: scale(1.0) translate(0%, 0%); }
+            25%  { transform: scale(1.12) translate(-3%, -2%); }
+            50%  { transform: scale(1.18) translate(2%, -4%); }
+            75%  { transform: scale(1.1) translate(-1%, 2%); }
+            100% { transform: scale(1.0) translate(0%, 0%); }
+        }
+        @keyframes kenburns-2 {
+            0%   { transform: scale(1.15) translate(3%, 2%); }
+            33%  { transform: scale(1.05) translate(-2%, -3%); }
+            66%  { transform: scale(1.2) translate(1%, 3%); }
+            100% { transform: scale(1.15) translate(3%, 2%); }
+        }
+        @keyframes kenburns-3 {
+            0%   { transform: scale(1.08) translate(-2%, 3%); }
+            50%  { transform: scale(1.2) translate(3%, -2%); }
+            100% { transform: scale(1.08) translate(-2%, 3%); }
+        }
+        .banner-img-animated {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            will-change: transform, opacity;
+        }
+        .banner-img-animated.active {
+            opacity: 0.55;
+            animation: kenburns-1 16s ease-in-out infinite;
+        }
+        .banner-img-animated.kb2 { animation-name: kenburns-2; animation-duration: 14s; }
+        .banner-img-animated.kb3 { animation-name: kenburns-3; animation-duration: 18s; }
+
+        /* ============ CATÉGORIES — Scroll mixte auto + manuel ============ */
+        #categoryBubbles {
+            overflow-x: auto !important;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: auto;
+            cursor: grab;
+        }
+        #categoryBubbles:active { cursor: grabbing; }
+        #categoryBubbles .categories-scroll-track {
+            display: flex;
+            gap: 24px;
+            padding: 0 24px;
+            width: max-content;
+        }
+        /* Autoriser les clics sur les bulles même en animation */
+        .categories-scroll-track { pointer-events: none; }
+        .categories-scroll-track .category-bubble { pointer-events: auto; }
 
         /* ============ LANGUE — style Glotelho : drapeau + code + flèche ============ */
         #langBtn {
@@ -368,13 +499,13 @@
     </section>
 
     <!-- CATÉGORIES BULLES -->
-    <section class="bg-white py-6 overflow-hidden border-b border-slate-100">
-        <div id="categoryBubbles" class="flex gap-6 overflow-x-auto px-6 no-scrollbar"></div>
+    <section class="bg-white py-6 border-b border-slate-100" style="overflow:visible">
+        <div id="categoryBubbles" class="no-scrollbar" style="overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;"></div>
     </section>
 
     <!-- MARQUEE PROMO — icônes SVG, sans emojis -->
     <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
-        <div class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
+        <div id="promoMarquee" class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
             <div class="flex items-center gap-10 px-6">
                 <!-- Icône TV/Électroménager -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
@@ -437,8 +568,11 @@
     </div>
 
     <!-- GRILLE PRODUITS + AVIS -->
-    <main class="container mx-auto px-4 py-8 min-h-screen">
-        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+    <main class="py-4 min-h-screen" style="overflow:visible">
+        <div id="productScrollWrapper" class="no-scrollbar" style="overflow-x:auto;overflow-y:visible;">
+            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4"></div>
+            <div id="productScrollTrack" style="display:none"></div>
+        </div>
 
         <section class="py-3 mt-4 border-t border-slate-200">
             <h3 class="font-black text-[10px] uppercase tracking-widest text-[#101944] mb-3 flex items-center gap-1.5">
@@ -1000,11 +1134,25 @@
                 }
             ];
 
-            container.innerHTML = banners.map(b => `
-                <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" onclick="window.showDetail('${b.id}')">
-                    <img src="${b.img}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-1000" loading="lazy">
-                    <div class="absolute inset-0" style="background:linear-gradient(90deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.2) 100%)"></div>
-                    <div class="relative z-10 p-8 flex flex-col justify-center h-full">
+            // Collect all product images for dynamic background cycling
+            const kbClasses = ['', ' kb2', ' kb3'];
+            container.innerHTML = banners.map((b, bi) => {
+                // Gather multiple images: primary + random others from stock
+                const allImgs = [...new Set([
+                    b.img,
+                    ...products.filter(p => p.imgs && p.imgs[0] && p.imgs[0] !== b.img)
+                              .sort(() => Math.random() - 0.5)
+                              .slice(0, 4)
+                              .map(p => p.imgs[0])
+                ])].filter(Boolean);
+                const imgTags = allImgs.map((src, i) =>
+                    `<img src="${src}" class="banner-img-animated${kbClasses[bi % 3]}${i === 0 ? ' active' : ''}" data-banner-imgs data-banner-idx="${bi}" data-img-idx="${i}" loading="lazy">`
+                ).join('');
+                return `
+                <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" onclick="window.showDetail('${b.id}')" data-banner-slot="${bi}">
+                    ${imgTags}
+                    <div class="absolute inset-0" style="background:linear-gradient(90deg,rgba(0,0,0,0.68) 0%,rgba(0,0,0,0.18) 100%);z-index:2"></div>
+                    <div class="relative flex flex-col justify-center h-full p-8" style="z-index:3">
                         <span class="bg-white text-slate-900 text-[9px] font-black px-3 py-1 rounded-full w-fit mb-2 uppercase tracking-tighter shadow-lg flex items-center gap-1">
                             ${b.icon}${b.tag}
                         </span>
@@ -1015,7 +1163,23 @@
                             ${b.desc}
                         </p>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
+
+            // Cycle images inside each banner every 8 seconds
+            if (window._bannerImgIntervals) window._bannerImgIntervals.forEach(clearInterval);
+            window._bannerImgIntervals = banners.map((_, bi) => {
+                let imgIdx = 0;
+                return setInterval(() => {
+                    const slot = container.querySelector(`[data-banner-slot="${bi}"]`);
+                    if (!slot) return;
+                    const imgs = slot.querySelectorAll('.banner-img-animated');
+                    if (imgs.length <= 1) return;
+                    imgs[imgIdx].classList.remove('active');
+                    imgIdx = (imgIdx + 1) % imgs.length;
+                    imgs[imgIdx].classList.add('active');
+                }, 8000);
+            });
         }
 
         // ==================== PANIER ====================
@@ -1036,15 +1200,113 @@
         // ==================== GRILLE PRODUITS ====================
         function renderProducts(data) {
             const grid = document.getElementById('productGrid');
-            if (!grid) return;
-            let html = "";
-            data.forEach((p) => {
+            const track = document.getElementById('productScrollTrack');
+            const wrapper = document.getElementById('productScrollWrapper');
+            if (!grid || !track || !wrapper) return;
+
+            // Construire le HTML des cartes (réutilisé grid + track)
+            function cardHTML(p) {
                 const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
                 const badgeChip = (p.badgeLabel && p.badgeIcon) ? `<div class="card-badge-chip">${getBadgeSVG(p.badgeIcon, 10)}<span>${p.badgeLabel}</span></div>` : '';
-                html += `<div class="product-card-container group" onclick="window.showDetail('${p.id}')"><div class="product-card-inner">${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}<div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50"><img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"></div><h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">${p.name}</h3>${badgeChip}<div class="mt-auto pt-2 flex items-center justify-between"><span class="price-tag">${parseInt(p.price).toLocaleString()} F</span></div></div></div>`;
-            });
+                return `<div class="product-card-container" onclick="window.showDetail('${p.id}')">
+                    <div class="product-card-inner">
+                        <div class="product-card-img-wrap">
+                            ${promo > 0 ? `<span class="product-card-promo" style="position:absolute;top:8px;left:8px;z-index:2">-${promo}%</span>` : ''}
+                            <img src="${img}" loading="lazy" alt="${p.name}">
+                        </div>
+                        <div class="product-card-body">
+                            <div class="product-card-name">${p.name}</div>
+                            ${badgeChip}
+                            <div class="product-card-price-row">
+                                <span class="product-card-price">${parseInt(p.price).toLocaleString()} F</span>
+                                ${p.old ? `<span class="product-card-oldprice">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            const html = data.map(cardHTML).join('');
+
+            // Grille normale (visible)
             grid.innerHTML = html;
+            grid.style.display = '';
+
+            // Track horizontal scroll (auto-scroll + drag) — tripler pour loop infini
+            track.innerHTML = html + html + html;
+            track.style.display = 'none'; // caché par défaut, activé par scroll auto
+
+            // ---- Auto-scroll JS sur le wrapper ----
+            // Arrêter l'ancien RAF s'il existe
+            if (window._prodScrollRaf) cancelAnimationFrame(window._prodScrollRaf);
+
+            const speed = 0.5;
+            let isPaused = false;
+            let isDragging = false;
+            let dragStartX = 0, dragStartScroll = 0, lastManual = 0;
+
+            // On utilise le grid lui-même converti en flex-row pour auto-scroll
+            // Passer en mode scroll horizontal dès que les produits sont rendus
+            function activateHorizontalMode() {
+                grid.style.display = 'none';
+                track.style.display = 'flex';
+                wrapper.style.overflowX = 'auto';
+
+                const singleW = () => track.scrollWidth / 3;
+                wrapper.scrollLeft = singleW(); // départ au bloc du milieu
+
+                function loop() {
+                    const sw = singleW();
+                    if (!isPaused && !isDragging) {
+                        wrapper.scrollLeft += speed;
+                        if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
+                        if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
+                    }
+                    window._prodScrollRaf = requestAnimationFrame(loop);
+                }
+                window._prodScrollRaf = requestAnimationFrame(loop);
+
+                // Touch
+                wrapper.addEventListener('touchstart', (e) => {
+                    isPaused = true; isDragging = true;
+                    dragStartX = e.touches[0].clientX;
+                    dragStartScroll = wrapper.scrollLeft;
+                }, { passive: true });
+                wrapper.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const dx = dragStartX - e.touches[0].clientX;
+                    wrapper.scrollLeft = dragStartScroll + dx;
+                    const sw = singleW();
+                    if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
+                    if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
+                }, { passive: true });
+                wrapper.addEventListener('touchend', () => {
+                    isDragging = false; lastManual = Date.now();
+                    setTimeout(() => { if (Date.now() - lastManual >= 2400) isPaused = false; }, 2500);
+                }, { passive: true });
+                // Mouse drag
+                wrapper.addEventListener('mousedown', (e) => {
+                    isPaused = true; isDragging = true;
+                    dragStartX = e.clientX; dragStartScroll = wrapper.scrollLeft;
+                    e.preventDefault();
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    wrapper.scrollLeft = dragStartScroll - (e.clientX - dragStartX);
+                    const sw = singleW();
+                    if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
+                    if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
+                });
+                window.addEventListener('mouseup', () => {
+                    if (!isDragging) return;
+                    isDragging = false; lastManual = Date.now();
+                    setTimeout(() => { if (Date.now() - lastManual >= 2400) isPaused = false; }, 2500);
+                });
+            }
+
+            // Activer le mode horizontal seulement si assez de produits
+            if (data.length >= 4) activateHorizontalMode();
         }
 
         // ==================== FICHE PRODUIT ====================
@@ -1126,11 +1388,103 @@
         function renderCategoryBubbles() {
             const container = document.getElementById('categoryBubbles');
             if (!container || !categories || categories.length === 0) return;
-            container.innerHTML = categories.map(cat => {
+            const catHTML = categories.map(cat => {
                 const prod = stock.find(p => p.cat === cat.name);
                 const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
                 return `<div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')"><div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div><span class="bubble-text">${cat.name}</span></div>`;
             }).join('');
+            // Dupliquer 3x pour scroll infini dans les deux sens
+            container.innerHTML = `<div class="categories-scroll-track">${catHTML}${catHTML}${catHTML}</div>`;
+
+            // ---- Auto-scroll JS avec pause au toucher ----
+            const track = container.querySelector('.categories-scroll-track');
+            let autoDir = 1; // 1 = gauche, -1 = droite
+            let speed = 0.6; // px/frame
+            let isPaused = false;
+            let rafId = null;
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartScroll = 0;
+            let lastManualTime = 0;
+
+            // Centrer sur le 2e bloc au départ pour pouvoir scroller dans les 2 sens
+            const singleW = () => track.scrollWidth / 3;
+            container.scrollLeft = singleW();
+
+            function autoScroll() {
+                const sw = singleW();
+                if (!isPaused && !isDragging) {
+                    container.scrollLeft += speed * autoDir;
+                    // Boucle infinie : si on dépasse le 3e bloc, on revient au 2e
+                    if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
+                    if (container.scrollLeft <= 0) container.scrollLeft += sw;
+                }
+                rafId = requestAnimationFrame(autoScroll);
+            }
+            rafId = requestAnimationFrame(autoScroll);
+
+            // Pause auto quand l'utilisateur touche
+            container.addEventListener('touchstart', (e) => {
+                isPaused = true;
+                dragStartX = e.touches[0].clientX;
+                dragStartScroll = container.scrollLeft;
+                isDragging = true;
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const dx = dragStartX - e.touches[0].clientX;
+                container.scrollLeft = dragStartScroll + dx;
+                // Boucle
+                const sw = singleW();
+                if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
+                if (container.scrollLeft <= 0) container.scrollLeft += sw;
+            }, { passive: true });
+
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+                lastManualTime = Date.now();
+                // Reprendre l'auto-scroll après 2.5 secondes
+                setTimeout(() => {
+                    if (Date.now() - lastManualTime >= 2400) isPaused = false;
+                }, 2500);
+            }, { passive: true });
+
+            // Support mouse drag (desktop)
+            container.addEventListener('mousedown', (e) => {
+                isPaused = true;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartScroll = container.scrollLeft;
+                e.preventDefault();
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = dragStartX - e.clientX;
+                container.scrollLeft = dragStartScroll + dx;
+                const sw = singleW();
+                if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
+                if (container.scrollLeft <= 0) container.scrollLeft += sw;
+            });
+            window.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                lastManualTime = Date.now();
+                setTimeout(() => { if (Date.now() - lastManualTime >= 2400) isPaused = false; }, 2500);
+            });
+
+            // Synchroniser le marquee dans le sens opposé
+            function syncMarquee() {
+                const marquee = document.getElementById('promoMarquee');
+                if (!marquee) return;
+                // autoDir 1 = cats → gauche → marquee → droite (reverse)
+                if (autoDir === 1) marquee.classList.add('reverse');
+                else marquee.classList.remove('reverse');
+            }
+            syncMarquee();
+
+            // Exposer pour le bouton de direction
+            window._catScrollState = { get dir() { return autoDir; }, set dir(v) { autoDir = v; syncMarquee(); } };
         }
 
         function renderMenu() {
@@ -1147,6 +1501,20 @@
         }
 
         window.toggleSub = (id) => { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
+
+        // ==================== DIRECTION CATÉGORIES + MARQUEE INVERSÉ ====================
+        let catDirectionReversed = false;
+        window.toggleCatDirection = function() {
+            catDirectionReversed = !catDirectionReversed;
+            if (window._catScrollState) {
+                window._catScrollState.dir = catDirectionReversed ? -1 : 1;
+            }
+        };
+        // Au démarrage : marquee en sens contraire des catégories (catégories → gauche, marquee → droite)
+        window.addEventListener('DOMContentLoaded', () => {
+            const marquee = document.getElementById('promoMarquee');
+            if (marquee) marquee.classList.add('reverse');
+        });
         window.filterItems = (cat, sub, subsub) => {
             let filtered = !sub && !subsub ? stock.filter(p => p.cat === cat) : stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
             renderProducts(filtered);
@@ -1559,7 +1927,7 @@
             if (pm) { pm.textContent = msgs[0]; pm.style.opacity = '1'; }
             setInterval(rotatePromoMsg, 4000);
 
-            // Défilement bannières
+            // Défilement bannières (scroll horizontal)
             let bannerIndex = 0;
             setInterval(() => {
                 const bannerContainer = document.querySelector('#dynamicBanners');
@@ -1568,7 +1936,7 @@
                 if (items.length <= 1) return;
                 bannerIndex = (bannerIndex + 1) % items.length;
                 bannerContainer.scrollTo({ left: items[bannerIndex].offsetLeft - 16, behavior: 'smooth' });
-            }, 5000);
+            }, 8000);
 
             // ===== BOUTON NAVIGATION UNIQUE — discret, disparaît en haut =====
             const scrollBtn  = document.getElementById('scrollToggleBtn');
@@ -1579,7 +1947,32 @@
 
             function getActiveScroller() {
                 const admin = document.getElementById('adminModal');
-                return (admin && !admin.classList.contains('hidden')) ? admin : null;
+                if (admin && !admin.classList.contains('hidden')) return admin;
+
+                const detail = document.getElementById('detailModal');
+                if (detail) {
+                    const t = detail.style.transform || '';
+                    if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') {
+                        // Le scroll réel est dans detailContent, pas detailModal
+                        return document.getElementById('detailContent') || detail;
+                    }
+                }
+
+                const cart = document.getElementById('sideCart');
+                if (cart) {
+                    const t = cart.style.transform || '';
+                    if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') {
+                        return document.getElementById('cartItems') || cart;
+                    }
+                }
+
+                const nav = document.getElementById('sideNav');
+                if (nav) {
+                    const t = nav.style.transform || '';
+                    if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') return nav;
+                }
+
+                return null;
             }
 
             function updateScrollBtn() {
@@ -1620,10 +2013,27 @@
             const adminModalEl = document.getElementById('adminModal');
             if (adminModalEl) adminModalEl.addEventListener('scroll', updateScrollBtn, { passive: true });
 
+            const detailContentEl = document.getElementById('detailContent');
+            if (detailContentEl) detailContentEl.addEventListener('scroll', updateScrollBtn, { passive: true });
+
+            const sideCartEl = document.getElementById('sideCart');
+            if (sideCartEl) sideCartEl.addEventListener('scroll', updateScrollBtn, { passive: true });
+
+            const sideNavEl = document.getElementById('sideNav');
+            if (sideNavEl) sideNavEl.addEventListener('scroll', updateScrollBtn, { passive: true });
+
             const _origOpen  = window.openAdmin;
             const _origClose = window.closeAdmin;
-            window.openAdmin  = function() { _origOpen  && _origOpen();  setTimeout(updateScrollBtn, 120); };
-            window.closeAdmin = function() { _origClose && _origClose(); setTimeout(updateScrollBtn, 120); };
+            const _origOpenNav = window.openNav;
+            const _origOpenCart = window.openCart;
+            const _origCloseMenus = window.closeMenus;
+            const _origCloseDetail = window.closeDetail;
+            window.openAdmin   = function() { _origOpen  && _origOpen();  setTimeout(updateScrollBtn, 120); };
+            window.closeAdmin  = function() { _origClose && _origClose(); setTimeout(updateScrollBtn, 120); };
+            window.openNav     = function() { _origOpenNav  && _origOpenNav();  setTimeout(updateScrollBtn, 120); };
+            window.openCart    = function() { _origOpenCart && _origOpenCart(); setTimeout(updateScrollBtn, 120); };
+            window.closeMenus  = function() { _origCloseMenus && _origCloseMenus(); setTimeout(updateScrollBtn, 120); };
+            window.closeDetail = function() { _origCloseDetail && _origCloseDetail(); setTimeout(updateScrollBtn, 120); };
 
             updateScrollBtn();
         });
