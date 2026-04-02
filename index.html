@@ -57,9 +57,7 @@
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
 
-        /* BADGES MODERNISÉS - NOUVEAU DESIGN SANS EMOJIS */
-        
-        /* Badge Administrateur Certifié avec Blue Check */
+        /* BADGES MODERNISÉS */
         .badge-admin-certified {
             display: inline-flex;
             align-items: center;
@@ -73,139 +71,25 @@
             padding-bottom: 0.25rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
+        .badge-admin-certified .admin-name { font-weight: 700; color: white; font-size: 0.75rem; line-height: 1; }
+        .badge-admin-certified .blue-check { width: 1rem; height: 1rem; color: #3b82f6; }
         
-        .badge-admin-certified .admin-name {
-            font-weight: 700;
-            color: white;
-            font-size: 0.75rem;
-            line-height: 1;
-        }
-        
-        .badge-admin-certified .blue-check {
-            width: 1rem;
-            height: 1rem;
-            color: #3b82f6;
-        }
-        
-        /* Badges de fidélité modernisés - Sans emojis */
-        .badge-new {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.1rem 0.35rem;
-            border-radius: 9999px;
-            font-size: 0.55rem;
-            font-weight: 700;
-            background-color: #dbeafe;
-            color: #1e40af;
-            gap: 0.2rem;
-            vertical-align: middle;
-            line-height: 1;
-        }
-        
-        .badge-new svg {
-            width: 0.35rem;
-            height: 0.35rem;
-            color: #60a5fa;
-        }
-        
-        .badge-regular {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.1rem 0.35rem;
-            border-radius: 9999px;
-            font-size: 0.55rem;
-            font-weight: 700;
-            background-color: #f3e8ff;
-            color: #6b21a5;
-            gap: 0.2rem;
-            vertical-align: middle;
-            line-height: 1;
-        }
-        
-        .badge-regular svg {
-            width: 0.35rem;
-            height: 0.35rem;
-            color: #c084fc;
-        }
-        
-        .badge-loyal {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.1rem 0.35rem;
-            border-radius: 9999px;
-            font-size: 0.55rem;
-            font-weight: 700;
-            background-color: #fef3c7;
-            color: #b45309;
-            gap: 0.2rem;
-            vertical-align: middle;
-            line-height: 1;
-        }
-        
-        .badge-loyal svg {
-            width: 0.35rem;
-            height: 0.35rem;
-            color: #f59e0b;
-        }
-        
-        .badge-admin-glow {
-            animation: admin-pulse 2s infinite;
-        }
+        .badge-new { display: inline-flex; align-items: center; padding: 0.1rem 0.35rem; border-radius: 9999px; font-size: 0.55rem; font-weight: 700; background-color: #dbeafe; color: #1e40af; gap: 0.2rem; vertical-align: middle; line-height: 1; }
+        .badge-regular { display: inline-flex; align-items: center; padding: 0.1rem 0.35rem; border-radius: 9999px; font-size: 0.55rem; font-weight: 700; background-color: #f3e8ff; color: #6b21a5; gap: 0.2rem; vertical-align: middle; line-height: 1; }
+        .badge-loyal { display: inline-flex; align-items: center; padding: 0.1rem 0.35rem; border-radius: 9999px; font-size: 0.55rem; font-weight: 700; background-color: #fef3c7; color: #b45309; gap: 0.2rem; vertical-align: middle; line-height: 1; }
+
+        .badge-admin-glow { animation: admin-pulse 2s infinite; }
         @keyframes admin-pulse {
             0% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0.4); }
             70% { box-shadow: 0 0 0 6px rgba(189, 30, 36, 0); }
             100% { box-shadow: 0 0 0 0 rgba(189, 30, 36, 0); }
         }
 
-        /* ADMIN PROFILE BADGE - Style pill sombre + badge bleu Meta */
-        .admin-profile-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            border-radius: 9999px;
-            padding: 0.45rem 0.85rem;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-        }
-        .admin-profile-badge .admin-name {
-            font-weight: 900;
-            color: white;
-            font-size: 0.875rem;
-            letter-spacing: 0.01em;
-            line-height: 1;
-        }
-        /* Badge inline pour les réponses admin dans les avis */
-        .admin-reply-block {
-            margin-top: 8px;
-            padding: 8px 10px;
-            background: #f0f4ff;
-            border-left: 3px solid #1877F2;
-            border-radius: 0 10px 10px 0;
-        }
-        .admin-reply-author {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 3px;
-        }
-        .admin-reply-author span {
-            font-size: 9px;
-            font-weight: 900;
-            color: #101944;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+        .admin-profile-badge { display: inline-flex; align-items: center; gap: 0.45rem; background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: 9999px; padding: 0.45rem 0.85rem; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
+        .admin-profile-badge .admin-name { font-weight: 900; color: white; font-size: 0.875rem; letter-spacing: 0.01em; line-height: 1; }
 
-        .product-card-container {
-            position: relative;
-            border-radius: 24px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
+        .product-card-container { position: relative; border-radius: 24px; background: white; border: 1px solid #e2e8f0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
         .product-card-container:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
-
         .product-card-inner { position: relative; background: white; border-radius: 23px; padding: 12px; display: flex; flex-direction: column; height: 100%; }
         
         .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
@@ -227,15 +111,102 @@
         #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
         #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
 
-        .banner-gradient-overlay {
-            background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%);
+        .banner-gradient-overlay { background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%); }
+        .icon-outline { stroke-width: 2; stroke: currentColor; fill: none; }
+
+        /* =====================================================
+           BADGE PRODUIT — SELECT DÉROULANT (NOUVEAU)
+        ===================================================== */
+        .badge-select-wrapper { position: relative; margin-top: 28px; margin-bottom: 8px; }
+        .badge-select-label { font-size: 9px; font-weight: 900; letter-spacing: 0.18em; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; margin-left: 2px; display: block; }
+        .badge-select-box {
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 14px 44px 14px 16px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #0f172a;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            letter-spacing: 0.01em;
         }
-        
-        .icon-outline {
-            stroke-width: 2;
-            stroke: currentColor;
-            fill: none;
+        .badge-select-box:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15); }
+        .badge-select-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #22c55e; }
+        .badge-preview-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1.5px solid #86efac;
+            border-radius: 14px;
+            min-height: 42px;
         }
+        .badge-preview-icon { width: 22px; height: 22px; color: #16a34a; flex-shrink: 0; }
+        .badge-preview-text { font-size: 11px; font-weight: 900; color: #15803d; text-transform: uppercase; letter-spacing: 0.04em; }
+        .badge-save-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 11px 0;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: opacity 0.2s, transform 0.1s;
+            font-family: inherit;
+        }
+        .badge-save-btn:active { transform: scale(0.97); opacity: 0.9; }
+
+        /* Badge affiché sur la fiche produit (lecture) */
+        .product-badge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1.5px solid #86efac;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 900;
+            color: #15803d;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .product-badge-chip svg { width: 14px; height: 14px; color: #16a34a; flex-shrink: 0; }
+
+        /* Badge sur la carte produit (grille) */
+        .card-badge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 8px;
+            font-weight: 900;
+            color: #15803d;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .card-badge-chip svg { width: 10px; height: 10px; }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
@@ -267,29 +238,13 @@
                 </div>
             </div>
         </div>
-        
         <div class="ticker-wrap">
             <div class="ticker">
-                <div class="ticker__item">
-                    <svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 
-                    Livraison Rapide à Bafoussam et environs
-                </div>
-                <div class="ticker__item">
-                    <svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    Qualité Garantie sur tous nos produits
-                </div>
-                <div class="ticker__item">
-                    <svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Service Client 24h/7j sur WhatsApp
-                </div>
-                <div class="ticker__item">
-                    <svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Nouvel arrivage chaque semaine !
-                </div>
-                <div class="ticker__item">
-                    <svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Paiement sécurisé à la livraison
-                </div>
+                <div class="ticker__item"><svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Livraison Rapide à Bafoussam et environs</div>
+                <div class="ticker__item"><svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>Qualité Garantie sur tous nos produits</div>
+                <div class="ticker__item"><svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Service Client 24h/7j sur WhatsApp</div>
+                <div class="ticker__item"><svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Nouvel arrivage chaque semaine !</div>
+                <div class="ticker__item"><svg class="inline w-3 h-3 mr-1 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Paiement sécurisé à la livraison</div>
             </div>
         </div>
     </header>
@@ -310,20 +265,11 @@
     <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
         <div class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
             <div class="flex items-center gap-10 px-6">
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    Nouvel arrivage Électroménager
-                </span>
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]"><svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>Nouvel arrivage Électroménager</span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    -25% sur les TV Smart
-                </span>
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>-25% sur les TV Smart</span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    Livraison Rapide à Bafoussam
-                </span>
+                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]"><svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Livraison Rapide à Bafoussam</span>
             </div>
         </div>
     </div>
@@ -426,7 +372,7 @@
         </div>
     </aside>
 
-    <!-- ADMIN MODAL AVEC ONGLETS -->
+    <!-- ADMIN MODAL -->
     <div id="adminModal" class="hidden fixed inset-0 bg-white z-[200] flex flex-col">
         <div class="p-4 border-b flex justify-between items-center bg-white shrink-0">
             <button onclick="window.closeAdmin()" class="font-bold text-[#101944] text-xs uppercase tracking-widest flex items-center gap-2">
@@ -441,7 +387,6 @@
                 </svg>
             </div>
         </div>
-
         <div class="flex border-b bg-slate-50 shrink-0">
             <button onclick="window.switchAdminTab('products')" id="tab-products" class="flex-1 py-4 text-[10px] font-black uppercase border-b-4 border-red-600 text-red-600 transition-all flex items-center justify-center gap-1">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
@@ -456,9 +401,7 @@
                 Avis
             </button>
         </div>
-
         <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100/30">
-            
             <div id="panel-products" class="admin-panel space-y-6">
                 <div class="bg-white p-6 rounded-3xl border shadow-sm">
                     <h3 id="admTitle" class="font-black uppercase text-xs mb-6 text-red-600">Ajouter un article</h3>
@@ -487,7 +430,6 @@
                 </div>
                 <div id="stockList" class="grid gap-2"></div>
             </div>
-
             <div id="panel-categories" class="admin-panel hidden space-y-6">
                 <div class="bg-white p-6 rounded-3xl border shadow-sm">
                     <div class="flex justify-between items-center mb-6">
@@ -504,14 +446,12 @@
                     </button>
                 </div>
             </div>
-
             <div id="panel-reviews" class="admin-panel hidden space-y-6">
                 <div class="bg-white p-6 rounded-3xl border shadow-sm">
                     <h3 class="font-black uppercase text-xs mb-6 text-orange-600 italic">Modération des Avis</h3>
                     <div id="adminReviewsList" class="space-y-2 pr-2"></div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -548,18 +488,10 @@
     </script>
 
     <script type="module">
-        // ============================================================
-        // AFRO SERVICE CAMEROUN - APPLICATION E-COMMERCE UNIFIÉE
-        // Version Premium avec badges modernisés (sans emojis)
-        // Badges clients : pastilles élégantes avec points colorés
-        // Badge admin : Blue Check certifié (type Twitter/Instagram) - CORRIGÉ
-        // ============================================================
-        
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, push, onValue, remove, update, set } from "firebase/database";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 
-        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB0NF5a7jhUyuA1FTIjK1Iw_x3eGHcrykY",
             authDomain: "afro-service-b8999.firebaseapp.com",
@@ -578,7 +510,6 @@
         const reviewsRef = ref(db, 'reviews');
         const ordersRef = ref(db, 'orders');
 
-        // Variables globales
         let currentUser = null;
         let cart = [];
         let stock = [];
@@ -591,44 +522,74 @@
             "judiwembe10@gmail.com"
         ];
 
-        // ==================== FONCTIONS UTILITAIRES ====================
-        
+        // ==================== BADGES PRODUIT — ICÔNES SVG ====================
+        const BADGE_ICONS = {
+            trending: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>`,
+            star: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>`,
+            barchart: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>`,
+            diamond: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>`,
+            rocket: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.82m2.56-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>`,
+            thumb: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>`,
+            xcirc: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+            hourglass: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+            coins: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>`,
+            flame: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>`,
+            box: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>`,
+            refresh: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>`,
+            tag: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>`,
+            arrowdown: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>`,
+            pricetag: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>`,
+            target: `<circle cx="12" cy="12" r="10" stroke-width="2"/><circle cx="12" cy="12" r="6" stroke-width="2"/><circle cx="12" cy="12" r="2" stroke-width="2"/>`,
+            clock: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+            spark: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>`,
+            basket: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>`,
+            newbox: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>`,
+            flag: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>`,
+            rocketland: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.82m2.56-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>`,
+            newbadge: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>`,
+            truck: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>`,
+            shield: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>`,
+            shield2: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/><text x="12" y="14" text-anchor="middle" font-size="7" font-weight="900" fill="white" stroke="none">2</text>`,
+            leaf: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>`,
+            seal: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>`,
+            checkcirc: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>`,
+        };
+
+        function getBadgeSVG(iconKey, size = 16) {
+            if (!BADGE_ICONS[iconKey]) return '';
+            return `<svg width="${size}" height="${size}" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#16a34a;flex-shrink:0">${BADGE_ICONS[iconKey]}</svg>`;
+        }
+
+        // ==================== BADGE SELECT — INTERACTIONS ====================
+        window.saveBadge = async function(productId) {
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) {
+                return alert("Connectez-vous en tant qu'administrateur pour appliquer un badge.");
+            }
+            const select = document.getElementById('badge_' + productId);
+            if (!select || !select.value) return alert("Veuillez choisir un badge.");
+            const [label, iconKey] = select.value.split('|');
+            await update(ref(db, 'stock/' + productId), { badgeLabel: label, badgeIcon: iconKey });
+            alert('✅ Badge "' + label + '" appliqué ! Il apparaît maintenant sur la boutique.');
+        };
+
+        window.removeBadge = async function(productId) {
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return;
+            await update(ref(db, 'stock/' + productId), { badgeLabel: null, badgeIcon: null });
+            alert('Badge supprimé.');
+        };
+
+        // ==================== UTILITAIRES ====================
         async function getCustomerBadge(userId) {
             if (!userId) return null;
             try {
                 const userOrdersRef = ref(db, `orders/${userId}`);
-                const snapshot = await new Promise((resolve) => {
-                    onValue(userOrdersRef, resolve, { onlyOnce: true });
-                });
+                const snapshot = await new Promise((resolve) => { onValue(userOrdersRef, resolve, { onlyOnce: true }); });
                 const orders = snapshot.val();
                 const orderCount = orders ? Object.keys(orders).length : 0;
-                
-                if (orderCount >= 10) {
-                    return { 
-                        label: "Client Fidèle", 
-                        style: "badge-loyal",
-                        class: "badge-loyal",
-                        icon: `<svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>`
-                    };
-                } else if (orderCount >= 3) {
-                    return { 
-                        label: "Client Régulier", 
-                        style: "badge-regular",
-                        class: "badge-regular",
-                        icon: `<svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>`
-                    };
-                } else {
-                    return { 
-                        label: "Nouveau Client", 
-                        style: "badge-new",
-                        class: "badge-new",
-                        icon: `<svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>`
-                    };
-                }
-            } catch (error) {
-                console.error("Erreur badge:", error);
-                return null;
-            }
+                if (orderCount >= 10) return { label: "Client Fidèle", class: "badge-loyal" };
+                else if (orderCount >= 3) return { label: "Client Régulier", class: "badge-regular" };
+                else return { label: "Nouveau Client", class: "badge-new" };
+            } catch (error) { return null; }
         }
 
         function updateWALink(prodName = null) {
@@ -638,155 +599,79 @@
         }
 
         function resetAdminForm() {
-            document.getElementById('admName').value = "";
-            document.getElementById('admPrice').value = "";
-            document.getElementById('admOld').value = "";
-            document.getElementById('admDesc').value = "";
-            document.getElementById('admImgs').value = "";
-            document.getElementById('admColors').value = "";
-            document.getElementById('admMem').value = "";
+            ['admName','admDesc','admImgs','admColors','admMem'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+            ['admPrice','admOld'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
         }
 
-        // ==================== BANNIÈRES DYNAMIQUES ====================
+        // ==================== BANNIÈRES ====================
         function updateDynamicBanners(products) {
             const container = document.getElementById('dynamicBanners');
-            if (!container || !products || products.length === 0) {
-                if (container) {
-                    container.innerHTML = `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>`;
-                }
-                return;
-            }
-
-            const promoItems = [...products].filter(p => p.old && p.old > p.price)
-                .sort((a, b) => {
-                    const percentA = ((a.old - a.price) / a.old) * 100;
-                    const percentB = ((b.old - b.price) / b.old) * 100;
-                    return percentB - percentA;
-                });
+            if (!container || !products || products.length === 0) { if (container) container.innerHTML = `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>`; return; }
+            const promoItems = [...products].filter(p => p.old && p.old > p.price).sort((a, b) => ((b.old - b.price) / b.old) - ((a.old - a.price) / a.old));
             const bestPromo = promoItems[0] || products[0];
             const latest = products[products.length - 1];
             const random = products[Math.floor(Math.random() * products.length)];
-
             const banners = [
-                {
-                    title: "Offre Imbattable",
-                    subtitle: bestPromo.name,
-                    tag: bestPromo.old ? `-${Math.round(((bestPromo.old - bestPromo.price) / bestPromo.old) * 100)}%` : "MEILLEUR PRIX",
-                    img: bestPromo.imgs && bestPromo.imgs[0] ? bestPromo.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-red-600",
-                    id: bestPromo.id,
-                    desc: bestPromo.old ? `Économisez ${(bestPromo.old - bestPromo.price).toLocaleString()} F` : "Qualité Premium"
-                },
-                {
-                    title: "Nouvel Arrivage",
-                    subtitle: latest.name,
-                    tag: "EXCLUSIVITÉ",
-                    img: latest.imgs && latest.imgs[0] ? latest.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-[#101944]",
-                    id: latest.id,
-                    desc: "Disponible dès maintenant"
-                },
-                {
-                    title: "Sélection du Jour",
-                    subtitle: random.name,
-                    tag: "COUP DE COEUR",
-                    img: random.imgs && random.imgs[0] ? random.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-slate-900",
-                    id: random.id,
-                    desc: "Qualité Premium Garantie"
-                }
+                { title: "Offre Imbattable", subtitle: bestPromo.name, tag: bestPromo.old ? `-${Math.round(((bestPromo.old - bestPromo.price) / bestPromo.old) * 100)}%` : "MEILLEUR PRIX", img: bestPromo.imgs && bestPromo.imgs[0] ? bestPromo.imgs[0] : 'https://via.placeholder.com/800x400', color: "bg-red-600", id: bestPromo.id, desc: bestPromo.old ? `Économisez ${(bestPromo.old - bestPromo.price).toLocaleString()} F` : "Qualité Premium" },
+                { title: "Nouvel Arrivage", subtitle: latest.name, tag: "EXCLUSIVITÉ", img: latest.imgs && latest.imgs[0] ? latest.imgs[0] : 'https://via.placeholder.com/800x400', color: "bg-[#101944]", id: latest.id, desc: "Disponible dès maintenant" },
+                { title: "Sélection du Jour", subtitle: random.name, tag: "COUP DE COEUR", img: random.imgs && random.imgs[0] ? random.imgs[0] : 'https://via.placeholder.com/800x400', color: "bg-slate-900", id: random.id, desc: "Qualité Premium Garantie" }
             ];
-
-            container.innerHTML = banners.map(b => `
-                <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" 
-                     onclick="window.showDetail('${b.id}')">
-                    <img src="${b.img}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-1000" loading="lazy">
-                    <div class="absolute inset-0 banner-gradient-overlay"></div>
-                    <div class="relative z-10 p-8 flex flex-col justify-center h-full">
-                        <span class="bg-white text-slate-900 text-[9px] font-black px-3 py-1 rounded-full w-fit mb-2 uppercase tracking-tighter shadow-lg">
-                            ${b.tag}
-                        </span>
-                        <h2 class="text-white text-xl font-black uppercase leading-none mb-1">${b.title}</h2>
-                        <p class="text-red-400 text-lg font-black uppercase leading-tight line-clamp-1">${b.subtitle}</p>
-                        <p class="text-white/80 text-[10px] font-bold mt-2 uppercase italic tracking-widest">${b.desc}</p>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = banners.map(b => `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" onclick="window.showDetail('${b.id}')"><img src="${b.img}" class="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-1000" loading="lazy"><div class="absolute inset-0 banner-gradient-overlay"></div><div class="relative z-10 p-8 flex flex-col justify-center h-full"><span class="bg-white text-slate-900 text-[9px] font-black px-3 py-1 rounded-full w-fit mb-2 uppercase tracking-tighter shadow-lg">${b.tag}</span><h2 class="text-white text-xl font-black uppercase leading-none mb-1">${b.title}</h2><p class="text-red-400 text-lg font-black uppercase leading-tight line-clamp-1">${b.subtitle}</p><p class="text-white/80 text-[10px] font-bold mt-2 uppercase italic tracking-widest">${b.desc}</p></div></div>`).join('');
         }
 
-        // ==================== FONCTIONS PANIER ====================
+        // ==================== PANIER ====================
         function updateCart() {
             let total = 0;
             const cartItems = document.getElementById('cartItems');
             if (cartItems) {
-                cartItems.innerHTML = cart.map((item, i) => {
-                    total += parseInt(item.price);
-                    return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="window.removeFromCart(${i})" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`;
-                }).join('');
+                cartItems.innerHTML = cart.map((item, i) => { total += parseInt(item.price); return `<div class="flex gap-4 bg-white p-4 rounded-2xl items-center shadow-sm border border-slate-100"><img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shadow-inner" loading="lazy"><div class="flex-1"><p class="text-[9px] font-black uppercase leading-tight text-slate-800">${item.name}</p><p class="text-red-600 font-black text-xs mt-1">${parseInt(item.price).toLocaleString()} F</p></div><button onclick="window.removeFromCart(${i})" class="text-slate-300 hover:text-red-600 font-bold px-2 text-xl">×</button></div>`; }).join('');
                 document.getElementById('cartTotal').innerText = total.toLocaleString() + " F";
                 document.getElementById('badge').innerText = cart.length;
             }
         }
+        window.removeFromCart = function(index) { cart.splice(index, 1); updateCart(); };
 
-        window.removeFromCart = function(index) {
-            cart.splice(index, 1);
-            updateCart();
-        };
-
-        // ==================== FONCTIONS PRODUITS ====================
+        // ==================== RENDU GRILLE PRODUITS ====================
         function renderProducts(data) {
             const grid = document.getElementById('productGrid');
             if (!grid) return;
-            
             let html = "";
             data.forEach((p) => {
                 const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
                 const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
-                
-                html += `
-                    <div class="product-card-container group" onclick="window.showDetail('${p.id}')">
-                        <div class="product-card-inner">
-                            ${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}
-                            <div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50">
-                                <img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
-                            </div>
-                            <h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">${p.name}</h3>
-                            <div class="mt-auto pt-2 flex items-center justify-between">
-                                <span class="price-tag">${parseInt(p.price).toLocaleString()} F</span>
-                            </div>
-                        </div>
-                    </div>`;
+                const badgeChip = (p.badgeLabel && p.badgeIcon) ? `<div class="card-badge-chip">${getBadgeSVG(p.badgeIcon, 10)}<span>${p.badgeLabel}</span></div>` : '';
+                html += `<div class="product-card-container group" onclick="window.showDetail('${p.id}')"><div class="product-card-inner">${promo > 0 ? `<span class="absolute top-3 left-3 promo-badge text-white text-[10px] font-black px-3 py-1 rounded-full z-10">-${promo}%</span>` : ''}<div class="aspect-square overflow-hidden rounded-[20px] mb-3 bg-slate-50"><img src="${img}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"></div><h3 class="text-[11px] font-bold uppercase line-clamp-2 h-9 leading-tight text-slate-800">${p.name}</h3>${badgeChip}<div class="mt-auto pt-2 flex items-center justify-between"><span class="price-tag">${parseInt(p.price).toLocaleString()} F</span></div></div></div>`;
             });
             grid.innerHTML = html;
         }
 
-        // ==================== SHOW DETAIL ====================
+        // ==================== FICHE PRODUIT (DETAIL) ====================
         window.showDetail = function(id) {
             const p = stock.find(x => x.id === id);
             if (!p) return;
-            
             const content = document.getElementById('detailContent');
             const imgs = p.imgs && p.imgs.length ? p.imgs : ['https://via.placeholder.com/300'];
             const ordersCount = Math.floor(Math.random() * 5) + 2;
+            
+            // Badge affiché en lecture seule sur la fiche publique
+            const existingBadgeHtml = (p.badgeLabel && p.badgeIcon) ? `
+                <div class="product-badge-chip">
+                    ${getBadgeSVG(p.badgeIcon, 14)}
+                    <span>${p.badgeLabel}</span>
+                </div>` : '';
             
             content.innerHTML = `
                 <div class="relative overflow-hidden rounded-3xl mb-6 shadow-xl bg-slate-100">
                     <div id="slideTrack" class="flex transition-transform duration-500">
                         ${imgs.map(img => `<img src="${img}" class="min-w-full aspect-square object-cover" loading="lazy">`).join('')}
                     </div>
-                    ${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3">
-                        <button onclick="window.moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg flex items-center justify-center">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
-                        </button>
-                        <button onclick="window.moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg flex items-center justify-center">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
-                        </button>
-                    </div>` : ''}
+                    ${imgs.length > 1 ? `<div class="absolute inset-0 flex items-center justify-between px-3"><button onclick="window.moveSlide(-1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg flex items-center justify-center"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg></button><button onclick="window.moveSlide(1,${imgs.length})" class="bg-white/90 w-10 h-10 rounded-full shadow-lg flex items-center justify-center"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg></button></div>` : ''}
                 </div>
                 <div class="bg-red-50 text-red-600 p-3 rounded-xl mb-4 flex items-center gap-3 border border-red-100">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     <p class="text-[10px] font-bold uppercase italic">${ordersCount} commandes enregistrées ce mois !</p>
                 </div>
+                ${existingBadgeHtml}
                 <h2 class="text-xl font-black text-[#101944] uppercase mb-4 leading-tight">${p.name}</h2>
                 <div class="flex items-center gap-4 mb-4">
                     <span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} F</span>
@@ -796,39 +681,19 @@
                 <p class="text-xs text-slate-600 mb-8 whitespace-pre-line">${p.desc || 'Pas de description disponible.'}</p>
                 
                 <div class="space-y-6 mt-6">
-                    ${p.colors ? `
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Couleur disponible</label>
-                            <select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">
-                                ${p.colors.split(',').map(c => `<option>${c.trim()}</option>`).join('')}
-                            </select>
-                        </div>` : ''}
-
-                    ${p.memory ? `
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Capacité / Mémoire</label>
-                            <select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">
-                                ${p.memory.split(',').map(m => `<option>${m.trim()}</option>`).join('')}
-                            </select>
-                        </div>` : ''}
-
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Quantité souhaitée</label>
-                        <div class="relative">
-                            <input id="vQty" type="number" value="1" min="1" 
-                                class="w-full border-2 border-slate-100 p-4 rounded-2xl font-black text-sm bg-slate-50 focus:border-red-600 outline-none transition-all">
-                        </div>
-                    </div>
+                    ${p.colors ? `<div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Couleur disponible</label><select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`).join('')}</select></div>` : ''}
+                    ${p.memory ? `<div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Capacité / Mémoire</label><select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`).join('')}</select></div>` : ''}
+                    <div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Quantité souhaitée</label><input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-2xl font-black text-sm bg-slate-50 focus:border-red-600 outline-none transition-all"></div>
                 </div>
 
-                <button onclick="window.addToCart('${p.id}')" 
-                    class="w-full bg-[#101944] text-white py-5 rounded-[24px] font-black uppercase text-xs mt-10 shadow-xl hover:bg-red-600 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                <button onclick="window.addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-[24px] font-black uppercase text-xs mt-8 shadow-xl hover:bg-red-600 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     Ajouter au Panier
                 </button>`;
             
             document.getElementById('detailModal').style.transform = "translateX(0)";
             document.getElementById('overlay').classList.remove('hidden');
+            updateWALink(p.name);
         };
 
         window.moveSlide = function(dir, total) {
@@ -841,52 +706,33 @@
         window.addToCart = function(id) {
             const p = stock.find(x => x.id === id);
             const qty = parseInt(document.getElementById('vQty')?.value || 1);
-            for (let i = 0; i < qty; i++) {
-                cart.push({ name: p.name, price: p.price, img: p.imgs[0] });
-            }
+            for (let i = 0; i < qty; i++) { cart.push({ name: p.name, price: p.price, img: p.imgs[0] }); }
             updateCart();
             closeDetail();
             openCart();
         };
 
         window.quickSearch = function(q) {
-            if (!q.trim()) {
-                renderProducts(stock);
-            } else {
-                renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
-            }
+            if (!q.trim()) renderProducts(stock);
+            else renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
         };
 
-        // ==================== GESTION CATÉGORIES ====================
+        // ==================== CATÉGORIES ====================
         function renderCategoryBubbles() {
             const container = document.getElementById('categoryBubbles');
             if (!container || !categories || categories.length === 0) return;
-            
             container.innerHTML = categories.map(cat => {
                 const prod = stock.find(p => p.cat === cat.name);
                 const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
-                return `
-                    <div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')">
-                        <div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div>
-                        <span class="bubble-text">${cat.name}</span>
-                    </div>`;
+                return `<div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')"><div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div><span class="bubble-text">${cat.name}</span></div>`;
             }).join('');
         }
 
         function renderMenu() {
             const menu = document.getElementById('categoryMenu');
             if (!menu) return;
-            
-            let menuHTML = `<button onclick="window.renderProducts(window.stock);window.closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 hover:bg-red-50 border-b flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                TOUTE LA BOUTIQUE
-            </button>`;
-            
-            if (!categories || categories.length === 0) {
-                menu.innerHTML = menuHTML + `<div class="p-6 text-[10px] text-slate-400 animate-pulse font-bold uppercase italic">Récupération des rayons...</div>`;
-                return;
-            }
-            
+            let menuHTML = `<button onclick="window.renderProducts(window.stock);window.closeMenus()" class="w-full text-left px-6 py-4 font-black text-xs text-red-600 hover:bg-red-50 border-b flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>TOUTE LA BOUTIQUE</button>`;
+            if (!categories || categories.length === 0) { menu.innerHTML = menuHTML + `<div class="p-6 text-[10px] text-slate-400 animate-pulse font-bold uppercase italic">Récupération des rayons...</div>`; return; }
             categories.forEach((c, index) => {
                 const catId = `cat-${index}`;
                 menuHTML += `<div class="border-b"><div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50" onclick="window.toggleSub('${catId}')"><span class="font-black text-xs text-[#101944] uppercase tracking-wide">${c.name}</span><span class="text-[10px] text-slate-400">▼</span></div><div id="${catId}" class="hidden bg-slate-50/50 pb-2">${c.subs ? c.subs.map((s, si) => { const subId = `sub-${index}-${si}`; return `<div class="pl-6"><div class="flex items-center justify-between py-2 pr-6 cursor-pointer" onclick="window.toggleSub('${subId}')"><span class="text-[10px] font-bold text-slate-600">• ${s.name}</span><span class="text-[8px] text-slate-300">▶</span></div><div id="${subId}" class="hidden pl-4 border-l-2 border-slate-200 mb-2">${s.subsubs ? s.subsubs.map(ss => `<button onclick="window.filterItems('${c.name}','${s.name}','${ss}')" class="block w-full text-left py-1.5 text-[9px] text-slate-400 hover:text-red-600 font-medium">${ss}</button>`).join('') : ''}</div></div>`; }).join('') : ''}</div></div>`;
@@ -895,31 +741,21 @@
         }
 
         window.toggleSub = (id) => { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
-        
         window.filterItems = (cat, sub, subsub) => {
-            let filtered;
-            if (!sub && !subsub) {
-                filtered = stock.filter(p => p.cat === cat);
-            } else {
-                filtered = stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
-            }
+            let filtered = !sub && !subsub ? stock.filter(p => p.cat === cat) : stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
             renderProducts(filtered);
             closeMenus();
             document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        // ==================== GESTION ADMIN ====================
+        // ==================== ADMIN ====================
         window.updateAdminSubs = function() {
             const catSelect = document.getElementById('admCat');
             if (!catSelect) return;
             const cat = categories.find(c => c.name === catSelect.value);
             const subSelect = document.getElementById('admSub');
-            if (subSelect) {
-                subSelect.innerHTML = cat && cat.subs ? cat.subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('') : '<option value="">--</option>';
-                window.updateAdminSubSubs();
-            }
+            if (subSelect) { subSelect.innerHTML = cat && cat.subs ? cat.subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('') : '<option value="">--</option>'; window.updateAdminSubSubs(); }
         };
-        
         window.updateAdminSubSubs = function() {
             const catSelect = document.getElementById('admCat');
             const subSelect = document.getElementById('admSub');
@@ -927,17 +763,12 @@
             const cat = categories.find(c => c.name === catSelect.value);
             const sub = cat && cat.subs ? cat.subs.find(s => s.name === subSelect.value) : null;
             const subSubSelect = document.getElementById('admSubSub');
-            if (subSubSelect) {
-                subSubSelect.innerHTML = sub && sub.subsubs ? sub.subsubs.map(ss => `<option value="${ss}">${ss}</option>`).join('') : '<option value="">--</option>';
-            }
+            if (subSubSelect) subSubSelect.innerHTML = sub && sub.subsubs ? sub.subsubs.map(ss => `<option value="${ss}">${ss}</option>`).join('') : '<option value="">--</option>';
         };
-
         window.editItem = function(id) {
             const p = stock.find(x => x.id === id);
             if (!p) return;
-            
             editId = id;
-            
             document.getElementById('admName').value = p.name;
             document.getElementById('admPrice').value = p.price;
             document.getElementById('admOld').value = p.old || '';
@@ -945,24 +776,15 @@
             document.getElementById('admDesc').value = p.desc || '';
             document.getElementById('admColors').value = p.colors || '';
             document.getElementById('admMem').value = p.memory || '';
-            
             const catSelect = document.getElementById('admCat');
             catSelect.value = p.cat;
             window.updateAdminSubs();
-            
-            setTimeout(() => {
-                document.getElementById('admSub').value = p.sub;
-                window.updateAdminSubSubs();
-                if (p.subsub) document.getElementById('admSubSub').value = p.subsub;
-            }, 50);
-            
-            document.getElementById('admTitle').innerHTML = `<svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> ÉDITION : ${p.name}`;
+            setTimeout(() => { document.getElementById('admSub').value = p.sub; window.updateAdminSubSubs(); if (p.subsub) document.getElementById('admSubSub').value = p.subsub; }, 50);
+            document.getElementById('admTitle').innerHTML = `Édition : ${p.name}`;
             document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
         };
-
         window.saveProductToFirebase = function() {
             if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
-            
             const name = document.getElementById('admName').value.trim();
             const price = document.getElementById('admPrice').value;
             const oldPrice = document.getElementById('admOld').value;
@@ -973,333 +795,220 @@
             const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
             const colors = document.getElementById('admColors').value.trim();
             const memory = document.getElementById('admMem').value.trim();
-
             if (!name || !price) return alert("Nom et prix requis");
-
-            const productData = { 
-                name, 
-                price: parseInt(price), 
-                old: oldPrice ? parseInt(oldPrice) : null, 
-                desc: description || "", 
-                cat: category, 
-                sub: subCategory, 
-                subsub: subSubCategory || "", 
-                imgs: images.length ? images : ['https://via.placeholder.com/300'], 
-                colors: colors || "", 
-                memory: memory || "" 
-            };
-
-            if (editId) {
-                update(ref(db, 'stock/' + editId), productData).then(() => {
-                    alert("Article mis à jour !");
-                    editId = null;
-                    document.getElementById('admTitle').innerHTML = "Ajouter un article";
-                    resetAdminForm();
-                }).catch(e => alert("Erreur: " + e.message));
-            } else {
-                push(stockRef, productData).then(() => {
-                    alert("Article ajouté !");
-                    resetAdminForm();
-                }).catch(e => alert("Erreur: " + e.message));
+            const productData = { name, price: parseInt(price), old: oldPrice ? parseInt(oldPrice) : null, desc: description || "", cat: category, sub: subCategory, subsub: subSubCategory || "", imgs: images.length ? images : ['https://via.placeholder.com/300'], colors: colors || "", memory: memory || "" };
+            if (editId) { update(ref(db, 'stock/' + editId), productData).then(() => { alert("Article mis à jour !"); editId = null; document.getElementById('admTitle').innerHTML = "Ajouter un article"; resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
+            else { push(stockRef, productData).then(() => { alert("Article ajouté !"); resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
+        };
+        window.deleteProductFromFirebase = function(id) { if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return; if (confirm("Supprimer définitivement ?")) remove(ref(db, 'stock/' + id)); };
+        
+        function badgeSelectOptions(currentLabel) {
+            const opts = [
+                ['', '— Choisir un badge —', ''],
+                // groupe 1
+                ['__g1', '📈 Tendance, Popularité et Ventes', 'group'],
+                ['Tendance|trending', '📈 Tendance', ''],
+                ['Best Seller|star', '⭐ Best Seller', ''],
+                ['Populaire|barchart', '📊 Populaire', ''],
+                ['Top Vente|diamond', '💎 Top Vente', ''],
+                ['Produit du moment|rocket', '🚀 Produit du moment', ''],
+                ['Choix des clients|thumb', '👍 Choix des clients', ''],
+                // groupe 2
+                ['__g2', '⏳ Stocks et Disponibilité', 'group'],
+                ['Rupture de stock|xcirc', '⊗ Rupture de stock', ''],
+                ['Stock limité|hourglass', '⌛ Stock limité', ''],
+                ['Plus que X pièces|coins', '🪙 Plus que X pièces', ''],
+                ['En forte demande|flame', '🔥 En forte demande', ''],
+                ['Victime de son succès|box', '📦 Victime de son succès', ''],
+                ['Bientôt disponible|refresh', '🔄 Bientôt disponible', ''],
+                // groupe 3
+                ['__g3', '💸 Prix, Promos et Offres', 'group'],
+                ['Promo|tag', '🏷️ Promo', ''],
+                ['-20% / -50%|arrowdown', '⬇️ -20% / -50%', ''],
+                ['Prix réduit|pricetag', '🔖 Prix réduit', ''],
+                ['Offre spéciale|target', '🎯 Offre spéciale', ''],
+                ['Offre limitée|clock', '⏰ Offre limitée', ''],
+                ['Bon plan|spark', '✨ Bon plan', ''],
+                ['Déstockage|basket', '🛒 Déstockage', ''],
+                // groupe 4
+                ['__g4', '✨ Nouveautés et Garanties', 'group'],
+                ['Nouveau|newbox', '📦 Nouveau', ''],
+                ['Nouvelle arrivée|flag', '🚩 Nouvelle arrivée', ''],
+                ['Juste arrivé|rocketland', '🛬 Juste arrivé', ''],
+                ['Dernière sortie|newbadge', '🆕 Dernière sortie', ''],
+                ['Livraison gratuite|truck', '🚚 Livraison gratuite', ''],
+                ['Paiement sécurisé|shield', '🛡️ Paiement sécurisé', ''],
+                ['Garantie 2 ans|shield2', '🔰 Garantie 2 ans', ''],
+                ['Éco énergie|leaf', '🌿 Éco énergie', ''],
+                ['Qualité certifiée|seal', '✅ Qualité certifiée', ''],
+                ['Produits Authentiques|checkcirc', '☑️ Produits Authentiques', ''],
+            ];
+            let html = '';
+            let inGroup = false;
+            for (const [val, label, type] of opts) {
+                if (type === 'group') {
+                    if (inGroup) html += '</optgroup>';
+                    html += `<optgroup label="${label}">`;
+                    inGroup = true;
+                } else {
+                    const label2 = val.split('|')[0];
+                    const sel = currentLabel === label2 ? ' selected' : '';
+                    html += `<option value="${val}"${sel}>${label}</option>`;
+                }
             }
-        };
-
-        window.deleteProductFromFirebase = function(id) {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return;
-            if (confirm("Supprimer définitivement ?")) remove(ref(db, 'stock/' + id));
-        };
+            if (inGroup) html += '</optgroup>';
+            return html;
+        }
 
         function renderAdminStock() {
             const stockList = document.getElementById('stockList');
             if (!stockList) return;
-            stockList.innerHTML = stock.map(p => `
-                <div class="flex items-center justify-between bg-white p-4 rounded-2xl border mb-2 shadow-sm">
-                    <div class="flex flex-col">
-                        <span class="font-black uppercase text-[10px] text-[#101944]">${p.name}</span>
-                        <span class="text-red-600 font-bold text-xs">${parseInt(p.price).toLocaleString()} F</span>
+            stockList.innerHTML = stock.map(p => {
+                const currentBadgeLabel = p.badgeLabel || '';
+                const currentBadgeIcon = p.badgeIcon || '';
+                const hasB = !!(p.badgeLabel && p.badgeIcon);
+                return `
+                <div class="bg-white rounded-2xl border shadow-sm mb-3 overflow-hidden">
+                    <div class="flex items-center justify-between p-4">
+                        <div class="flex flex-col flex-1 min-w-0 mr-3">
+                            <span class="font-black uppercase text-[10px] text-[#101944] truncate">${p.name}</span>
+                            <span class="text-red-600 font-bold text-xs mt-0.5">${parseInt(p.price).toLocaleString()} F</span>
+                            ${hasB ? `<div class="flex items-center gap-1 mt-1"><svg width="11" height="11" fill="none" stroke="#16a34a" viewBox="0 0 24 24" style="flex-shrink:0">${BADGE_ICONS[currentBadgeIcon] || ''}</svg><span class="text-[9px] font-black text-green-700 uppercase truncate">${currentBadgeLabel}</span></div>` : ''}
+                        </div>
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="window.editItem('${p.id}')" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-xl text-[9px] font-black uppercase flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>Modifier
+                            </button>
+                            <button onclick="window.deleteProductFromFirebase('${p.id}')" class="bg-red-50 text-red-600 px-3 py-2 rounded-xl text-[9px] font-black uppercase flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>Suppr.
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.editItem('${p.id}')" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            Modifier
-                        </button>
-                        <button onclick="window.deleteProductFromFirebase('${p.id}')" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            Suppr.
-                        </button>
+                    <div class="px-4 pb-4 pt-0 border-t border-slate-50 bg-slate-50/50">
+                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-3">🏷️ Badge boutique</p>
+                        <div style="position:relative">
+                            <select id="badge_${p.id}" class="badge-select-box" style="font-size:10px;padding:10px 38px 10px 12px;" onchange="window.previewAdminBadge('${p.id}')">
+                                ${badgeSelectOptions(currentBadgeLabel)}
+                            </select>
+                            <svg style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#22c55e" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                        <div id="adminBadgePreview_${p.id}" class="badge-preview-strip mt-2" style="display:${hasB ? 'flex' : 'none'}">
+                            <svg id="adminBadgeIcon_${p.id}" class="badge-preview-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">${hasB ? (BADGE_ICONS[currentBadgeIcon] || '') : ''}</svg>
+                            <span id="adminBadgeText_${p.id}" class="badge-preview-text">${currentBadgeLabel}</span>
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="window.saveBadge('${p.id}')" class="badge-save-btn flex-1" style="margin-top:0;border-radius:10px;padding:9px 0;font-size:8px">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                Appliquer
+                            </button>
+                            ${hasB ? `<button onclick="window.removeBadge('${p.id}')" style="margin-top:0;border-radius:10px;padding:9px 12px;font-size:8px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;background:#fee2e2;color:#dc2626;border:none;cursor:pointer;font-family:inherit">✕ Retirer</button>` : ''}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
             syncAdminMenus();
         }
 
-        function syncAdminMenus() {
-            const catSelect = document.getElementById('admCat');
-            if (!catSelect) return;
-            const currentVal = catSelect.value;
-            catSelect.innerHTML = categories.map(c => `<option value="${c.name}" ${c.name === currentVal ? 'selected' : ''}>${c.name}</option>`).join('');
-            window.updateAdminSubs();
-        }
+        window.previewAdminBadge = function(productId) {
+            const select = document.getElementById('badge_' + productId);
+            const preview = document.getElementById('adminBadgePreview_' + productId);
+            const iconEl = document.getElementById('adminBadgeIcon_' + productId);
+            const textEl = document.getElementById('adminBadgeText_' + productId);
+            if (!select || !select.value) { if (preview) preview.style.display = 'none'; return; }
+            const [label, iconKey] = select.value.split('|');
+            if (preview) preview.style.display = 'flex';
+            if (textEl) textEl.textContent = label;
+            if (iconEl && BADGE_ICONS[iconKey]) iconEl.innerHTML = BADGE_ICONS[iconKey];
+        };
+        function syncAdminMenus() { const catSelect = document.getElementById('admCat'); if (!catSelect) return; const currentVal = catSelect.value; catSelect.innerHTML = categories.map(c => `<option value="${c.name}" ${c.name === currentVal ? 'selected' : ''}>${c.name}</option>`).join(''); window.updateAdminSubs(); }
 
-        // ==================== GESTION DES VARIANTES ====================
         function renderVisualManager() {
             const container = document.getElementById('visualCatsManager');
             if (!container) return;
-            
-            container.innerHTML = (categories || []).map((cat, cIdx) => `
-                <div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2">
-                    <div class="flex gap-2 mb-2">
-                        <input type="text" value="${cat.name}" oninput="window.updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none">
-                        <button onclick="window.deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button>
-                    </div>
-                    <div class="pl-4 border-l-2 border-red-500 space-y-2">
-                        ${(cat.subs || []).map((sub, sIdx) => `
-                            <div class="bg-slate-50 p-2 rounded-lg">
-                                <div class="flex gap-2 mb-1">
-                                    <input type="text" value="${sub.name}" oninput="window.updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none">
-                                    <button onclick="window.deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button>
-                                </div>
-                                <div class="flex flex-wrap gap-1">
-                                    ${(sub.subsubs || []).map((ss, ssIdx) => `
-                                        <span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center">
-                                            <input type="text" value="${ss}" oninput="window.updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase">
-                                            <button onclick="window.deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button>
-                                        </span>
-                                    `).join('')}
-                                    <button onclick="window.addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1 text-xs flex items-center gap-1">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                        Variante
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <button onclick="window.addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500 flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            Sous-Catégorie
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = (categories || []).map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="window.updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="window.deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${(cat.subs || []).map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="window.updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="window.deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${(sub.subsubs || []).map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="window.updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="window.deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('')}<button onclick="window.addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1 text-xs">+ Variante</button></div></div>`).join('')}<button onclick="window.addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
         }
-
-        window.updateCatName = (c, val) => { 
-            categories[c].name = val.toUpperCase(); 
-            syncAdminMenus(); 
-        };
-        
-        window.updateSubName = (c, s, val) => { 
-            categories[c].subs[s].name = val.toUpperCase(); 
-            syncAdminMenus(); 
-        };
-        
-        window.updateSubSubName = (c, s, ss, val) => { 
-            categories[c].subs[s].subsubs[ss] = val.toUpperCase(); 
-            syncAdminMenus(); 
-        };
-        
-        window.addNewCategory = () => { 
-            categories.push({ name: "NOUVEAU", subs: [] }); 
-            renderVisualManager(); 
-            syncAdminMenus(); 
-        };
-        
-        window.addNewSub = (cIdx) => { 
-            if (!categories[cIdx].subs) categories[cIdx].subs = [];
-            categories[cIdx].subs.push({ name: "SOUS-CAT", subsubs: [] }); 
-            renderVisualManager(); 
-            syncAdminMenus(); 
-        };
-        
-        window.addSubSub = (c, s) => {
-            if (!categories[c].subs[s].subsubs) {
-                categories[c].subs[s].subsubs = [];
-            }
-            categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); 
-            renderVisualManager();
-            syncAdminMenus();
-        };
-        
-        window.deleteCat = (c) => { 
-            if (confirm("Supprimer cette catégorie ?")) { 
-                categories.splice(c, 1); 
-                renderVisualManager(); 
-                syncAdminMenus(); 
-            } 
-        };
-        
-        window.deleteSub = (c, s) => { 
-            categories[c].subs.splice(s, 1); 
-            renderVisualManager(); 
-            syncAdminMenus(); 
-        };
-        
-        window.deleteSubSub = (c, s, ss) => { 
-            categories[c].subs[s].subsubs.splice(ss, 1); 
-            renderVisualManager(); 
-            syncAdminMenus(); 
-        };
-
+        window.updateCatName = (c, val) => { categories[c].name = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubName = (c, s, val) => { categories[c].subs[s].name = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubSubName = (c, s, ss, val) => { categories[c].subs[s].subsubs[ss] = val.toUpperCase(); syncAdminMenus(); };
+        window.addNewCategory = () => { categories.push({ name: "NOUVEAU", subs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addNewSub = (cIdx) => { if (!categories[cIdx].subs) categories[cIdx].subs = []; categories[cIdx].subs.push({ name: "SOUS-CAT", subsubs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addSubSub = (c, s) => { if (!categories[c].subs[s].subsubs) categories[c].subs[s].subsubs = []; categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); renderVisualManager(); syncAdminMenus(); };
+        window.deleteCat = (c) => { if (confirm("Supprimer cette catégorie ?")) { categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); } };
+        window.deleteSub = (c, s) => { categories[c].subs.splice(s, 1); renderVisualManager(); syncAdminMenus(); };
+        window.deleteSubSub = (c, s, ss) => { categories[c].subs[s].subsubs.splice(ss, 1); renderVisualManager(); syncAdminMenus(); };
         window.saveCategoriesToFirebase = function() {
             if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
-            if (!categories || categories.length === 0) return alert("Rien à enregistrer");
-            
-            const cleanCategories = categories.map(cat => ({
-                ...cat,
-                subs: cat.subs ? cat.subs.map(sub => ({
-                    ...sub,
-                    subsubs: sub.subsubs && sub.subsubs.length > 0 ? sub.subsubs : null
-                })) : null
-            }));
-            
-            set(catsRef, cleanCategories).then(() => {
-                alert("✅ Structure enregistrée !");
-                renderMenu();
-                renderVisualManager();
-            }).catch(e => alert("Erreur: " + e.message));
+            const cleanCategories = categories.map(cat => ({ ...cat, subs: cat.subs ? cat.subs.map(sub => ({ ...sub, subsubs: sub.subsubs && sub.subsubs.length > 0 ? sub.subsubs : null })) : null }));
+            set(catsRef, cleanCategories).then(() => { alert("✅ Structure enregistrée !"); renderMenu(); renderVisualManager(); }).catch(e => alert("Erreur: " + e.message));
         };
 
-        // ==================== GESTION AVIS AVEC BADGES MODERNISÉS ====================
+        // ==================== AVIS ====================
         window.sendReview = async function() {
             if (!currentUser) return alert("Connectez-vous pour laisser une note !");
             if (!currentUser.emailVerified) return alert("Vérifiez votre email avant de noter.");
-            
             const note = document.getElementById('revStars').value;
             const comment = document.getElementById('revText').value.trim();
             if (!comment) return alert("Laissez un petit mot !");
-            
             const badge = await getCustomerBadge(currentUser.uid);
-            
-            const newReview = {
-                name: currentUser.displayName || "Client AfroService",
-                note: parseInt(note),
-                comment: comment,
-                date: new Date().toLocaleDateString('fr-FR'),
-                userId: currentUser.uid,
-                likes: {},
-                likeCount: 0,
-                timestamp: Date.now(),
-                badge: badge ? badge.label : null,
-                badgeClass: badge ? badge.class : null
-            };
-            
-            await push(reviewsRef, newReview);
+            await push(reviewsRef, { name: currentUser.displayName || "Client AfroService", note: parseInt(note), comment, date: new Date().toLocaleDateString('fr-FR'), userId: currentUser.uid, likes: {}, likeCount: 0, timestamp: Date.now(), badge: badge ? badge.label : null, badgeClass: badge ? badge.class : null });
             document.getElementById('revText').value = "";
             alert("Merci pour votre avis !");
         };
-
         window.likeReview = async function(reviewId) {
-            if (!currentUser) {
-                alert("Connectez-vous pour aimer un avis !");
-                return;
-            }
-            
+            if (!currentUser) { alert("Connectez-vous pour aimer un avis !"); return; }
             const reviewRef = ref(db, `reviews/${reviewId}`);
             const snapshot = await new Promise((resolve) => onValue(reviewRef, resolve, { onlyOnce: true }));
             const review = snapshot.val();
-            
             if (!review) return;
-            
             const likes = review.likes || {};
             const likeCount = review.likeCount || 0;
             const userId = currentUser.uid;
-            
-            if (likes[userId]) {
-                delete likes[userId];
-                await update(reviewRef, { likes, likeCount: likeCount - 1 });
-            } else {
-                likes[userId] = true;
-                await update(reviewRef, { likes, likeCount: likeCount + 1 });
-            }
+            if (likes[userId]) { delete likes[userId]; await update(reviewRef, { likes, likeCount: likeCount - 1 }); }
+            else { likes[userId] = true; await update(reviewRef, { likes, likeCount: likeCount + 1 }); }
         };
-
         window.replyToReview = async function(reviewId) {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) {
-                alert("Action non autorisée");
-                return;
-            }
-            
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) { alert("Action non autorisée"); return; }
             const reply = prompt("Réponse de l'équipe Afro Service :");
-            if (reply && reply.trim()) {
-                await update(ref(db, `reviews/${reviewId}`), { 
-                    adminReply: reply.trim(),
-                    adminReplyDate: new Date().toLocaleDateString('fr-FR')
-                });
-                alert("Réponse ajoutée avec succès !");
-            }
+            if (reply && reply.trim()) { await update(ref(db, `reviews/${reviewId}`), { adminReply: reply.trim(), adminReplyDate: new Date().toLocaleDateString('fr-FR') }); alert("Réponse ajoutée !"); }
         };
+        window.deleteReviewFromFirebase = function(id) { if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return; if (confirm("Supprimer définitivement cet avis ?")) remove(ref(db, 'reviews/' + id)); };
 
-        window.deleteReviewFromFirebase = function(id) {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return;
-            if (confirm("Supprimer définitivement cet avis ?")) remove(ref(db, 'reviews/' + id));
-        };
-
-        // ==================== HISTORIQUE COMMANDES ====================
+        // ==================== HISTORIQUE ====================
         window.viewHistory = function() {
             if (!currentUser) return alert("Connectez-vous pour voir votre historique");
-            const userOrderRef = ref(db, `orders/${currentUser.uid}`);
-            onValue(userOrderRef, (snapshot) => {
+            onValue(ref(db, `orders/${currentUser.uid}`), (snapshot) => {
                 const data = snapshot.val();
                 const container = document.getElementById('historyContent');
-                if (!data) {
-                    container.innerHTML = "<p class='text-center text-slate-400 py-10 text-[10px] font-bold uppercase italic'>Aucune commande passée</p>";
-                } else {
-                    container.innerHTML = Object.values(data).reverse().map(order => `
-                        <div class="bg-slate-50 p-4 rounded-2xl border mb-3">
-                            <p class="text-[9px] font-black text-red-600 mb-1 uppercase">${order.date}</p>
-                            <div class="text-[10px] font-bold text-slate-700 leading-tight">${order.items.replace(/%0A/g, '<br>')}</div>
-                            <div class="mt-2 pt-2 border-t flex justify-between font-black text-[#1d265e]">
-                                <span class="text-[9px]">TOTAL</span> <span class="text-xs">${order.total}</span>
-                            </div>
-                        </div>`).join('');
-                }
+                if (!data) container.innerHTML = "<p class='text-center text-slate-400 py-10 text-[10px] font-bold uppercase italic'>Aucune commande passée</p>";
+                else container.innerHTML = Object.values(data).reverse().map(order => `<div class="bg-slate-50 p-4 rounded-2xl border mb-3"><p class="text-[9px] font-black text-red-600 mb-1 uppercase">${order.date}</p><div class="text-[10px] font-bold text-slate-700 leading-tight">${order.items.replace(/%0A/g, '<br>')}</div><div class="mt-2 pt-2 border-t flex justify-between font-black text-[#1d265e]"><span class="text-[9px]">TOTAL</span> <span class="text-xs">${order.total}</span></div></div>`).join('');
                 document.getElementById('historyModal').classList.remove('hidden');
             });
         };
-        
         window.closeHistory = () => document.getElementById('historyModal').classList.add('hidden');
 
         // ==================== COMMANDE ====================
         window.checkout = async function() {
             if (currentUser && !currentUser.emailVerified) return alert("Veuillez confirmer votre e-mail avant de commander.");
-            
             const name = document.getElementById('cName').value.trim();
             const tel = document.getElementById('cTel').value.trim();
             const loc = document.getElementById('cQuartier').value.trim();
-            
             if (!name || !tel || !loc || !cart.length) return alert("Veuillez remplir vos informations.");
-            
             const total = cart.reduce((sum, item) => sum + parseInt(item.price), 0);
             const itemsList = cart.map(x => `- ${x.name}`).join('%0A');
             const msg = `*COMMANDE AFRO SERVICE*%0A%0A*Client:* ${name}%0A*Tél:* ${tel}%0A*Lieu:* ${loc}%0A%0A*Articles:*%0A${itemsList}%0A%0A*TOTAL: ${total.toLocaleString()} F*`;
-            
-            if (currentUser) {
-                const orderData = {
-                    date: new Date().toLocaleString('fr-FR'),
-                    items: itemsList.replace(/%0A/g, '\n'),
-                    total: total.toLocaleString() + " F",
-                    timestamp: Date.now()
-                };
-                await push(ref(db, `orders/${currentUser.uid}`), orderData);
-            }
-            
+            if (currentUser) { const orderData = { date: new Date().toLocaleString('fr-FR'), items: itemsList.replace(/%0A/g, '\n'), total: total.toLocaleString() + " F", timestamp: Date.now() }; await push(ref(db, `orders/${currentUser.uid}`), orderData); }
             window.open(`https://wa.me/237658562104?text=${encodeURIComponent(msg)}`, '_blank');
-            cart = [];
-            updateCart();
-            closeMenus();
+            cart = []; updateCart(); closeMenus();
         };
 
-        // ==================== AUTHENTIFICATION ====================
+        // ==================== AUTH ====================
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             const btn = document.getElementById('authBtn');
             const adminBtn = document.getElementById('adminBtn');
-
             if (user) {
-                if (user.email && adminEmails.includes(user.email.toLowerCase())) {
-                    adminBtn.classList.remove('hidden');
-                } else {
-                    adminBtn.classList.add('hidden');
-                }
+                if (user.email && adminEmails.includes(user.email.toLowerCase())) adminBtn.classList.remove('hidden');
+                else adminBtn.classList.add('hidden');
                 btn.classList.add(user.emailVerified ? 'text-green-500' : 'text-orange-500');
                 if (document.getElementById('cName')) document.getElementById('cName').value = user.displayName || "";
             } else {
@@ -1308,256 +1017,105 @@
                 adminBtn.classList.add('hidden');
             }
         });
-
         window.handleAuth = async () => {
             const email = document.getElementById('authEmail').value;
             const pass = document.getElementById('authPass').value;
             const name = document.getElementById('authName').value;
             const isLogin = document.getElementById('authTitle').innerText === "CONNEXION";
-            
             try {
-                if (isLogin) {
-                    const res = await signInWithEmailAndPassword(auth, email, pass);
-                    if (!res.user.emailVerified) {
-                        alert("Veuillez vérifier votre adresse e-mail. Un lien vous a été envoyé lors de l'inscription.");
-                    }
-                } else {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await updateProfile(res.user, { displayName: name });
-                    await sendEmailVerification(res.user);
-                    alert("Compte créé ! Un e-mail de vérification a été envoyé à " + email);
-                }
+                if (isLogin) { const res = await signInWithEmailAndPassword(auth, email, pass); if (!res.user.emailVerified) alert("Vérifiez votre adresse e-mail."); }
+                else { const res = await createUserWithEmailAndPassword(auth, email, pass); await updateProfile(res.user, { displayName: name }); await sendEmailVerification(res.user); alert("Compte créé ! Un e-mail de vérification vous a été envoyé."); }
                 closeAuth();
-            } catch (e) {
-                alert("Erreur : " + e.message);
-            }
+            } catch (e) { alert("Erreur : " + e.message); }
         };
-
-        window.forgotPassword = async () => {
-            const email = document.getElementById('authEmail').value;
-            if (!email) return alert("Entrez votre adresse e-mail.");
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Lien de réinitialisation envoyé à : " + email);
-            } catch (e) {
-                alert("Erreur : " + e.message);
-            }
-        };
-
+        window.forgotPassword = async () => { const email = document.getElementById('authEmail').value; if (!email) return alert("Entrez votre adresse e-mail."); try { await sendPasswordResetEmail(auth, email); alert("Lien envoyé à : " + email); } catch (e) { alert("Erreur : " + e.message); } };
         window.openAuth = () => currentUser ? (confirm("Se déconnecter ?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden');
         window.closeAuth = () => document.getElementById('authModal').classList.add('hidden');
         window.toggleAuthMode = () => {
             const title = document.getElementById('authTitle');
             const signUpDiv = document.getElementById('signUpOnly');
             const btnToggle = event.target;
-            if (title.innerText === "CONNEXION") {
-                title.innerText = "INSCRIPTION";
-                signUpDiv.classList.remove('hidden');
-                btnToggle.innerText = "DÉJÀ UN COMPTE ? SE CONNECTER";
-            } else {
-                title.innerText = "CONNEXION";
-                signUpDiv.classList.add('hidden');
-                btnToggle.innerText = "CRÉER UN COMPTE ?";
-            }
+            if (title.innerText === "CONNEXION") { title.innerText = "INSCRIPTION"; signUpDiv.classList.remove('hidden'); btnToggle.innerText = "DÉJÀ UN COMPTE ? SE CONNECTER"; }
+            else { title.innerText = "CONNEXION"; signUpDiv.classList.add('hidden'); btnToggle.innerText = "CRÉER UN COMPTE ?"; }
         };
 
-        // ==================== UI / MODALS ====================
-        window.openNav = function() { 
-            document.getElementById('sideNav').style.transform = "translateX(0)"; 
-            document.getElementById('overlay').classList.remove('hidden'); 
-        };
-        
-        window.openCart = function() { 
-            document.getElementById('sideCart').style.transform = "translateX(0)"; 
-            document.getElementById('overlay').classList.remove('hidden'); 
-        };
-        
-        window.closeMenus = function() { 
-            document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => {
-                el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)";
-            });
-            document.getElementById('overlay').classList.add('hidden');
-        };
-        
-        window.closeDetail = function() {
-            document.getElementById('detailModal').style.transform = "translateX(100%)";
-            document.getElementById('overlay').classList.add('hidden');
-            updateWALink();
-        };
-        
+        // ==================== UI ====================
+        window.openNav = function() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
+        window.openCart = function() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
+        window.closeMenus = function() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => { el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"; }); document.getElementById('overlay').classList.add('hidden'); };
+        window.closeDetail = function() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); };
         window.switchAdminTab = function(tabName) {
             document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden'));
-            document.querySelectorAll('[id^="tab-"]').forEach(tab => {
-                tab.classList.remove('border-red-600', 'text-red-600');
-                tab.classList.add('border-transparent', 'text-slate-400');
-            });
-        
+            document.querySelectorAll('[id^="tab-"]').forEach(tab => { tab.classList.remove('border-red-600', 'text-red-600'); tab.classList.add('border-transparent', 'text-slate-400'); });
             document.getElementById(`panel-${tabName}`).classList.remove('hidden');
             const activeTab = document.getElementById(`tab-${tabName}`);
             activeTab.classList.remove('border-transparent', 'text-slate-400');
             activeTab.classList.add('border-red-600', 'text-red-600');
-            
             if (tabName === 'categories') renderVisualManager();
             if (tabName === 'products') renderAdminStock();
         };
-        
-        window.openAdmin = function() {
-            document.getElementById('adminModal').classList.remove('hidden');
-            window.switchAdminTab('products');
-            renderAdminStock();
-        };
-        
-        window.closeAdmin = function() {
-            document.getElementById('adminModal').classList.add('hidden');
-            editId = null;
-            document.getElementById('admTitle').innerHTML = "Ajouter un article";
-            resetAdminForm();
-        };
-
+        window.openAdmin = function() { document.getElementById('adminModal').classList.remove('hidden'); window.switchAdminTab('products'); renderAdminStock(); };
+        window.closeAdmin = function() { document.getElementById('adminModal').classList.add('hidden'); editId = null; document.getElementById('admTitle').innerHTML = "Ajouter un article"; resetAdminForm(); };
         window.renderProducts = renderProducts;
         window.stock = stock;
-        
+
         // ==================== FIREBASE LISTENERS ====================
+        const BLUE_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;flex-shrink:0"><path d="M12 1L14.39 3.42L17.66 2.38L18.87 5.61L22.24 6.38L21.5 9.74L24 12L21.5 14.26L22.24 17.62L18.87 18.39L17.66 21.62L14.39 20.58L12 23L9.61 20.58L6.34 21.62L5.13 18.39L1.76 17.62L2.5 14.26L0 12L2.5 9.74L1.76 6.38L5.13 5.61L6.34 2.38L9.61 3.42L12 1Z" fill="#1877F2"/><path d="M7 12.5L10 15.5L17 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
         onValue(stockRef, (snapshot) => {
             const data = snapshot.val();
             stock = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
             window.stock = stock;
-            
             updateDynamicBanners(stock);
             renderProducts(stock);
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-products') && !document.getElementById('panel-products').classList.contains('hidden')) {
-                renderAdminStock();
-            }
+            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-products') && !document.getElementById('panel-products').classList.contains('hidden')) renderAdminStock();
             renderCategoryBubbles();
         });
 
         onValue(catsRef, (snapshot) => {
             const data = snapshot.val();
-            categories = data ? data.map(cat => ({
-                ...cat,
-                subs: cat.subs ? cat.subs.map(sub => ({
-                    ...sub,
-                    subsubs: sub.subsubs || []
-                })) : []
-            })) : [];
+            categories = data ? data.map(cat => ({ ...cat, subs: cat.subs ? cat.subs.map(sub => ({ ...sub, subsubs: sub.subsubs || [] })) : [] })) : [];
             renderMenu();
             renderCategoryBubbles();
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-categories') && !document.getElementById('panel-categories').classList.contains('hidden')) {
-                renderVisualManager();
-                syncAdminMenus();
-            }
+            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-categories') && !document.getElementById('panel-categories').classList.contains('hidden')) { renderVisualManager(); syncAdminMenus(); }
         });
-
-        // ==================== LISTENER AVIS AVEC BADGES MODERNISÉS ====================
-        // SVG badge certification bleu style Meta/Instagram — réutilisé partout
-        const BLUE_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;flex-shrink:0"><path d="M12 1L14.39 3.42L17.66 2.38L18.87 5.61L22.24 6.38L21.5 9.74L24 12L21.5 14.26L22.24 17.62L18.87 18.39L17.66 21.62L14.39 20.58L12 23L9.61 20.58L6.34 21.62L5.13 18.39L1.76 17.62L2.5 14.26L0 12L2.5 9.74L1.76 6.38L5.13 5.61L6.34 2.38L9.61 3.42L12 1Z" fill="#1877F2"/><path d="M7 12.5L10 15.5L17 9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
         onValue(reviewsRef, (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('reviewsDisplay');
             const adminContainer = document.getElementById('adminReviewsList');
-            
             if (!data) {
                 if (container) container.innerHTML = "<p class='text-[10px] text-slate-400 italic'>Soyez le premier à donner votre avis !</p>";
                 if (adminContainer) adminContainer.innerHTML = "<p class='text-[10px] text-slate-400'>Aucun avis à modérer.</p>";
                 return;
             }
-            
             const entries = Object.entries(data).reverse();
-            
-            // --- Rendu Public avec badges modernisés ---
+            const SF = '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+            const SE = '<svg class="w-3 h-3 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
             if (container) {
                 let html = "";
-                const SF = '<svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-                const SE = '<svg class="w-3 h-3 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
                 for (const [id, r] of entries.slice(0, 10)) {
                     if (!r || !r.name || !r.comment) continue;
                     const note = Math.min(5, Math.max(0, parseInt(r.note) || 5));
                     const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
-                    
                     let badgeHtml = '';
-                    if (r.badge === 'Nouveau Client') {
-                        badgeHtml = `<span class="badge-new"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Nouveau Client</span>`;
-                    } else if (r.badge === 'Client Régulier') {
-                        badgeHtml = `<span class="badge-regular"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Client Régulier</span>`;
-                    } else if (r.badge === 'Client Fidèle') {
-                        badgeHtml = `<span class="badge-loyal"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>Client Fidèle</span>`;
-                    }
-                    
-                    html += `
-                        <div class="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100 min-w-[200px] max-w-[240px] flex-shrink-0">
-                            <div class="flex justify-between items-center mb-1.5">
-                                <div class="flex text-orange-400 gap-0.5">${SF.repeat(note)}${SE.repeat(5 - note)}</div>
-                                <button onclick="window.likeReview('${id}')" class="flex items-center gap-0.5 bg-slate-50 px-1.5 py-0.5 rounded-full border border-slate-100 hover:bg-slate-100 transition-all">
-                                    <svg class="w-2 h-2 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                                    <span class="text-[8px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span>
-                                </button>
-                            </div>
-                            <p class="text-[10px] font-black uppercase text-[#101944] mb-1 flex items-center gap-1 flex-wrap">${r.name} ${badgeHtml}</p>
-                            <p class="text-[10px] text-slate-600 leading-snug line-clamp-2">"${r.comment}"</p>
-                            ${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5 flex items-center gap-1">↩ Afro Service <span style="display:inline-flex;align-items:center;width:10px;height:10px;"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L14.39 3.42L17.66 2.38L18.87 5.61L22.24 6.38L21.5 9.74L24 12L21.5 14.26L22.24 17.62L18.87 18.39L17.66 21.62L14.39 20.58L12 23L9.61 20.58L6.34 21.62L5.13 18.39L1.76 17.62L2.5 14.26L0 12L2.5 9.74L1.76 6.38L5.13 5.61L6.34 2.38L9.61 3.42L12 1Z" fill="#1877F2"/><path d="M7 12.5L10 15.5L17 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}
-                            <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
-                                <p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>
-                                ${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase hover:bg-red-600 transition-colors">RÉPONDRE</button>` : ''}
-                            </div>
-                        </div>`;
+                    if (r.badge === 'Nouveau Client') badgeHtml = `<span class="badge-new"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Nouveau Client</span>`;
+                    else if (r.badge === 'Client Régulier') badgeHtml = `<span class="badge-regular"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Client Régulier</span>`;
+                    else if (r.badge === 'Client Fidèle') badgeHtml = `<span class="badge-loyal"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Client Fidèle</span>`;
+                    html += `<div class="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100 min-w-[200px] max-w-[240px] flex-shrink-0"><div class="flex justify-between items-center mb-1.5"><div class="flex text-orange-400 gap-0.5">${SF.repeat(note)}${SE.repeat(5 - note)}</div><button onclick="window.likeReview('${id}')" class="flex items-center gap-0.5 bg-slate-50 px-1.5 py-0.5 rounded-full border border-slate-100"><svg class="w-2 h-2 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg><span class="text-[8px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span></button></div><p class="text-[10px] font-black uppercase text-[#101944] mb-1 flex items-center gap-1 flex-wrap">${r.name} ${badgeHtml}</p><p class="text-[10px] text-slate-600 leading-snug line-clamp-2">"${r.comment}"</p>${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5 flex items-center gap-1">↩ Afro Service ${BLUE_CHECK}</p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}<div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50"><p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase">RÉPONDRE</button>` : ''}</div></div>`;
                 }
                 container.innerHTML = html || "<p class='text-[10px] text-slate-400 italic px-1'>Aucun avis pour l'instant.</p>";
             }
-            
-            // --- Rendu Dashboard Admin ---
             if (adminContainer) {
-                adminContainer.innerHTML = entries.map(([id, r]) => `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span>
-                                    ${r.badge === 'Nouveau Client' ? `<span class="badge-new text-[8px]">${r.badge}</span>` : ''}
-                                    ${r.badge === 'Client Régulier' ? `<span class="badge-regular text-[8px]">${r.badge}</span>` : ''}
-                                    ${r.badge === 'Client Fidèle' ? `<span class="badge-loyal text-[8px]">${r.badge}</span>` : ''}
-                                    <span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span>
-                                    <span class="text-[9px] text-slate-400 flex items-center gap-0.5">
-                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                                        ${r.likeCount || 0}
-                                    </span>
-                                </div>
-                                <p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p>
-                                ${r.adminReply ? `
-                                    <div class="bg-blue-50 p-2 rounded-lg border border-blue-100 mb-2">
-                                        <p class="text-[8px] font-black text-blue-800 uppercase flex items-center gap-1">
-                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                            Ma Réponse (Afro Service
-                                            <span style="display:inline-flex;align-items:center;width:10px;height:10px;"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L14.39 3.42L17.66 2.38L18.87 5.61L22.24 6.38L21.5 9.74L24 12L21.5 14.26L22.24 17.62L18.87 18.39L17.66 21.62L14.39 20.58L12 23L9.61 20.58L6.34 21.62L5.13 18.39L1.76 17.62L2.5 14.26L0 12L2.5 9.74L1.76 6.38L5.13 5.61L6.34 2.38L9.61 3.42L12 1Z" fill="#1877F2"/><path d="M7 12.5L10 15.5L17 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                                            ) :
-                                        </p>
-                                        <p class="text-[10px] text-blue-600">${r.adminReply}</p>
-                                    </div>
-                                ` : ''}
-                                <div class="flex gap-3">
-                                    <button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline flex items-center gap-1">
-                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                                        ${r.adminReply ? 'Modifier' : 'Répondre'}
-                                    </button>
-                                    <button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline flex items-center gap-1">
-                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </div>
-                            <span class="text-[8px] text-slate-400 font-bold">${r.date}</span>
-                        </div>
-                    </div>`).join('');
+                adminContainer.innerHTML = entries.map(([id, r]) => `<div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span><span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span></div><p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p><div class="flex gap-3"><button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline">${r.adminReply ? 'Modifier' : 'Répondre'}</button><button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline">Supprimer</button></div></div><span class="text-[8px] text-slate-400 font-bold">${r.date}</span></div></div>`).join('');
             }
         });
 
-        // ==================== INITIALISATION ====================
+        // ==================== INIT ====================
         window.addEventListener('DOMContentLoaded', () => {
             renderMenu();
             renderCategoryBubbles();
             updateWALink();
-            
-            // Défilement automatique des bannières
             let bannerIndex = 0;
             setInterval(() => {
                 const bannerContainer = document.querySelector('#dynamicBanners');
@@ -1565,19 +1123,12 @@
                 const items = bannerContainer.querySelectorAll('.banner-item');
                 if (items.length <= 1) return;
                 bannerIndex = (bannerIndex + 1) % items.length;
-                const scrollAmount = items[bannerIndex].offsetLeft - 16;
-                bannerContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                bannerContainer.scrollTo({ left: items[bannerIndex].offsetLeft - 16, behavior: 'smooth' });
             }, 5000);
-            
             window.addEventListener('scroll', () => {
                 const btt = document.getElementById('backToTop');
-                if (window.scrollY > 300) {
-                    btt.classList.remove('opacity-0', 'pointer-events-none');
-                    btt.classList.add('opacity-100', 'pointer-events-auto');
-                } else {
-                    btt.classList.add('opacity-0', 'pointer-events-none');
-                    btt.classList.remove('opacity-100', 'pointer-events-auto');
-                }
+                if (window.scrollY > 300) { btt.classList.remove('opacity-0', 'pointer-events-none'); btt.classList.add('opacity-100', 'pointer-events-auto'); }
+                else { btt.classList.add('opacity-0', 'pointer-events-none'); btt.classList.remove('opacity-100', 'pointer-events-auto'); }
             });
         });
     </script>
