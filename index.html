@@ -161,9 +161,11 @@
         .animate-marquee.reverse { animation-name: marquee-reverse; }
         .animate-marquee:hover { animation-play-state: paused; }
 
-        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
-        .banner-item { flex: 0 0 85%; scroll-snap-align: center; margin-right: 15px; }
-        @media (min-width: 768px) { .banner-item { flex: 0 0 60%; } }
+        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; gap: 12px; }
+        .banner-item { flex: 0 0 88%; scroll-snap-align: start; }
+        .banner-item:first-child { margin-left: 16px; }
+        .banner-item:last-child { margin-right: 16px; }
+        @media (min-width: 768px) { .banner-item { flex: 0 0 55%; } }
 
         #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
         #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
@@ -492,9 +494,16 @@
     </header>
 
     <!-- BANNIÈRES DYNAMIQUES -->
-    <section class="pt-6 pb-2 bg-white">
-        <div id="dynamicBanners" class="banner-container no-scrollbar px-4">
-            <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>
+    <section class="pt-4 pb-3 bg-[#f0f4ff]">
+        <div id="dynamicBanners" class="banner-container no-scrollbar">
+            <div class="banner-item relative rounded-2xl overflow-hidden bg-slate-200 animate-pulse" style="height:200px;margin-left:16px;"></div>
+        </div>
+        <!-- Indicateurs points -->
+        <div id="bannerDots" class="flex justify-center gap-1.5 mt-2.5">
+            <span class="w-5 h-1.5 rounded-full bg-[#bd1e24]"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
         </div>
     </section>
 
@@ -1136,8 +1145,7 @@
 
             // Collect all product images for dynamic background cycling
             const kbClasses = ['', ' kb2', ' kb3'];
-            container.innerHTML = banners.map((b, bi) => {
-                // Gather multiple images: primary + random others from stock
+            const productBanners = banners.map((b, bi) => {
                 const allImgs = [...new Set([
                     b.img,
                     ...products.filter(p => p.imgs && p.imgs[0] && p.imgs[0] !== b.img)
@@ -1146,25 +1154,76 @@
                               .map(p => p.imgs[0])
                 ])].filter(Boolean);
                 const imgTags = allImgs.map((src, i) =>
-                    `<img src="${src}" class="banner-img-animated${kbClasses[bi % 3]}${i === 0 ? ' active' : ''}" data-banner-imgs data-banner-idx="${bi}" data-img-idx="${i}" loading="lazy">`
+                    `<img src="${src}" class="banner-img-animated${kbClasses[bi % 3]}${i === 0 ? ' active' : ''}" loading="lazy">`
                 ).join('');
                 return `
-                <div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl ${b.color} group cursor-pointer" onclick="window.showDetail('${b.id}')" data-banner-slot="${bi}">
+                <div class="banner-item relative overflow-hidden cursor-pointer group" onclick="window.showDetail('${b.id}')" data-banner-slot="${bi}"
+                     style="height:200px;border-radius:22px;box-shadow:0 8px 32px rgba(16,25,68,0.18);">
                     ${imgTags}
-                    <div class="absolute inset-0" style="background:linear-gradient(90deg,rgba(0,0,0,0.68) 0%,rgba(0,0,0,0.18) 100%);z-index:2"></div>
-                    <div class="relative flex flex-col justify-center h-full p-8" style="z-index:3">
-                        <span class="bg-white text-slate-900 text-[9px] font-black px-3 py-1 rounded-full w-fit mb-2 uppercase tracking-tighter shadow-lg flex items-center gap-1">
+                    <!-- Dégradé gauche dominant -->
+                    <div class="absolute inset-0" style="background:linear-gradient(110deg,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.45) 55%,rgba(0,0,0,0.05) 100%);z-index:2"></div>
+                    <!-- Accent couleur en bas -->
+                    <div class="absolute bottom-0 left-0 right-0 h-1" style="background:${bi===0?'#bd1e24':bi===1?'#3b82f6':'#f59e0b'};z-index:3"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center p-6" style="z-index:4">
+                        <!-- Badge tag -->
+                        <span style="display:inline-flex;align-items:center;gap:4px;background:${bi===0?'#bd1e24':bi===1?'#1e40af':'#92400e'};color:white;font-size:9px;font-weight:900;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:8px;letter-spacing:0.08em;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,0.3)">
                             ${b.icon}${b.tag}
                         </span>
-                        <h2 class="text-white text-xl font-black uppercase leading-none mb-1">${b.title}</h2>
-                        <p class="text-red-400 text-lg font-black uppercase leading-tight line-clamp-1">${b.subtitle}</p>
-                        <p class="text-white/80 text-[10px] font-bold mt-2 uppercase italic tracking-widest flex items-center gap-1">
-                            <svg width="12" height="12" fill="none" stroke="rgba(255,255,255,0.6)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            ${b.desc}
-                        </p>
+                        <h2 style="color:white;font-size:1.25rem;font-weight:900;text-transform:uppercase;line-height:1.1;margin-bottom:4px;letter-spacing:-0.3px;text-shadow:0 2px 8px rgba(0,0,0,0.5)">${b.title}</h2>
+                        <p style="color:#fca5a5;font-size:0.95rem;font-weight:800;text-transform:uppercase;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-shadow:0 1px 4px rgba(0,0,0,0.5)">${b.subtitle}</p>
+                        <p style="color:rgba(255,255,255,0.75);font-size:9px;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:0.1em;font-style:italic">${b.desc}</p>
+                    </div>
+                    <!-- Flèche cliquable -->
+                    <div class="absolute bottom-4 right-4" style="z-index:5">
+                        <span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,0.4)">
+                            <svg width="14" height="14" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                        </span>
                     </div>
                 </div>`;
-            }).join('');
+            });
+
+            // Bannière "Pas de cash" animée
+            const cashBanner = `
+                <div class="banner-item relative overflow-hidden" id="cashBanner"
+                     style="height:200px;border-radius:22px;box-shadow:0 8px 32px rgba(189,30,36,0.25);background:#bd1e24;margin-right:16px;">
+                    <!-- Cercles déco animés -->
+                    <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08);z-index:1"></div>
+                    <div style="position:absolute;bottom:-40px;left:-20px;width:160px;height:160px;border-radius:50%;background:rgba(0,0,0,0.1);z-index:1"></div>
+                    <div style="position:absolute;top:50%;right:16px;transform:translateY(-50%);z-index:2;opacity:0.12">
+                        <svg width="80" height="80" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+                    </div>
+                    <div class="absolute inset-0 flex flex-col justify-center px-7" style="z-index:3">
+                        <p style="color:rgba(255,255,255,0.85);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Afro Service</p>
+                        <h2 id="cashBannerText" style="color:white;font-size:1.45rem;font-weight:900;line-height:1.15;text-transform:uppercase;letter-spacing:-0.5px;text-shadow:0 2px 10px rgba(0,0,0,0.3)">PAS DE CASH ?</h2>
+                        <div style="width:48px;height:3px;background:white;border-radius:2px;margin:8px 0;opacity:0.7"></div>
+                        <p id="cashBannerSub" style="color:rgba(255,255,255,0.9);font-size:1rem;font-weight:700;line-height:1.2">Pas de panique !</p>
+                        <p id="cashBannerDesc" style="color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;margin-top:8px;font-style:italic">Paie à ton rythme 💳</p>
+                    </div>
+                </div>`;
+
+            container.innerHTML = [...productBanners, cashBanner].join('');
+
+            // Animation texte bannière cash (cycle 3 messages)
+            const cashMessages = [
+                { h: 'PAS DE CASH ?', sub: 'Pas de panique !', desc: 'Paie à ton rythme 💳' },
+                { h: 'PAIE À TON', sub: 'RYTHME !', desc: 'Facilités de paiement disponibles' },
+                { h: 'COMMANDEZ', sub: 'MAINTENANT', desc: 'Réglez plus tard, en toute sérénité' },
+            ];
+            let cashIdx = 0;
+            if (window._cashBannerInterval) clearInterval(window._cashBannerInterval);
+            window._cashBannerInterval = setInterval(() => {
+                cashIdx = (cashIdx + 1) % cashMessages.length;
+                const m = cashMessages[cashIdx];
+                const h = document.getElementById('cashBannerText');
+                const s = document.getElementById('cashBannerSub');
+                const d = document.getElementById('cashBannerDesc');
+                if (!h) return;
+                [h, s, d].forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; el.style.transition = 'all 0.4s ease'; });
+                setTimeout(() => {
+                    h.textContent = m.h; s.textContent = m.sub; d.textContent = m.desc;
+                    [h, s, d].forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+                }, 420);
+            }, 3500);
 
             // Cycle images inside each banner every 8 seconds
             if (window._bannerImgIntervals) window._bannerImgIntervals.forEach(clearInterval);
@@ -1927,15 +1986,24 @@
             if (pm) { pm.textContent = msgs[0]; pm.style.opacity = '1'; }
             setInterval(rotatePromoMsg, 4000);
 
-            // Défilement bannières (scroll horizontal)
+            // Défilement bannières (scroll horizontal) — 4 bannières
             let bannerIndex = 0;
+            function updateBannerDots(idx) {
+                const dots = document.querySelectorAll('#bannerDots span');
+                dots.forEach((d, i) => {
+                    d.style.width = i === idx ? '20px' : '6px';
+                    d.style.background = i === idx ? '#bd1e24' : '#cbd5e1';
+                    d.style.transition = 'all 0.3s ease';
+                });
+            }
             setInterval(() => {
                 const bannerContainer = document.querySelector('#dynamicBanners');
                 if (!bannerContainer) return;
                 const items = bannerContainer.querySelectorAll('.banner-item');
                 if (items.length <= 1) return;
                 bannerIndex = (bannerIndex + 1) % items.length;
-                bannerContainer.scrollTo({ left: items[bannerIndex].offsetLeft - 16, behavior: 'smooth' });
+                items[bannerIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                updateBannerDots(bannerIndex);
             }, 8000);
 
             // ===== BOUTON NAVIGATION UNIQUE — discret, disparaît en haut =====
@@ -1947,13 +2015,16 @@
 
             function getActiveScroller() {
                 const admin = document.getElementById('adminModal');
-                if (admin && !admin.classList.contains('hidden')) return admin;
+                if (admin && !admin.classList.contains('hidden')) {
+                    // Le scroll réel est dans le div flex-1 overflow-y-auto de l'admin
+                    const adminScroll = admin.querySelector('.flex-1.overflow-y-auto');
+                    return adminScroll || admin;
+                }
 
                 const detail = document.getElementById('detailModal');
                 if (detail) {
                     const t = detail.style.transform || '';
                     if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') {
-                        // Le scroll réel est dans detailContent, pas detailModal
                         return document.getElementById('detailContent') || detail;
                     }
                 }
@@ -2011,7 +2082,11 @@
             window.addEventListener('scroll', updateScrollBtn, { passive: true });
 
             const adminModalEl = document.getElementById('adminModal');
-            if (adminModalEl) adminModalEl.addEventListener('scroll', updateScrollBtn, { passive: true });
+            if (adminModalEl) {
+                adminModalEl.addEventListener('scroll', updateScrollBtn, { passive: true });
+                const adminInner = adminModalEl.querySelector('.flex-1.overflow-y-auto');
+                if (adminInner) adminInner.addEventListener('scroll', updateScrollBtn, { passive: true });
+            }
 
             const detailContentEl = document.getElementById('detailContent');
             if (detailContentEl) detailContentEl.addEventListener('scroll', updateScrollBtn, { passive: true });
