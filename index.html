@@ -841,10 +841,10 @@
                         <div class="md:col-span-2" id="richEditorWrap" style="border:2px solid #e2e8f0;border-radius:16px;overflow:hidden;background:white;">
                           <div style="display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;background:#f8fafc;border-bottom:1.5px solid #e2e8f0;align-items:center;">
                             <span style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-right:4px;">MISE EN FORME</span>
-                            <button type="button" title="Gras" onclick="document.execCommand('bold')" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1e293b;"><b>B</b></button>
-                            <button type="button" title="Italique" onclick="document.execCommand('italic')" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-style:italic;color:#1e293b;"><i>I</i></button>
-                            <button type="button" title="Titre" onclick="window.insertRichBlock('h3')" style="height:28px;padding:0 8px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:9px;cursor:pointer;color:#101944;letter-spacing:.04em;">TITRE</button>
-                            <button type="button" title="Liste" onclick="document.execCommand('insertUnorderedList')" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="#475569"/><circle cx="4" cy="12" r="1.5" fill="#475569"/><circle cx="4" cy="18" r="1.5" fill="#475569"/></svg></button>
+                            <button type="button" title="Gras" onmousedown="event.preventDefault()" ontouchstart="event.preventDefault();window.formatBold()" onclick="window.formatBold()" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1e293b;"><b>B</b></button>
+                            <button type="button" title="Italique" onmousedown="event.preventDefault()" ontouchstart="event.preventDefault();window.formatItalic()" onclick="window.formatItalic()" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-style:italic;color:#1e293b;"><i>I</i></button>
+                            <button type="button" title="Titre" onmousedown="event.preventDefault()" ontouchstart="event.preventDefault();window.insertRichBlock('h3')" onclick="window.insertRichBlock('h3')" style="height:28px;padding:0 8px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-weight:900;font-size:9px;cursor:pointer;color:#101944;letter-spacing:.04em;">TITRE</button>
+                            <button type="button" title="Liste" onmousedown="event.preventDefault()" ontouchstart="event.preventDefault();window.formatList()" onclick="window.formatList()" style="width:28px;height:28px;border:1.5px solid #e2e8f0;border-radius:8px;background:white;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="#475569"/><circle cx="4" cy="12" r="1.5" fill="#475569"/><circle cx="4" cy="18" r="1.5" fill="#475569"/></svg></button>
                             <div style="width:1px;height:22px;background:#e2e8f0;margin:0 2px;"></div>
                             <div style="display:flex;gap:4px;flex:1;min-width:0;">
                               <input id="descImgUrl" type="url" placeholder="https://... lien image à insérer" style="flex:1;min-width:0;border:1.5px solid #e2e8f0;border-radius:8px;padding:0 8px;font-size:10px;height:28px;outline:none;background:white;color:#334155;" onfocus="this.style.borderColor='#bd1e24'" onblur="this.style.borderColor='#e2e8f0'" onkeydown="if(event.key==='Enter'){event.preventDefault();window.insertDescImage();}">
@@ -1216,11 +1216,52 @@
 
         // ==================== ÉDITEUR DESCRIPTION RICHE ====================
 
+        // ---- Éditeur riche : sauvegarde/restauration de sélection (fix Chrome Android) ----
+        let _savedRange = null;
+
+        function saveSelection() {
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+                _savedRange = sel.getRangeAt(0).cloneRange();
+            }
+        }
+
+        function restoreSelection(editor) {
+            editor.focus();
+            if (_savedRange) {
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(_savedRange);
+            } else {
+                // Placer le curseur à la fin si aucune sélection sauvegardée
+                const range = document.createRange();
+                range.selectNodeContents(editor);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+
+        function execFormatCmd(cmd, value) {
+            const editor = document.getElementById('admDescEditor');
+            restoreSelection(editor);
+            try {
+                document.execCommand(cmd, false, value || null);
+            } catch(e) {}
+            window.syncDescToHidden();
+            saveSelection();
+        }
+
         window.syncDescToHidden = function() {
             const editor = document.getElementById('admDescEditor');
             const hidden = document.getElementById('admDesc');
             if (editor && hidden) hidden.value = editor.innerHTML;
         };
+
+        window.formatBold = function() { execFormatCmd('bold'); };
+        window.formatItalic = function() { execFormatCmd('italic'); };
+        window.formatList = function() { execFormatCmd('insertUnorderedList'); };
 
         window.insertDescImage = function() {
             const input = document.getElementById('descImgUrl');
@@ -1231,8 +1272,7 @@
                 return;
             }
             const editor = document.getElementById('admDescEditor');
-            editor.focus();
-            // Insert a block with the image + spacing
+            restoreSelection(editor);
             const imgHtml = `<div style="margin:12px 0;text-align:center;"><img src="${url}" style="max-width:100%;border-radius:12px;display:inline-block;" onerror="this.style.border='2px dashed #fca5a5';"></div>`;
             document.execCommand('insertHTML', false, imgHtml);
             input.value = '';
@@ -1241,24 +1281,43 @@
 
         window.insertRichBlock = function(tag) {
             const editor = document.getElementById('admDescEditor');
-            editor.focus();
-            document.execCommand('formatBlock', false, tag);
+            restoreSelection(editor);
+            // Insérer un élément block directement si execCommand échoue
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                // Récupérer le texte sélectionné ou vide
+                const text = range.toString() || 'Titre';
+                const el = document.createElement(tag);
+                el.textContent = text;
+                range.deleteContents();
+                range.insertNode(el);
+                // Placer le curseur après l'élément
+                const newRange = document.createRange();
+                newRange.setStartAfter(el);
+                newRange.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(newRange);
+                // Ajouter un <br> après pour continuer à écrire
+                const br = document.createElement('br');
+                el.parentNode.insertBefore(br, el.nextSibling);
+            } else {
+                document.execCommand('formatBlock', false, tag);
+            }
             window.syncDescToHidden();
         };
 
         window.handleDescKeydown = function(e) {
-            // Allow normal typing; sync on each keystroke via oninput
             if (e.key === 'Tab') {
                 e.preventDefault();
                 document.execCommand('insertHTML', false, '&nbsp;&nbsp;&nbsp;&nbsp;');
             }
         };
 
-        // Placeholder styling for the contenteditable
+        // Placeholder + sauvegarde sélection (fix Chrome Android)
         document.addEventListener('DOMContentLoaded', function() {
             const editor = document.getElementById('admDescEditor');
             if (!editor) return;
-            const placeholder = 'Rédigez la description ici... Utilisez la toolbar pour mettre en forme ou insérer des images.';
             function updatePlaceholder() {
                 if (editor.innerHTML === '' || editor.innerHTML === '<br>') {
                     editor.setAttribute('data-empty', 'true');
@@ -1268,6 +1327,17 @@
             }
             editor.addEventListener('input', updatePlaceholder);
             editor.addEventListener('blur', updatePlaceholder);
+            // Sauvegarder la sélection à chaque interaction pour le fix mobile
+            editor.addEventListener('keyup', saveSelection);
+            editor.addEventListener('mouseup', saveSelection);
+            editor.addEventListener('touchend', saveSelection);
+            document.addEventListener('selectionchange', function() {
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount > 0) {
+                    const node = sel.getRangeAt(0).commonAncestorContainer;
+                    if (editor.contains(node)) saveSelection();
+                }
+            });
             updatePlaceholder();
         });
 
