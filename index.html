@@ -132,96 +132,59 @@
 
         .price-tag { color: var(--afro-red); font-weight: 900; font-size: 1.1rem; letter-spacing: -0.5px; }
 
-        /* ============ GRILLE PRODUITS — scroll horizontal auto + manuel ============ */
+        /* ============ SCROLL ARTICLES — Carousel GPU transform (professionnel) ============ */
         #productScrollWrapper {
-            overflow-x: auto;
-            overflow-y: visible;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: auto;
-            cursor: grab;
+            overflow: hidden;
+            position: relative;
+            touch-action: pan-y;
         }
-        #productScrollWrapper:active { cursor: grabbing; }
+        /* Dégradé droit : indice qu'il y a d'autres articles */
+        #productScrollWrapper::after {
+            content: '';
+            position: absolute; top: 0; right: 0; bottom: 0; width: 52px;
+            background: linear-gradient(to right, transparent, rgba(248,250,252,0.94));
+            pointer-events: none; z-index: 2;
+        }
         #productScrollTrack {
             display: flex;
-            gap: 14px;
-            padding: 8px 16px 12px;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 12px;
+            padding: 8px 16px 16px;
             width: max-content;
+            /* Transition CSS native — accélérée GPU, ultra-fluide */
+            transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+            cursor: grab;
         }
+        #productScrollTrack:active { cursor: grabbing; }
         #productScrollTrack .product-card-container {
-            flex: 0 0 160px;
-            width: 160px;
+            flex: 0 0 auto;
+            width: 155px;
         }
         @media (min-width: 480px) {
-            #productScrollTrack .product-card-container { flex: 0 0 175px; width: 175px; }
+            #productScrollTrack .product-card-container { width: 170px; }
         }
 
+        /* ============ CATÉGORIES — Scroll horizontal natif ============ */
+        #categoryBubbles {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 16px 8px;
+        }
+
+        /* ============ MARQUEE PROMO — CSS pur ============ */
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0%); } }
-        .animate-marquee { display: flex; width: max-content; animation: marquee 25s linear infinite; }
-        .animate-marquee.reverse { animation-name: marquee-reverse; }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 28s linear infinite; }
         .animate-marquee:hover { animation-play-state: paused; }
 
-        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; gap: 12px; }
+        .banner-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 12px; }
         .banner-item { flex: 0 0 88%; scroll-snap-align: start; }
         .banner-item:first-child { margin-left: 16px; }
         .banner-item:last-child { margin-right: 16px; }
         @media (min-width: 768px) { .banner-item { flex: 0 0 55%; } }
-
-        #backToTop { transition: opacity 0.4s ease, transform 0.4s ease; }
-        #backToTop:hover { transform: translateY(-5px); background-color: rgba(255, 255, 255, 0.9); color: #bd1e24; }
-
-        .banner-gradient-overlay { background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%); }
-
-        /* ============ BANNIÈRES — Animation Ken Burns dynamique ============ */
-        @keyframes kenburns-1 {
-            0%   { transform: scale(1.0) translate(0%, 0%); }
-            25%  { transform: scale(1.12) translate(-3%, -2%); }
-            50%  { transform: scale(1.18) translate(2%, -4%); }
-            75%  { transform: scale(1.1) translate(-1%, 2%); }
-            100% { transform: scale(1.0) translate(0%, 0%); }
-        }
-        @keyframes kenburns-2 {
-            0%   { transform: scale(1.15) translate(3%, 2%); }
-            33%  { transform: scale(1.05) translate(-2%, -3%); }
-            66%  { transform: scale(1.2) translate(1%, 3%); }
-            100% { transform: scale(1.15) translate(3%, 2%); }
-        }
-        @keyframes kenburns-3 {
-            0%   { transform: scale(1.08) translate(-2%, 3%); }
-            50%  { transform: scale(1.2) translate(3%, -2%); }
-            100% { transform: scale(1.08) translate(-2%, 3%); }
-        }
-        .banner-img-animated {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0;
-            transition: opacity 1.2s ease-in-out;
-            will-change: transform, opacity;
-        }
-        .banner-img-animated.active {
-            opacity: 0.55;
-            animation: kenburns-1 16s ease-in-out infinite;
-        }
-        .banner-img-animated.kb2 { animation-name: kenburns-2; animation-duration: 14s; }
-        .banner-img-animated.kb3 { animation-name: kenburns-3; animation-duration: 18s; }
-
-        /* ============ CATÉGORIES — Scroll mixte auto + manuel ============ */
-        #categoryBubbles {
-            overflow-x: auto !important;
-            overflow-y: visible;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: auto;
-            cursor: grab;
-        }
-        #categoryBubbles:active { cursor: grabbing; }
-        #categoryBubbles .categories-scroll-track {
-            display: flex;
-            gap: 24px;
-            padding: 0 24px;
-            width: max-content;
-        }
-        /* Autoriser les clics sur les bulles même en animation */
-        .categories-scroll-track { pointer-events: none; }
-        .categories-scroll-track .category-bubble { pointer-events: auto; }
 
         /* ============ LANGUE — style Glotelho : drapeau + code + flèche ============ */
         #langBtn {
@@ -274,9 +237,7 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: rgba(16,25,68,0.80);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(16,25,68,0.88);
             border: 1.5px solid rgba(255,255,255,0.20);
             box-shadow: 0 4px 14px rgba(0,0,0,0.30);
             display: flex;
@@ -379,11 +340,39 @@
         /* ============ PROMO TOP BAR ============ */
         #promoTopBar { min-height: 38px; }
         #promoMsg { transition: opacity 0.5s ease, transform 0.5s ease; }
+
+        /* ============ Images bannières — Ken Burns + crossfade ============ */
+        @keyframes kb1 {
+            0%   { transform: scale(1.00) translate(0%, 0%);       }
+            50%  { transform: scale(1.14) translate(-2.5%, -2%);   }
+            100% { transform: scale(1.00) translate(0%, 0%);       }
+        }
+        @keyframes kb2 {
+            0%   { transform: scale(1.00) translate(0%, 0%);       }
+            50%  { transform: scale(1.12) translate(2.5%, -1.5%);  }
+            100% { transform: scale(1.00) translate(0%, 0%);       }
+        }
+        @keyframes kb3 {
+            0%   { transform: scale(1.00) translate(0%, 0%);       }
+            50%  { transform: scale(1.10) translate(0%, 2.5%);     }
+            100% { transform: scale(1.00) translate(0%, 0%);       }
+        }
+        .banner-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            transform-origin: center center;
+            transition: opacity 1s ease;
+        }
+        .banner-bg-img.hidden-img  { opacity: 0; animation: none !important; }
+        .banner-bg-img.visible-img { opacity: 1; }
+        .banner-bg-img.kb1 { animation: kb1 9s ease-in-out infinite; }
+        .banner-bg-img.kb2 { animation: kb2 9s ease-in-out infinite; }
+        .banner-bg-img.kb3 { animation: kb3 9s ease-in-out infinite; }
     </style>
 </head>
 <body class="text-slate-900 overflow-x-hidden">
 
-    <div id="overlay" onclick="window.closeMenus && window.closeMenus()" class="hidden fixed inset-0 bg-black/70 z-[90] backdrop-blur-sm"></div>
+    <div id="overlay" onclick="window.closeMenus && window.closeMenus()" class="hidden fixed inset-0 bg-black/70 z-[90]"></div>
 
     <!-- BARRE PROMO DYNAMIQUE -->
     <div id="promoTopBar" class="sticky top-0 z-[101] bg-gradient-to-r from-[#bd1e24] via-[#e02020] to-[#bd1e24] text-white flex items-stretch overflow-hidden shadow-lg">
@@ -415,7 +404,6 @@
                     <img src="https://i.postimg.cc/KYpsH5PR/20260328-090141.jpg" 
                          class="h-11 w-11 rounded-xl object-cover shadow-lg border-2 border-red-600/40" 
                          alt="Afro Service Logo">
-                    <!-- point vert supprimé -->
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="font-black text-[15px] leading-none tracking-tight text-white" style="letter-spacing:-0.3px">Afro Service</span>
@@ -425,10 +413,10 @@
                 </div>
             </div>
 
-            <!-- ACTIONS DROITE — symétrique, auth=cart=36px cercle -->
+            <!-- ACTIONS DROITE -->
             <div class="flex items-center gap-2 flex-shrink-0">
 
-                <!-- Sélecteur de langue style Glotelho : drapeau + code + flèche bas -->
+                <!-- Sélecteur de langue -->
                 <button id="langBtn" onclick="window.cycleLang && window.cycleLang()" title="Changer de langue">
                     <span id="langFlag" class="text-base leading-none">🇫🇷</span>
                     <span id="langCode" style="font-size:11px;font-weight:900;">FR</span>
@@ -437,7 +425,7 @@
                     </svg>
                 </button>
 
-                <!-- Bouton Connexion style Glotelho — cercle 36px + icône user -->
+                <!-- Bouton Connexion -->
                 <button id="authBtn" onclick="window.openAuth && window.openAuth()">
                     <svg viewBox="0 0 24 24">
                         <circle cx="12" cy="8" r="3.5" stroke="white" stroke-width="2" fill="none"/>
@@ -446,7 +434,7 @@
                     <span id="authStatusDot" class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-[#101944] bg-slate-400"></span>
                 </button>
 
-                <!-- Bouton Panier — MÊME TAILLE que authBtn : cercle 36px -->
+                <!-- Bouton Panier -->
                 <button onclick="window.openCart && window.openCart()"
                         class="relative flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
                         style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.65);box-shadow:0 2px 6px rgba(0,0,0,0.15);">
@@ -508,39 +496,34 @@
     </section>
 
     <!-- CATÉGORIES BULLES -->
-    <section class="bg-white py-6 border-b border-slate-100" style="overflow:visible">
-        <div id="categoryBubbles" class="no-scrollbar" style="overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;"></div>
+    <section class="bg-white py-5 border-b border-slate-100">
+        <div id="categoryBubbles" class="no-scrollbar"></div>
     </section>
 
-    <!-- MARQUEE PROMO — icônes SVG, sans emojis -->
+    <!-- MARQUEE PROMO -->
     <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
         <div id="promoMarquee" class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
             <div class="flex items-center gap-10 px-6">
-                <!-- Icône TV/Électroménager -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
                     <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     <span data-fr="Nouvel arrivage Électroménager" data-en="New Appliance Arrivals">Nouvel arrivage Électroménager</span>
                 </span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <!-- Icône promo/tag -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                     <span data-fr="-25% sur les TV Smart" data-en="-25% on Smart TVs">-25% sur les TV Smart</span>
                 </span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <!-- Icône livraison -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
                     <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
                     <span data-fr="Livraison Rapide à Bafoussam" data-en="Fast Delivery in Bafoussam">Livraison Rapide à Bafoussam</span>
                 </span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <!-- Icône bouclier qualité -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
                     <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     <span data-fr="Qualité 100% Garantie" data-en="100% Quality Guaranteed">Qualité 100% Garantie</span>
                 </span>
                 <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <!-- Icône paiement sécurisé -->
                 <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
                     <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     <span data-fr="Paiement à la Livraison" data-en="Payment on Delivery">Paiement à la Livraison</span>
@@ -578,8 +561,8 @@
 
     <!-- GRILLE PRODUITS + AVIS -->
     <main class="py-4 min-h-screen" style="overflow:visible">
-        <div id="productScrollWrapper" class="no-scrollbar" style="overflow-x:auto;overflow-y:visible;">
-            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4"></div>
+        <div id="productScrollWrapper" class="no-scrollbar" style="position:relative;">
+            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4" style="display:none"></div>
             <div id="productScrollTrack" style="display:none"></div>
         </div>
 
@@ -600,11 +583,11 @@
                     <div class="flex items-center gap-2">
                         <span class="text-[9px] font-bold text-white/60 uppercase" data-fr="Note :" data-en="Rating:">Note :</span>
                         <select id="revStars" class="bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-[10px] outline-none text-white flex-1">
-                            <option value="5" class="bg-slate-800" data-fr="Excellent" data-en="Excellent">⭐⭐⭐⭐⭐ (Excellent)</option>
-                            <option value="4" class="bg-slate-800" data-fr="Très Bien" data-en="Very Good">⭐⭐⭐⭐ (Très Bien)</option>
-                            <option value="3" class="bg-slate-800" data-fr="Bien" data-en="Good">⭐⭐⭐ (Bien)</option>
-                            <option value="2" class="bg-slate-800" data-fr="Moyen" data-en="Average">⭐⭐ (Moyen)</option>
-                            <option value="1" class="bg-slate-800" data-fr="Déçu" data-en="Disappointed">⭐ (Déçu)</option>
+                            <option value="5" class="bg-slate-800">⭐⭐⭐⭐⭐ (Excellent)</option>
+                            <option value="4" class="bg-slate-800">⭐⭐⭐⭐ (Très Bien)</option>
+                            <option value="3" class="bg-slate-800">⭐⭐⭐ (Bien)</option>
+                            <option value="2" class="bg-slate-800">⭐⭐ (Moyen)</option>
+                            <option value="1" class="bg-slate-800">⭐ (Déçu)</option>
                         </select>
                     </div>
                     <textarea id="revText"
@@ -655,7 +638,7 @@
         </div>
     </footer>
 
-    <!-- BOUTON NAVIGATION UNIQUE — petit, élégant, discret -->
+    <!-- BOUTON NAVIGATION UNIQUE -->
     <button id="scrollToggleBtn"
             onclick="window.handleScrollToggle && window.handleScrollToggle()"
             style="
@@ -725,15 +708,9 @@
         <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-100/50"></div>
         <div class="p-6 border-t shadow-inner space-y-4">
             <div id="clientInfo" class="space-y-2">
-                <input id="cName" type="text"
-                       data-placeholder-fr="Nom Complet" data-placeholder-en="Full Name"
-                       placeholder="Nom Complet" class="w-full border p-2 text-xs rounded-lg outline-none">
-                <input id="cTel" type="tel"
-                       data-placeholder-fr="N° de Téléphone" data-placeholder-en="Phone Number"
-                       placeholder="N° de Téléphone" class="w-full border p-2 text-xs rounded-lg outline-none">
-                <input id="cQuartier" type="text"
-                       data-placeholder-fr="Ville et Quartier" data-placeholder-en="City and District"
-                       placeholder="Ville et Quartier" class="w-full border p-2 text-xs rounded-lg outline-none">
+                <input id="cName" type="text" data-placeholder-fr="Nom Complet" data-placeholder-en="Full Name" placeholder="Nom Complet" class="w-full border p-2 text-xs rounded-lg outline-none">
+                <input id="cTel" type="tel" data-placeholder-fr="N° de Téléphone" data-placeholder-en="Phone Number" placeholder="N° de Téléphone" class="w-full border p-2 text-xs rounded-lg outline-none">
+                <input id="cQuartier" type="text" data-placeholder-fr="Ville et Quartier" data-placeholder-en="City and District" placeholder="Ville et Quartier" class="w-full border p-2 text-xs rounded-lg outline-none">
             </div>
             <div class="flex justify-between items-center font-black">
                 <span class="text-xs text-slate-400 uppercase" data-fr="Total" data-en="Total">Total</span>
@@ -831,7 +808,7 @@
 
     <div id="authModal" class="hidden fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[32px] p-8 space-y-4 text-center">
-            <h2 id="authTitle" class="text-xl font-black text-[#101944] uppercase italic" data-fr="CONNEXION" data-en="LOGIN">CONNEXION</h2>
+            <h2 id="authTitle" class="text-xl font-black text-[#101944] uppercase italic">CONNEXION</h2>
             <div id="signUpOnly" class="hidden"><input id="authName" type="text" data-placeholder-fr="Nom Complet" data-placeholder-en="Full Name" placeholder="Nom Complet" class="w-full border-2 p-4 rounded-2xl text-sm mb-2"></div>
             <input id="authEmail" type="email" data-placeholder-fr="Email Admin" data-placeholder-en="Admin Email" placeholder="Email Admin" class="w-full border-2 p-4 rounded-2xl text-sm">
             <input id="authPass" type="password" data-placeholder-fr="Mot de passe" data-placeholder-en="Password" placeholder="Mot de passe" class="w-full border-2 p-4 rounded-2xl text-sm">
@@ -839,10 +816,10 @@
                 <span data-fr="Valider" data-en="Confirm">Valider</span>
             </button>
             <div class="flex flex-col gap-3 mt-4">
-                <button onclick="window.toggleAuthMode && window.toggleAuthMode()" class="text-[10px] font-bold text-slate-500 underline uppercase" data-fr="Créer un compte ?" data-en="Create an account?">Créer un compte ?</button>
-                <button onclick="window.forgotPassword && window.forgotPassword()" class="text-[10px] font-bold text-red-600 underline uppercase italic" data-fr="Mot de passe oublié ?" data-en="Forgot password?">Mot de passe oublié ?</button>
+                <button onclick="window.toggleAuthMode && window.toggleAuthMode()" class="text-[10px] font-bold text-slate-500 underline uppercase">Créer un compte ?</button>
+                <button onclick="window.forgotPassword && window.forgotPassword()" class="text-[10px] font-bold text-red-600 underline uppercase italic">Mot de passe oublié ?</button>
             </div>
-            <button onclick="window.closeAuth && window.closeAuth()" class="block w-full text-[10px] text-slate-300 uppercase mt-4" data-fr="Fermer" data-en="Close">Fermer</button>
+            <button onclick="window.closeAuth && window.closeAuth()" class="block w-full text-[10px] text-slate-300 uppercase mt-4">Fermer</button>
         </div>
     </div>
 
@@ -959,7 +936,6 @@
         // ==================== LANGUE ====================
         let currentLang = localStorage.getItem('afroLang') || 'fr';
 
-        // ---- Messages promo sans emojis, avec données i18n ----
         const PROMO_MESSAGES = {
             fr: [
                 "Bienvenue chez Afro Service — Le Commerce Vous Ouvre Son Cœur !",
@@ -1004,66 +980,38 @@
             }, 350);
         }
 
-        /**
-         * Applies lang to ALL elements with data-fr / data-en attributes
-         * Also updates placeholders for inputs/textareas
-         */
         function applyLang(lang) {
             currentLang = lang;
             localStorage.setItem('afroLang', lang);
-
-            // Update lang button
             document.getElementById('langFlag').textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
             document.getElementById('langCode').textContent = lang === 'fr' ? 'FR' : 'EN';
-
-            // All elements with data-fr / data-en (text content)
             document.querySelectorAll('[data-fr][data-en]').forEach(el => {
-                // Skip inputs/textareas/selects (handled via placeholder)
                 const tag = el.tagName.toLowerCase();
                 if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
                 const val = el.getAttribute('data-' + lang);
                 if (val !== null) el.textContent = val;
             });
-
-            // Placeholders for inputs and textareas
             document.querySelectorAll('[data-placeholder-fr], [data-placeholder-en]').forEach(el => {
                 const ph = el.getAttribute('data-placeholder-' + lang);
                 if (ph) el.placeholder = ph;
             });
-
-            // Ticker items
             document.querySelectorAll('#headerTicker .ticker__item').forEach(el => {
                 const t = el.getAttribute('data-' + lang);
                 if (t) el.textContent = t;
             });
-
-            // Marquee spans with data-fr/data-en inside the marquee
             document.querySelectorAll('.animate-marquee [data-fr][data-en]').forEach(el => {
                 const val = el.getAttribute('data-' + lang);
                 if (val !== null) el.textContent = val;
             });
-
-            // Promo top bar phone label
             const lbl = document.getElementById('promoPhoneLabel');
             if (lbl) lbl.textContent = lbl.getAttribute('data-' + lang);
-
-            // Promo message
             const msgs = PROMO_MESSAGES[lang];
             const pm = document.getElementById('promoMsg');
-            if (pm) {
-                pm.textContent = msgs[promoMsgIndex % msgs.length];
-                pm.style.opacity = '1';
-                pm.style.transform = 'translateY(0)';
-            }
-
-            // Re-render products to apply translated descriptions
+            if (pm) { pm.textContent = msgs[promoMsgIndex % msgs.length]; pm.style.opacity = '1'; pm.style.transform = 'translateY(0)'; }
             renderProducts(stock);
         }
 
-        // Cycle FR <-> EN on single click
-        window.cycleLang = function() {
-            applyLang(currentLang === 'fr' ? 'en' : 'fr');
-        };
+        window.cycleLang = function() { applyLang(currentLang === 'fr' ? 'en' : 'fr'); };
 
         // ==================== UTILITAIRES ====================
         async function getCustomerBadge(userId) {
@@ -1096,149 +1044,347 @@
             ['admPrice','admOld'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
         }
 
-        // ==================== BANNIÈRES ====================
+        // ==================== FIX 3 : BANNIÈRES avec rotation d'images toutes les 8s ====================
+        // Chaque bannière produit a un tableau d'images qui tournent indépendamment
+        let _bannerImgIntervals = [];
+
         function updateDynamicBanners(products) {
             const container = document.getElementById('dynamicBanners');
             if (!container || !products || products.length === 0) {
                 if (container) container.innerHTML = `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>`;
                 return;
             }
-            const promoItems = [...products].filter(p => p.old && p.old > p.price).sort((a, b) => ((b.old - b.price) / b.old) - ((a.old - a.price) / a.old));
-            const bestPromo = promoItems[0] || products[0];
-            const latest = products[products.length - 1];
-            const random = products[Math.floor(Math.random() * products.length)];
 
-            // Bannière SVG icons au lieu d'emojis
-            const banners = [
+            // Arrêter les anciens intervalles de rotation d'images
+            _bannerImgIntervals.forEach(clearInterval);
+            _bannerImgIntervals = [];
+
+            // Trier produits avec promo pour bannière 1
+            const promoItems = [...products].filter(p => p.old && p.old > p.price)
+                .sort((a, b) => ((b.old - b.price) / b.old) - ((a.old - a.price) / a.old));
+            const bestPromo = promoItems[0] || products[0];
+            const latest    = products[products.length - 1];
+            const random    = products[Math.floor(Math.random() * products.length)];
+
+            // ── FIX 3 : Pool d'images par bannière ──
+            // On collecte TOUTES les images de la boutique pour chaque bannière
+            const allImgs = products
+                .filter(p => p.imgs && p.imgs[0])
+                .map(p => ({ img: p.imgs[0], id: p.id, name: p.name }));
+
+            // Bannière 1 : images des articles en promo
+            const promoImgs = promoItems.length > 0
+                ? promoItems.map(p => ({ img: p.imgs && p.imgs[0] ? p.imgs[0] : '', id: p.id, name: p.name })).filter(x => x.img)
+                : allImgs.slice(0, 6);
+
+            // Bannière 2 : derniers arrivages (derniers 6 articles)
+            const latestImgs = [...products].slice(-6).reverse()
+                .filter(p => p.imgs && p.imgs[0])
+                .map(p => ({ img: p.imgs[0], id: p.id, name: p.name }));
+
+            // Bannière 3 : sélection aléatoire de 6 articles
+            const shuffled = [...products].sort(() => Math.random() - 0.5).slice(0, 6)
+                .filter(p => p.imgs && p.imgs[0])
+                .map(p => ({ img: p.imgs[0], id: p.id, name: p.name }));
+
+            const bannerConfigs = [
                 {
-                    title: currentLang === 'fr' ? "Offre Imbattable" : "Unbeatable Deal",
-                    subtitle: bestPromo.name,
-                    tag: bestPromo.old ? `-${Math.round(((bestPromo.old - bestPromo.price) / bestPromo.old) * 100)}%` : (currentLang === 'fr' ? "MEILLEUR PRIX" : "BEST PRICE"),
-                    img: bestPromo.imgs && bestPromo.imgs[0] ? bestPromo.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-red-600",
-                    id: bestPromo.id,
-                    desc: bestPromo.old ? `${currentLang === 'fr' ? 'Économisez' : 'Save'} ${(bestPromo.old - bestPromo.price).toLocaleString()} F` : (currentLang === 'fr' ? "Qualité Premium" : "Premium Quality"),
-                    // SVG icône tag promo
-                    icon: `<svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>`
+                    pool: promoImgs.length ? promoImgs : allImgs,
+                    anchorId: bestPromo.id,
+                    accentColor: '#bd1e24',
+                    badgeBg: '#bd1e24',
+                    tag: bestPromo.old ? `-${Math.round(((bestPromo.old - bestPromo.price) / bestPromo.old) * 100)}% SUR CE PRODUIT` : (currentLang === 'fr' ? 'MEILLEUR PRIX GARANTI' : 'BEST PRICE GUARANTEED'),
+                    title: currentLang === 'fr' ? 'OFFRE IMBATTABLE' : 'UNBEATABLE DEAL',
+                    subtitle: currentLang === 'fr' ? 'Prix réduits · Qualité garantie · Livraison rapide' : 'Reduced prices · Quality guaranteed · Fast delivery',
+                    ctaLabel: currentLang === 'fr' ? 'VOIR L\'OFFRE' : 'SEE DEAL',
+                    tagIcon: `<svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>`,
+                    ctaIcon: `<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>`
                 },
                 {
-                    title: currentLang === 'fr' ? "Nouvel Arrivage" : "New Arrival",
-                    subtitle: latest.name,
-                    tag: currentLang === 'fr' ? "EXCLUSIVITÉ" : "EXCLUSIVE",
-                    img: latest.imgs && latest.imgs[0] ? latest.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-[#101944]",
-                    id: latest.id,
-                    desc: currentLang === 'fr' ? "Disponible dès maintenant" : "Available now",
-                    icon: `<svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`
+                    pool: latestImgs.length ? latestImgs : allImgs,
+                    anchorId: latest.id,
+                    accentColor: '#2563eb',
+                    badgeBg: '#1e40af',
+                    tag: currentLang === 'fr' ? 'NOUVEAUTE · EN STOCK' : 'NEW ARRIVAL · IN STOCK',
+                    title: currentLang === 'fr' ? 'NOUVEL ARRIVAGE' : 'NEW ARRIVAL',
+                    subtitle: currentLang === 'fr' ? 'Fraichement arrive · Exclusivite boutique · Stock limite' : 'Just arrived · Store exclusive · Limited stock',
+                    ctaLabel: currentLang === 'fr' ? 'DECOUVRIR' : 'DISCOVER',
+                    tagIcon: `<svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`,
+                    ctaIcon: `<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>`
                 },
                 {
-                    title: currentLang === 'fr' ? "Sélection du Jour" : "Today's Pick",
-                    subtitle: random.name,
-                    tag: currentLang === 'fr' ? "COUP DE COEUR" : "FAVORITE",
-                    img: random.imgs && random.imgs[0] ? random.imgs[0] : 'https://via.placeholder.com/800x400',
-                    color: "bg-slate-900",
-                    id: random.id,
-                    desc: currentLang === 'fr' ? "Qualité Premium Garantie" : "Premium Quality Guaranteed",
-                    icon: `<svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>`
+                    pool: shuffled.length ? shuffled : allImgs,
+                    anchorId: random.id,
+                    accentColor: '#d97706',
+                    badgeBg: '#92400e',
+                    tag: currentLang === 'fr' ? 'SELECTION · COUP DE COEUR' : 'SELECTION · FAVORITE PICK',
+                    title: currentLang === 'fr' ? 'SELECTION DU JOUR' : 'TODAY\'S PICK',
+                    subtitle: currentLang === 'fr' ? 'Nos coups de coeur · Premium · Satisfait ou rembourse' : 'Our favorites · Premium · Satisfaction guaranteed',
+                    ctaLabel: currentLang === 'fr' ? 'EXPLORER' : 'EXPLORE',
+                    tagIcon: `<svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:4px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>`,
+                    ctaIcon: `<svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>`
                 }
             ];
 
-            // Collect all product images for dynamic background cycling
-            const kbClasses = ['', ' kb2', ' kb3'];
-            const productBanners = banners.map((b, bi) => {
-                const allImgs = [...new Set([
-                    b.img,
-                    ...products.filter(p => p.imgs && p.imgs[0] && p.imgs[0] !== b.img)
-                              .sort(() => Math.random() - 0.5)
-                              .slice(0, 4)
-                              .map(p => p.imgs[0])
-                ])].filter(Boolean);
-                const imgTags = allImgs.map((src, i) =>
-                    `<img src="${src}" class="banner-img-animated${kbClasses[bi % 3]}${i === 0 ? ' active' : ''}" loading="lazy">`
-                ).join('');
+            // Générer le HTML des 3 bannières produits
+            const productBannerHTMLs = bannerConfigs.map((cfg, bi) => {
+                const firstImg = cfg.pool[0]?.img || 'https://via.placeholder.com/800x400';
+                const bannerId = `dynBanner_${bi}`;
                 return `
-                <div class="banner-item relative overflow-hidden cursor-pointer group" onclick="window.showDetail('${b.id}')" data-banner-slot="${bi}"
+                <div class="banner-item relative overflow-hidden cursor-pointer" 
+                     id="${bannerId}"
+                     onclick="window.showDetail('${cfg.anchorId}')"
                      style="height:200px;border-radius:22px;box-shadow:0 8px 32px rgba(16,25,68,0.18);">
-                    ${imgTags}
-                    <!-- Dégradé gauche dominant -->
-                    <div class="absolute inset-0" style="background:linear-gradient(110deg,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.45) 55%,rgba(0,0,0,0.05) 100%);z-index:2"></div>
-                    <!-- Accent couleur en bas -->
-                    <div class="absolute bottom-0 left-0 right-0 h-1" style="background:${bi===0?'#bd1e24':bi===1?'#3b82f6':'#f59e0b'};z-index:3"></div>
-                    <div class="absolute inset-0 flex flex-col justify-center p-6" style="z-index:4">
-                        <!-- Badge tag -->
-                        <span style="display:inline-flex;align-items:center;gap:4px;background:${bi===0?'#bd1e24':bi===1?'#1e40af':'#92400e'};color:white;font-size:9px;font-weight:900;padding:3px 10px;border-radius:999px;width:fit-content;margin-bottom:8px;letter-spacing:0.08em;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,0.3)">
-                            ${b.icon}${b.tag}
+                    <!-- Image A — Ken Burns dès le départ -->
+                    <img id="${bannerId}_imgA" src="${firstImg}" 
+                         class="banner-bg-img visible-img kb${(bi % 3) + 1}" 
+                         loading="lazy" alt="Afro Service">
+                    <!-- Image B — cachée, prête pour le crossfade -->
+                    <img id="${bannerId}_imgB" src="${firstImg}" 
+                         class="banner-bg-img hidden-img" 
+                         loading="lazy" alt="Afro Service">
+                    <!-- Overlay dégradé -->
+                    <div class="absolute inset-0" style="background:linear-gradient(115deg,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.05) 100%);z-index:2"></div>
+                    <!-- Ligne accent bas -->
+                    <div class="absolute bottom-0 left-0 right-0" style="height:3px;background:${cfg.accentColor};z-index:3"></div>
+                    <!-- Contenu textuel -->
+                    <div class="absolute inset-0 flex flex-col justify-center p-5" style="z-index:4">
+                        <!-- Badge tag avec icône SVG -->
+                        <span style="display:inline-flex;align-items:center;background:${cfg.badgeBg};color:white;font-size:8px;font-weight:900;padding:4px 10px;border-radius:999px;width:fit-content;margin-bottom:9px;letter-spacing:0.08em;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,0.3);gap:2px;">
+                            ${cfg.tagIcon}${cfg.tag}
                         </span>
-                        <h2 style="color:white;font-size:1.25rem;font-weight:900;text-transform:uppercase;line-height:1.1;margin-bottom:4px;letter-spacing:-0.3px;text-shadow:0 2px 8px rgba(0,0,0,0.5)">${b.title}</h2>
-                        <p style="color:#fca5a5;font-size:0.95rem;font-weight:800;text-transform:uppercase;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;text-shadow:0 1px 4px rgba(0,0,0,0.5)">${b.subtitle}</p>
-                        <p style="color:rgba(255,255,255,0.75);font-size:9px;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:0.1em;font-style:italic">${b.desc}</p>
+                        <!-- Titre principal — SANS emoji -->
+                        <h2 style="color:white;font-size:1.1rem;font-weight:900;text-transform:uppercase;line-height:1.15;margin-bottom:5px;text-shadow:0 2px 10px rgba(0,0,0,0.6);letter-spacing:0.02em;">${cfg.title}</h2>
+                        <!-- Sous-titre -->
+                        <p style="color:rgba(255,255,255,0.78);font-size:8.5px;font-weight:700;line-height:1.4;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:11px;">${cfg.subtitle}</p>
+                        <!-- CTA avec flèche SVG -->
+                        <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.14);border:1.5px solid rgba(255,255,255,0.45);color:white;font-size:8px;font-weight:900;padding:5px 12px;border-radius:20px;width:fit-content;letter-spacing:0.08em;text-transform:uppercase;backdrop-filter:blur(4px);">
+                            ${cfg.ctaLabel} ${cfg.ctaIcon}
+                        </span>
                     </div>
-                    <!-- Flèche cliquable -->
-                    <div class="absolute bottom-4 right-4" style="z-index:5">
-                        <span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,0.4)">
-                            <svg width="14" height="14" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                        </span>
+                    <!-- Mini dots image -->
+                    <div id="${bannerId}_dots" class="absolute bottom-3 right-4" style="z-index:5;display:flex;gap:3px;">
+                        ${cfg.pool.slice(0, Math.min(cfg.pool.length, 6)).map((_, i) => 
+                            `<span style="display:inline-block;width:${i===0?'14px':'5px'};height:5px;border-radius:9999px;background:${i===0?'white':'rgba(255,255,255,0.4)'};transition:all 0.4s ease;" id="${bannerId}_dot_${i}"></span>`
+                        ).join('')}
                     </div>
                 </div>`;
             });
 
-            // Bannière "Pas de cash" animée
+            // ── BANNIÈRE CASH — totalement refaite, textes gérés par JS ──
+            const cashBannerId  = 'cashBanner_text';
+            const cashBannerBgId = 'cashBanner_bg';
             const cashBanner = `
-                <div class="banner-item relative overflow-hidden" id="cashBanner"
-                     style="height:200px;border-radius:22px;box-shadow:0 8px 32px rgba(189,30,36,0.25);background:#bd1e24;margin-right:16px;">
-                    <!-- Cercles déco animés -->
-                    <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08);z-index:1"></div>
-                    <div style="position:absolute;bottom:-40px;left:-20px;width:160px;height:160px;border-radius:50%;background:rgba(0,0,0,0.1);z-index:1"></div>
-                    <div style="position:absolute;top:50%;right:16px;transform:translateY(-50%);z-index:2;opacity:0.12">
-                        <svg width="80" height="80" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+                <div class="banner-item relative overflow-hidden" 
+                     id="${cashBannerBgId}"
+                     style="height:200px;border-radius:22px;margin-right:16px;
+                            background:linear-gradient(135deg,#8b0000 0%,#bd1e24 50%,#8b0000 100%);
+                            box-shadow:0 8px 32px rgba(189,30,36,0.3);
+                            transition:background 1.8s ease, box-shadow 1.8s ease;">
+                    <div style="position:absolute;top:-35px;right:-35px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
+                    <div style="position:absolute;bottom:-45px;left:-25px;width:180px;height:180px;border-radius:50%;background:rgba(0,0,0,0.07);pointer-events:none;"></div>
+                    <div style="position:absolute;top:50%;right:16px;transform:translateY(-50%);opacity:0.09;pointer-events:none;">
+                        <svg width="96" height="96" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
                     </div>
-                    <div class="absolute inset-0 flex flex-col justify-center px-7" style="z-index:3">
-                        <p style="color:rgba(255,255,255,0.85);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Afro Service</p>
-                        <h2 id="cashBannerText" style="color:white;font-size:1.45rem;font-weight:900;line-height:1.15;text-transform:uppercase;letter-spacing:-0.5px;text-shadow:0 2px 10px rgba(0,0,0,0.3)">PAS DE CASH ?</h2>
-                        <div style="width:48px;height:3px;background:white;border-radius:2px;margin:8px 0;opacity:0.7"></div>
-                        <p id="cashBannerSub" style="color:rgba(255,255,255,0.9);font-size:1rem;font-weight:700;line-height:1.2">Pas de panique !</p>
-                        <p id="cashBannerDesc" style="color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;margin-top:8px;font-style:italic">Paie à ton rythme 💳</p>
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.2);"></div>
+                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:20px 24px;z-index:3;">
+                        <div id="cashBanner_badge" style="display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.22);border:1px solid rgba(255,255,255,0.18);border-radius:999px;padding:4px 10px;width:fit-content;margin-bottom:13px;transition:border-color 1.8s ease;">
+                            <svg width="11" height="11" fill="none" stroke="rgba(255,255,255,0.75)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"/></svg>
+                            <span id="cashBanner_label" style="color:rgba(255,255,255,0.7);font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;transition:color 1.8s ease;">AFRO SERVICE · BAFOUSSAM</span>
+                        </div>
+                        <div style="position:relative;height:2.5rem;overflow:hidden;margin-bottom:13px;">
+                            <div id="${cashBannerId}" style="color:white;font-size:1.2rem;font-weight:900;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,0.5);line-height:1.2;transition:opacity 0.4s ease,transform 0.4s ease;position:absolute;left:0;right:0;top:0;">
+                                PAS DE CASH ?
+                            </div>
+                        </div>
+                        <div id="cashBanner_sep" style="width:36px;height:2px;background:rgba(255,255,255,0.35);border-radius:2px;margin-bottom:9px;transition:background 1.8s ease;"></div>
+                        <div id="cashBanner_footer" style="display:flex;align-items:center;gap:5px;color:rgba(255,255,255,0.55);font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;flex-wrap:wrap;transition:color 1.8s ease;">
+                            <svg width="10" height="10" fill="none" stroke="rgba(255,255,255,0.55)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            Mobile Money
+                            <span style="opacity:0.3;">·</span>
+                            Orange Money
+                            <span style="opacity:0.3;">·</span>
+                            <svg width="10" height="10" fill="none" stroke="rgba(255,255,255,0.55)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"/></svg>
+                            Livraison
+                        </div>
                     </div>
                 </div>`;
 
-            container.innerHTML = [...productBanners, cashBanner].join('');
+            container.innerHTML = [...productBannerHTMLs, cashBanner].join('');
 
-            // Animation texte bannière cash (cycle 3 messages)
-            const cashMessages = [
-                { h: 'PAS DE CASH ?', sub: 'Pas de panique !', desc: 'Paie à ton rythme 💳' },
-                { h: 'PAIE À TON', sub: 'RYTHME !', desc: 'Facilités de paiement disponibles' },
-                { h: 'COMMANDEZ', sub: 'MAINTENANT', desc: 'Réglez plus tard, en toute sérénité' },
+            // ── Cycle couleurs bannière cash : rouge → bleu → blanc ──
+            const cashColorCycles = [
+                {
+                    bg:     'linear-gradient(135deg,#8b0000 0%,#bd1e24 50%,#8b0000 100%)',
+                    shadow: '0 8px 32px rgba(189,30,36,0.35)',
+                    textColor: 'white',
+                    accent:    '#ffe066',
+                },
+                {
+                    bg:     'linear-gradient(135deg,#0a1f6e 0%,#1a3bbf 50%,#0a1f6e 100%)',
+                    shadow: '0 8px 32px rgba(26,59,191,0.35)',
+                    textColor: 'white',
+                    accent:    '#93c5fd',
+                },
+                {
+                    bg:     'linear-gradient(135deg,#e2e8f0 0%,#f8fafc 50%,#e2e8f0 100%)',
+                    shadow: '0 8px 32px rgba(100,116,139,0.22)',
+                    textColor: '#101944',
+                    accent:    '#bd1e24',
+                },
             ];
-            let cashIdx = 0;
-            if (window._cashBannerInterval) clearInterval(window._cashBannerInterval);
-            window._cashBannerInterval = setInterval(() => {
-                cashIdx = (cashIdx + 1) % cashMessages.length;
-                const m = cashMessages[cashIdx];
-                const h = document.getElementById('cashBannerText');
-                const s = document.getElementById('cashBannerSub');
-                const d = document.getElementById('cashBannerDesc');
-                if (!h) return;
-                [h, s, d].forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; el.style.transition = 'all 0.4s ease'; });
-                setTimeout(() => {
-                    h.textContent = m.h; s.textContent = m.sub; d.textContent = m.desc;
-                    [h, s, d].forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
-                }, 420);
-            }, 3500);
+            let _cashColorIdx = 0;
 
-            // Cycle images inside each banner every 8 seconds
-            if (window._bannerImgIntervals) window._bannerImgIntervals.forEach(clearInterval);
-            window._bannerImgIntervals = banners.map((_, bi) => {
-                let imgIdx = 0;
-                return setInterval(() => {
-                    const slot = container.querySelector(`[data-banner-slot="${bi}"]`);
-                    if (!slot) return;
-                    const imgs = slot.querySelectorAll('.banner-img-animated');
-                    if (imgs.length <= 1) return;
-                    imgs[imgIdx].classList.remove('active');
-                    imgIdx = (imgIdx + 1) % imgs.length;
-                    imgs[imgIdx].classList.add('active');
+            function rotateCashColor() {
+                _cashColorIdx = (_cashColorIdx + 1) % cashColorCycles.length;
+                const scheme = cashColorCycles[_cashColorIdx];
+                const bg     = document.getElementById(cashBannerBgId);
+                const label  = document.getElementById('cashBanner_label');
+                const sep    = document.getElementById('cashBanner_sep');
+                if (!bg) return;
+                bg.style.background = scheme.bg;
+                bg.style.boxShadow  = scheme.shadow;
+                // Adapter la couleur du texte principal si fond blanc
+                const textEl = document.getElementById(cashBannerId);
+                if (textEl) textEl.style.color = scheme.textColor;
+                if (label) label.style.color = _cashColorIdx === 2
+                    ? 'rgba(16,25,68,0.65)' : 'rgba(255,255,255,0.7)';
+                if (sep) sep.style.background = _cashColorIdx === 2
+                    ? 'rgba(16,25,68,0.25)' : 'rgba(255,255,255,0.35)';
+                // Mettre à jour la couleur accent des phrases tournantes
+                window._cashAccentColor = scheme.accent;
+            }
+            if (window._cashColorInterval) clearInterval(window._cashColorInterval);
+            window._cashColorInterval = setInterval(rotateCashColor, 5600); // change toutes les ~2 textes
+
+            // ── Rotation texte bannière cash — 100% JS, zéro CSS animation ──
+            const cashLines = [
+                { text: 'PAS DE CASH ?',              accent: false },
+                { text: 'PAS DE PANIQUE !',            accent: false },
+                { text: 'PAIE A TON RYTHME !',         accent: true  },
+                { text: 'ON LIVRE PARTOUT !',          accent: false },
+                { text: 'QUALITE 100% GARANTIE',       accent: true  },
+            ];
+            window._cashAccentColor = '#ffe066'; // couleur accent initiale (rouge)
+            let _cashIdx = 0;
+
+            function rotateCashText() {
+                const el = document.getElementById(cashBannerId);
+                if (!el) { clearInterval(window._cashTextInterval); return; }
+                el.style.opacity   = '0';
+                el.style.transform = 'translateY(-16px)';
+                setTimeout(() => {
+                    _cashIdx = (_cashIdx + 1) % cashLines.length;
+                    const line  = cashLines[_cashIdx];
+                    const theme = cashColorCycles[_cashColorIdx];
+                    el.textContent    = line.text;
+                    el.style.color    = line.accent ? (window._cashAccentColor || theme.accent) : theme.textColor;
+                    el.style.fontSize = '1.2rem';
+                    el.style.transition = 'none';
+                    el.style.transform  = 'translateY(16px)';
+                    el.style.opacity    = '0';
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        el.style.transition = 'opacity 0.38s ease, transform 0.38s ease';
+                        el.style.opacity    = '1';
+                        el.style.transform  = 'translateY(0)';
+                    }));
+                }, 400);
+            }
+            if (window._cashTextInterval) clearInterval(window._cashTextInterval);
+            window._cashTextInterval = setInterval(rotateCashText, 2800);
+
+            // ── Rotation d'images + Ken Burns sur chaque bannière produit ──
+            bannerConfigs.forEach((cfg, bi) => {
+                if (cfg.pool.length <= 1) return;
+                const bannerId = `dynBanner_${bi}`;
+                const kbClasses = ['kb1', 'kb2', 'kb3'];
+                let imgIdx   = 0;
+                let showingA = true;
+                let kbIdx    = bi % 3; // variante de départ différente pour chaque bannière
+
+                const interval = setInterval(() => {
+                    imgIdx = (imgIdx + 1) % cfg.pool.length;
+                    kbIdx  = (kbIdx  + 1) % 3;
+                    const imgA = document.getElementById(`${bannerId}_imgA`);
+                    const imgB = document.getElementById(`${bannerId}_imgB`);
+                    if (!imgA || !imgB) return;
+
+                    const nextKb = kbClasses[kbIdx];
+
+                    if (showingA) {
+                        // Préparer B hors écran avec la nouvelle image + Ken Burns
+                        imgB.src = cfg.pool[imgIdx].img;
+                        imgB.classList.remove('kb1','kb2','kb3');
+                        imgB.classList.add(nextKb);
+                        // Crossfade : montrer B, cacher A
+                        imgB.classList.remove('hidden-img');
+                        imgB.classList.add('visible-img');
+                        imgA.classList.remove('visible-img');
+                        imgA.classList.add('hidden-img');
+                        imgA.classList.remove('kb1','kb2','kb3');
+                    } else {
+                        imgA.src = cfg.pool[imgIdx].img;
+                        imgA.classList.remove('kb1','kb2','kb3');
+                        imgA.classList.add(nextKb);
+                        imgA.classList.remove('hidden-img');
+                        imgA.classList.add('visible-img');
+                        imgB.classList.remove('visible-img');
+                        imgB.classList.add('hidden-img');
+                        imgB.classList.remove('kb1','kb2','kb3');
+                    }
+                    showingA = !showingA;
+
+                    // Mini-dots
+                    const maxDots = Math.min(cfg.pool.length, 6);
+                    for (let i = 0; i < maxDots; i++) {
+                        const dot = document.getElementById(`${bannerId}_dot_${i}`);
+                        if (dot) {
+                            dot.style.width      = i === imgIdx % maxDots ? '14px' : '5px';
+                            dot.style.background = i === imgIdx % maxDots ? 'white' : 'rgba(255,255,255,0.4)';
+                        }
+                    }
                 }, 8000);
+
+                _bannerImgIntervals.push(interval);
             });
+
+            // ── Auto-slide bannières toutes les 8 secondes ──
+            if (window._bannerAutoSlide) clearInterval(window._bannerAutoSlide);
+            let _bannerIdx = 0;
+            const _bannerItems = container.querySelectorAll('.banner-item');
+            const _total = _bannerItems.length;
+
+            const dotsContainer = document.getElementById('bannerDots');
+            if (dotsContainer) {
+                dotsContainer.innerHTML = Array.from({length: _total}, (_, i) =>
+                    `<span style="display:inline-block;height:6px;border-radius:9999px;transition:all 0.4s ease;background:${i===0?'#bd1e24':'#cbd5e1'};width:${i===0?'20px':'6px'}"></span>`
+                ).join('');
+            }
+            const _dotsLive = dotsContainer ? dotsContainer.querySelectorAll('span') : [];
+
+            function _gotoSlide(idx) {
+                _bannerIdx = (idx + _total) % _total;
+                const itemW = _bannerItems[0]?.offsetWidth + 12 || container.clientWidth * 0.88 + 12;
+                container.scrollTo({ left: _bannerIdx * itemW, behavior: 'smooth' });
+                _dotsLive.forEach((d, i) => {
+                    d.style.width      = i === _bannerIdx ? '20px' : '6px';
+                    d.style.background = i === _bannerIdx ? '#bd1e24' : '#cbd5e1';
+                });
+            }
+
+            window._bannerAutoSlide = setInterval(() => _gotoSlide(_bannerIdx + 1), 8000);
+
+            container.addEventListener('scroll', () => {
+                const itemW = _bannerItems[0]?.offsetWidth + 12 || container.clientWidth * 0.88 + 12;
+                const idx = Math.round(container.scrollLeft / itemW);
+                if (idx !== _bannerIdx) {
+                    _bannerIdx = idx;
+                    _dotsLive.forEach((d, i) => {
+                        d.style.width      = i === _bannerIdx ? '20px' : '6px';
+                        d.style.background = i === _bannerIdx ? '#bd1e24' : '#cbd5e1';
+                    });
+                }
+            }, { passive: true });
         }
 
         // ==================== PANIER ====================
@@ -1256,116 +1402,198 @@
         }
         window.removeFromCart = function(index) { cart.splice(index, 1); updateCart(); };
 
-        // ==================== GRILLE PRODUITS ====================
-        function renderProducts(data) {
-            const grid = document.getElementById('productGrid');
+
+        // ==================== CAROUSEL PROFESSIONNEL — transform GPU ====================
+        // Architecture : le track se déplace par translateX (GPU, 60fps garanti).
+        // Transition CSS cubic-bezier pour le glissement → aucun JS d'animation frame-by-frame.
+        // Boucle infinie : contenu triplé, téléportation silencieuse aux extrémités.
+
+        let _carIdx    = 0;       // index de la carte visible (dans le set original)
+        let _carTotal  = 0;       // nombre de cartes originales
+        let _carTimer  = null;    // timer auto-avance
+        let _carPaused = false;   // true pendant interaction utilisateur
+        let _carResume = null;    // timer de reprise
+        let _dragStartX = 0;
+        let _isDragging = false;
+
+        const CAR_PAUSE_MS  = 2200;   // pause sur chaque article
+        const CAR_SLIDE_MS  = 550;    // durée transition (synchro avec CSS)
+
+        function stopScroll() {
+            clearTimeout(_carTimer);
+            clearTimeout(_carResume);
+        }
+
+        // Largeur d'une carte + gap (en px)
+        function getCardStep() {
             const track = document.getElementById('productScrollTrack');
+            if (!track) return 167;
+            const card = track.querySelector('.product-card-container');
+            if (!card) return 167;
+            // gap entre cartes = 12px (défini en CSS)
+            return card.offsetWidth + 12;
+        }
+
+        // Déplace le track vers la carte d'index absolu i (sans transition = téléportation)
+        function jumpToCard(i, withTransition) {
+            const track = document.getElementById('productScrollTrack');
+            if (!track) return;
+            const step = getCardStep();
+            const offset = -(i * step) + 16; // 16px = padding-left
+            if (!withTransition) {
+                track.style.transition = 'none';
+                track.style.transform  = `translateX(${offset}px)`;
+                // Force reflow pour que la suppression de transition prenne effet
+                track.getBoundingClientRect();
+            } else {
+                track.style.transition = `transform ${CAR_SLIDE_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                track.style.transform  = `translateX(${offset}px)`;
+            }
+        }
+
+        function advanceCard() {
+            if (_carPaused || _carTotal === 0) return;
+
+            _carIdx++;
+
+            // Boucle : si on a parcouru le set original, téléportation silencieuse
+            // On utilise 3 copies (A + B + C), on navigue dans B (milieu),
+            // quand on atteint la fin de B → on téléporte au début de B sans animation
+            if (_carIdx >= _carTotal * 2) {
+                // Téléportation vers la carte _carTotal (début du 2e bloc = même position visuelle)
+                _carIdx = _carTotal;
+                jumpToCard(_carIdx, false);
+            }
+
+            // Glissement animé vers la carte suivante
+            jumpToCard(_carIdx, true);
+
+            // Programmer la prochaine avance après pause + durée slide
+            _carTimer = setTimeout(advanceCard, CAR_PAUSE_MS + CAR_SLIDE_MS);
+        }
+
+        function startCarousel() {
+            stopScroll();
+            _carPaused = false;
+            // Démarrer dans le 2e bloc pour pouvoir boucler dans les deux sens
+            _carIdx = _carTotal;
+            jumpToCard(_carIdx, false);
+            _carTimer = setTimeout(advanceCard, CAR_PAUSE_MS);
+        }
+
+        function pauseCarousel() {
+            if (_carPaused) return;
+            _carPaused = true;
+            clearTimeout(_carTimer);
+            clearTimeout(_carResume);
+        }
+
+        function resumeCarousel() {
+            clearTimeout(_carResume);
+            _carResume = setTimeout(() => {
+                _carPaused = false;
+                _carTimer  = setTimeout(advanceCard, CAR_PAUSE_MS);
+            }, 2000);
+        }
+
+        function initCarouselInteraction() {
+            const track = document.getElementById('productScrollTrack');
+            if (!track) return;
+
+            // ── Touch swipe ──
+            track.addEventListener('touchstart', (e) => {
+                pauseCarousel();
+                _dragStartX = e.touches[0].clientX;
+                _isDragging = true;
+            }, { passive: true });
+
+            track.addEventListener('touchend', (e) => {
+                if (!_isDragging) return;
+                _isDragging = false;
+                const dx = e.changedTouches[0].clientX - _dragStartX;
+                if (Math.abs(dx) > 40) {
+                    // Swipe détecté : avance ou recule d'une carte
+                    if (dx < 0) {
+                        _carIdx = Math.min(_carIdx + 1, _carTotal * 3 - 1);
+                    } else {
+                        _carIdx = Math.max(_carIdx - 1, 0);
+                    }
+                    jumpToCard(_carIdx, true);
+                }
+                resumeCarousel();
+            }, { passive: true });
+
+            // ── Drag souris ──
+            track.addEventListener('mousedown', (e) => {
+                pauseCarousel();
+                _dragStartX = e.clientX;
+                _isDragging = true;
+            });
+            window.addEventListener('mouseup', (e) => {
+                if (!_isDragging) return;
+                _isDragging = false;
+                const dx = e.clientX - _dragStartX;
+                if (Math.abs(dx) > 40) {
+                    if (dx < 0) {
+                        _carIdx = Math.min(_carIdx + 1, _carTotal * 3 - 1);
+                    } else {
+                        _carIdx = Math.max(_carIdx - 1, 0);
+                    }
+                    jumpToCard(_carIdx, true);
+                }
+                resumeCarousel();
+            });
+        }
+
+        function cardHTML(p) {
+            const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
+            const img   = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
+            const badgeChip = (p.badgeLabel && p.badgeIcon)
+                ? `<div class="card-badge-chip">${getBadgeSVG(p.badgeIcon, 10)}<span>${p.badgeLabel}</span></div>` : '';
+            return `<div class="product-card-container" onclick="window.showDetail('${p.id}')">
+                <div class="product-card-inner">
+                    <div class="product-card-img-wrap">
+                        ${promo > 0 ? `<span class="product-card-promo" style="position:absolute;top:8px;left:8px;z-index:2">-${promo}%</span>` : ''}
+                        <img src="${img}" loading="lazy" alt="${p.name}">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-card-name">${p.name}</div>
+                        ${badgeChip}
+                        <div class="product-card-price-row">
+                            <span class="product-card-price">${parseInt(p.price).toLocaleString()} F</span>
+                            ${p.old ? `<span class="product-card-oldprice">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // ── Page d'accueil : carousel GPU transform ──
+        function renderProducts(data) {
+            const grid    = document.getElementById('productGrid');
+            const track   = document.getElementById('productScrollTrack');
             const wrapper = document.getElementById('productScrollWrapper');
             if (!grid || !track || !wrapper) return;
 
-            // Construire le HTML des cartes (réutilisé grid + track)
-            function cardHTML(p) {
-                const promo = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
-                const img = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
-                const badgeChip = (p.badgeLabel && p.badgeIcon) ? `<div class="card-badge-chip">${getBadgeSVG(p.badgeIcon, 10)}<span>${p.badgeLabel}</span></div>` : '';
-                return `<div class="product-card-container" onclick="window.showDetail('${p.id}')">
-                    <div class="product-card-inner">
-                        <div class="product-card-img-wrap">
-                            ${promo > 0 ? `<span class="product-card-promo" style="position:absolute;top:8px;left:8px;z-index:2">-${promo}%</span>` : ''}
-                            <img src="${img}" loading="lazy" alt="${p.name}">
-                        </div>
-                        <div class="product-card-body">
-                            <div class="product-card-name">${p.name}</div>
-                            ${badgeChip}
-                            <div class="product-card-price-row">
-                                <span class="product-card-price">${parseInt(p.price).toLocaleString()} F</span>
-                                ${p.old ? `<span class="product-card-oldprice">${parseInt(p.old).toLocaleString()} F</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            }
+            stopScroll();
 
+            wrapper.style.overflow = 'hidden';
+            wrapper.style.overflowX = '';
+
+            _carTotal = data.length;
+
+            // Triple clone pour boucle infinie dans les deux sens (A + B + C)
             const html = data.map(cardHTML).join('');
+            track.innerHTML     = html + html + html;
+            track.style.display = 'flex';
+            track.style.transition = 'none';
+            track.style.transform  = 'translateX(16px)';
+            grid.style.display  = 'none';
 
-            // Grille normale (visible)
-            grid.innerHTML = html;
-            grid.style.display = '';
-
-            // Track horizontal scroll (auto-scroll + drag) — tripler pour loop infini
-            track.innerHTML = html + html + html;
-            track.style.display = 'none'; // caché par défaut, activé par scroll auto
-
-            // ---- Auto-scroll JS sur le wrapper ----
-            // Arrêter l'ancien RAF s'il existe
-            if (window._prodScrollRaf) cancelAnimationFrame(window._prodScrollRaf);
-
-            const speed = 0.5;
-            let isPaused = false;
-            let isDragging = false;
-            let dragStartX = 0, dragStartScroll = 0, lastManual = 0;
-
-            // On utilise le grid lui-même converti en flex-row pour auto-scroll
-            // Passer en mode scroll horizontal dès que les produits sont rendus
-            function activateHorizontalMode() {
-                grid.style.display = 'none';
-                track.style.display = 'flex';
-                wrapper.style.overflowX = 'auto';
-
-                const singleW = () => track.scrollWidth / 3;
-                wrapper.scrollLeft = singleW(); // départ au bloc du milieu
-
-                function loop() {
-                    const sw = singleW();
-                    if (!isPaused && !isDragging) {
-                        wrapper.scrollLeft += speed;
-                        if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
-                        if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
-                    }
-                    window._prodScrollRaf = requestAnimationFrame(loop);
-                }
-                window._prodScrollRaf = requestAnimationFrame(loop);
-
-                // Touch
-                wrapper.addEventListener('touchstart', (e) => {
-                    isPaused = true; isDragging = true;
-                    dragStartX = e.touches[0].clientX;
-                    dragStartScroll = wrapper.scrollLeft;
-                }, { passive: true });
-                wrapper.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    const dx = dragStartX - e.touches[0].clientX;
-                    wrapper.scrollLeft = dragStartScroll + dx;
-                    const sw = singleW();
-                    if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
-                    if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
-                }, { passive: true });
-                wrapper.addEventListener('touchend', () => {
-                    isDragging = false; lastManual = Date.now();
-                    setTimeout(() => { if (Date.now() - lastManual >= 2400) isPaused = false; }, 2500);
-                }, { passive: true });
-                // Mouse drag
-                wrapper.addEventListener('mousedown', (e) => {
-                    isPaused = true; isDragging = true;
-                    dragStartX = e.clientX; dragStartScroll = wrapper.scrollLeft;
-                    e.preventDefault();
-                });
-                window.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    wrapper.scrollLeft = dragStartScroll - (e.clientX - dragStartX);
-                    const sw = singleW();
-                    if (wrapper.scrollLeft >= sw * 2) wrapper.scrollLeft -= sw;
-                    if (wrapper.scrollLeft <= 0) wrapper.scrollLeft += sw;
-                });
-                window.addEventListener('mouseup', () => {
-                    if (!isDragging) return;
-                    isDragging = false; lastManual = Date.now();
-                    setTimeout(() => { if (Date.now() - lastManual >= 2400) isPaused = false; }, 2500);
-                });
-            }
-
-            // Activer le mode horizontal seulement si assez de produits
-            if (data.length >= 4) activateHorizontalMode();
+            setTimeout(() => {
+                initCarouselInteraction();
+                startCarousel();
+            }, 300);
         }
 
         // ==================== FICHE PRODUIT ====================
@@ -1383,7 +1611,6 @@
                     <span>${p.badgeLabel}</span>
                 </div>` : '';
 
-            // Descriptions bilingues si disponibles
             const desc = (lang === 'en' && p.descEn) ? p.descEn : (p.desc || (lang === 'fr' ? 'Pas de description disponible.' : 'No description available.'));
 
             content.innerHTML = `
@@ -1440,110 +1667,18 @@
 
         window.quickSearch = function(q) {
             if (!q.trim()) renderProducts(stock);
-            else renderProducts(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
+            else renderStaticGrid(stock.filter(p => p.name.toLowerCase().includes(q.toLowerCase())));
         };
 
         // ==================== CATÉGORIES ====================
         function renderCategoryBubbles() {
             const container = document.getElementById('categoryBubbles');
             if (!container || !categories || categories.length === 0) return;
-            const catHTML = categories.map(cat => {
+            container.innerHTML = categories.map(cat => {
                 const prod = stock.find(p => p.cat === cat.name);
                 const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
                 return `<div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')"><div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div><span class="bubble-text">${cat.name}</span></div>`;
             }).join('');
-            // Dupliquer 3x pour scroll infini dans les deux sens
-            container.innerHTML = `<div class="categories-scroll-track">${catHTML}${catHTML}${catHTML}</div>`;
-
-            // ---- Auto-scroll JS avec pause au toucher ----
-            const track = container.querySelector('.categories-scroll-track');
-            let autoDir = 1; // 1 = gauche, -1 = droite
-            let speed = 0.6; // px/frame
-            let isPaused = false;
-            let rafId = null;
-            let isDragging = false;
-            let dragStartX = 0;
-            let dragStartScroll = 0;
-            let lastManualTime = 0;
-
-            // Centrer sur le 2e bloc au départ pour pouvoir scroller dans les 2 sens
-            const singleW = () => track.scrollWidth / 3;
-            container.scrollLeft = singleW();
-
-            function autoScroll() {
-                const sw = singleW();
-                if (!isPaused && !isDragging) {
-                    container.scrollLeft += speed * autoDir;
-                    // Boucle infinie : si on dépasse le 3e bloc, on revient au 2e
-                    if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
-                    if (container.scrollLeft <= 0) container.scrollLeft += sw;
-                }
-                rafId = requestAnimationFrame(autoScroll);
-            }
-            rafId = requestAnimationFrame(autoScroll);
-
-            // Pause auto quand l'utilisateur touche
-            container.addEventListener('touchstart', (e) => {
-                isPaused = true;
-                dragStartX = e.touches[0].clientX;
-                dragStartScroll = container.scrollLeft;
-                isDragging = true;
-            }, { passive: true });
-
-            container.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const dx = dragStartX - e.touches[0].clientX;
-                container.scrollLeft = dragStartScroll + dx;
-                // Boucle
-                const sw = singleW();
-                if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
-                if (container.scrollLeft <= 0) container.scrollLeft += sw;
-            }, { passive: true });
-
-            container.addEventListener('touchend', () => {
-                isDragging = false;
-                lastManualTime = Date.now();
-                // Reprendre l'auto-scroll après 2.5 secondes
-                setTimeout(() => {
-                    if (Date.now() - lastManualTime >= 2400) isPaused = false;
-                }, 2500);
-            }, { passive: true });
-
-            // Support mouse drag (desktop)
-            container.addEventListener('mousedown', (e) => {
-                isPaused = true;
-                isDragging = true;
-                dragStartX = e.clientX;
-                dragStartScroll = container.scrollLeft;
-                e.preventDefault();
-            });
-            window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const dx = dragStartX - e.clientX;
-                container.scrollLeft = dragStartScroll + dx;
-                const sw = singleW();
-                if (container.scrollLeft >= sw * 2) container.scrollLeft -= sw;
-                if (container.scrollLeft <= 0) container.scrollLeft += sw;
-            });
-            window.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                lastManualTime = Date.now();
-                setTimeout(() => { if (Date.now() - lastManualTime >= 2400) isPaused = false; }, 2500);
-            });
-
-            // Synchroniser le marquee dans le sens opposé
-            function syncMarquee() {
-                const marquee = document.getElementById('promoMarquee');
-                if (!marquee) return;
-                // autoDir 1 = cats → gauche → marquee → droite (reverse)
-                if (autoDir === 1) marquee.classList.add('reverse');
-                else marquee.classList.remove('reverse');
-            }
-            syncMarquee();
-
-            // Exposer pour le bouton de direction
-            window._catScrollState = { get dir() { return autoDir; }, set dir(v) { autoDir = v; syncMarquee(); } };
         }
 
         function renderMenu() {
@@ -1561,24 +1696,35 @@
 
         window.toggleSub = (id) => { const el = document.getElementById(id); if (el) el.classList.toggle('hidden'); };
 
-        // ==================== DIRECTION CATÉGORIES + MARQUEE INVERSÉ ====================
-        let catDirectionReversed = false;
-        window.toggleCatDirection = function() {
-            catDirectionReversed = !catDirectionReversed;
-            if (window._catScrollState) {
-                window._catScrollState.dir = catDirectionReversed ? -1 : 1;
-            }
-        };
-        // Au démarrage : marquee en sens contraire des catégories (catégories → gauche, marquee → droite)
-        window.addEventListener('DOMContentLoaded', () => {
-            const marquee = document.getElementById('promoMarquee');
-            if (marquee) marquee.classList.add('reverse');
-        });
         window.filterItems = (cat, sub, subsub) => {
             let filtered = !sub && !subsub ? stock.filter(p => p.cat === cat) : stock.filter(p => p.cat === cat && p.sub === sub && (p.subsub === subsub || !subsub));
-            renderProducts(filtered);
+            renderStaticGrid(filtered);
             closeMenus();
-            document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('productScrollWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        // ── Catégories & Recherche : grille statique bien organisée ──
+        function renderStaticGrid(data) {
+            const grid    = document.getElementById('productGrid');
+            const track   = document.getElementById('productScrollTrack');
+            const wrapper = document.getElementById('productScrollWrapper');
+            if (!grid || !track || !wrapper) return;
+
+            // Stopper le carousel et réinitialiser
+            stopScroll();
+            _carPaused = false;
+            wrapper.style.overflow  = 'visible';
+            wrapper.style.overflowX = 'visible';
+
+            track.style.display = 'none';
+            track.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                grid.innerHTML = `<p class="col-span-2 text-center text-slate-400 text-[11px] italic py-10">${currentLang === 'fr' ? 'Aucun article trouvé.' : 'No items found.'}</p>`;
+            } else {
+                grid.innerHTML = data.map(cardHTML).join('');
+            }
+            grid.style.display = 'grid';
         };
 
         // ==================== ADMIN ====================
@@ -1602,13 +1748,13 @@
             const p = stock.find(x => x.id === id);
             if (!p) return;
             editId = id;
-            document.getElementById('admName').value = p.name;
+            document.getElementById('admName').value  = p.name;
             document.getElementById('admPrice').value = p.price;
-            document.getElementById('admOld').value = p.old || '';
-            document.getElementById('admImgs').value = (p.imgs && p.imgs.length) ? p.imgs.join(',') : '';
-            document.getElementById('admDesc').value = p.desc || '';
+            document.getElementById('admOld').value   = p.old || '';
+            document.getElementById('admImgs').value  = (p.imgs && p.imgs.length) ? p.imgs.join(',') : '';
+            document.getElementById('admDesc').value  = p.desc || '';
             document.getElementById('admColors').value = p.colors || '';
-            document.getElementById('admMem').value = p.memory || '';
+            document.getElementById('admMem').value   = p.memory || '';
             const catSelect = document.getElementById('admCat');
             catSelect.value = p.cat;
             window.updateAdminSubs();
@@ -1694,7 +1840,7 @@
             if (!stockList) return;
             stockList.innerHTML = stock.map(p => {
                 const currentBadgeLabel = p.badgeLabel || '';
-                const currentBadgeIcon = p.badgeIcon || '';
+                const currentBadgeIcon  = p.badgeIcon  || '';
                 const hasB = !!(p.badgeLabel && p.badgeIcon);
                 return `
                 <div class="bg-white rounded-2xl border shadow-sm mb-3 overflow-hidden">
@@ -1741,10 +1887,10 @@
         }
 
         window.previewAdminBadge = function(productId) {
-            const select = document.getElementById('badge_' + productId);
+            const select  = document.getElementById('badge_' + productId);
             const preview = document.getElementById('adminBadgePreview_' + productId);
-            const iconEl = document.getElementById('adminBadgeIcon_' + productId);
-            const textEl = document.getElementById('adminBadgeText_' + productId);
+            const iconEl  = document.getElementById('adminBadgeIcon_' + productId);
+            const textEl  = document.getElementById('adminBadgeText_' + productId);
             if (!select || !select.value) { if (preview) preview.style.display = 'none'; return; }
             const [label, iconKey] = select.value.split('|');
             if (preview) preview.style.display = 'flex';
@@ -1766,15 +1912,15 @@
             container.innerHTML = (categories || []).map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="window.updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="window.deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${(cat.subs || []).map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="window.updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="window.deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${(sub.subsubs || []).map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="window.updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="window.deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('')}<button onclick="window.addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1 text-xs">+ Variante</button></div></div>`).join('')}<button onclick="window.addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
         }
 
-        window.updateCatName = (c, val) => { categories[c].name = val.toUpperCase(); syncAdminMenus(); };
-        window.updateSubName = (c, s, val) => { categories[c].subs[s].name = val.toUpperCase(); syncAdminMenus(); };
-        window.updateSubSubName = (c, s, ss, val) => { categories[c].subs[s].subsubs[ss] = val.toUpperCase(); syncAdminMenus(); };
-        window.addNewCategory = () => { categories.push({ name: "NOUVEAU", subs: [] }); renderVisualManager(); syncAdminMenus(); };
-        window.addNewSub = (cIdx) => { if (!categories[cIdx].subs) categories[cIdx].subs = []; categories[cIdx].subs.push({ name: "SOUS-CAT", subsubs: [] }); renderVisualManager(); syncAdminMenus(); };
-        window.addSubSub = (c, s) => { if (!categories[c].subs[s].subsubs) categories[c].subs[s].subsubs = []; categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); renderVisualManager(); syncAdminMenus(); };
-        window.deleteCat = (c) => { if (confirm("Supprimer cette catégorie ?")) { categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); } };
-        window.deleteSub = (c, s) => { categories[c].subs.splice(s, 1); renderVisualManager(); syncAdminMenus(); };
-        window.deleteSubSub = (c, s, ss) => { categories[c].subs[s].subsubs.splice(ss, 1); renderVisualManager(); syncAdminMenus(); };
+        window.updateCatName    = (c, val)        => { categories[c].name                      = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubName    = (c, s, val)      => { categories[c].subs[s].name              = val.toUpperCase(); syncAdminMenus(); };
+        window.updateSubSubName = (c, s, ss, val)  => { categories[c].subs[s].subsubs[ss]       = val.toUpperCase(); syncAdminMenus(); };
+        window.addNewCategory   = ()               => { categories.push({ name: "NOUVEAU", subs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addNewSub        = (cIdx)           => { if (!categories[cIdx].subs) categories[cIdx].subs = []; categories[cIdx].subs.push({ name: "SOUS-CAT", subsubs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addSubSub        = (c, s)           => { if (!categories[c].subs[s].subsubs) categories[c].subs[s].subsubs = []; categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); renderVisualManager(); syncAdminMenus(); };
+        window.deleteCat        = (c)              => { if (confirm("Supprimer cette catégorie ?")) { categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); } };
+        window.deleteSub        = (c, s)           => { categories[c].subs.splice(s, 1); renderVisualManager(); syncAdminMenus(); };
+        window.deleteSubSub     = (c, s, ss)       => { categories[c].subs[s].subsubs.splice(ss, 1); renderVisualManager(); syncAdminMenus(); };
         window.saveCategoriesToFirebase = function() {
             if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
             const cleanCategories = categories.map(cat => ({ ...cat, subs: cat.subs ? cat.subs.map(sub => ({ ...sub, subsubs: sub.subsubs && sub.subsubs.length > 0 ? sub.subsubs : null })) : null }));
@@ -1785,7 +1931,7 @@
         window.sendReview = async function() {
             if (!currentUser) return alert(currentLang === 'fr' ? "Connectez-vous pour laisser une note !" : "Log in to leave a review!");
             if (!currentUser.emailVerified) return alert(currentLang === 'fr' ? "Vérifiez votre email avant de noter." : "Verify your email before reviewing.");
-            const note = document.getElementById('revStars').value;
+            const note    = document.getElementById('revStars').value;
             const comment = document.getElementById('revText').value.trim();
             if (!comment) return alert(currentLang === 'fr' ? "Laissez un petit mot !" : "Please write something!");
             const badge = await getCustomerBadge(currentUser.uid);
@@ -1797,12 +1943,12 @@
         window.likeReview = async function(reviewId) {
             if (!currentUser) { alert(currentLang === 'fr' ? "Connectez-vous pour aimer un avis !" : "Log in to like a review!"); return; }
             const reviewRef = ref(db, `reviews/${reviewId}`);
-            const snapshot = await new Promise((resolve) => onValue(reviewRef, resolve, { onlyOnce: true }));
-            const review = snapshot.val();
+            const snapshot  = await new Promise((resolve) => onValue(reviewRef, resolve, { onlyOnce: true }));
+            const review    = snapshot.val();
             if (!review) return;
-            const likes = review.likes || {};
+            const likes     = review.likes || {};
             const likeCount = review.likeCount || 0;
-            const userId = currentUser.uid;
+            const userId    = currentUser.uid;
             if (likes[userId]) { delete likes[userId]; await update(reviewRef, { likes, likeCount: likeCount - 1 }); }
             else { likes[userId] = true; await update(reviewRef, { likes, likeCount: likeCount + 1 }); }
         };
@@ -1834,13 +1980,13 @@
         // ==================== COMMANDE ====================
         window.checkout = async function() {
             if (currentUser && !currentUser.emailVerified) return alert(currentLang === 'fr' ? "Veuillez confirmer votre e-mail avant de commander." : "Please verify your email before ordering.");
-            const name = document.getElementById('cName').value.trim();
-            const tel = document.getElementById('cTel').value.trim();
-            const loc = document.getElementById('cQuartier').value.trim();
+            const name  = document.getElementById('cName').value.trim();
+            const tel   = document.getElementById('cTel').value.trim();
+            const loc   = document.getElementById('cQuartier').value.trim();
             if (!name || !tel || !loc || !cart.length) return alert(currentLang === 'fr' ? "Veuillez remplir vos informations." : "Please fill in your information.");
-            const total = cart.reduce((sum, item) => sum + parseInt(item.price), 0);
+            const total     = cart.reduce((sum, item) => sum + parseInt(item.price), 0);
             const itemsList = cart.map(x => `- ${x.name}`).join('%0A');
-            const header = currentLang === 'fr' ? '*COMMANDE AFRO SERVICE*' : '*AFRO SERVICE ORDER*';
+            const header    = currentLang === 'fr' ? '*COMMANDE AFRO SERVICE*' : '*AFRO SERVICE ORDER*';
             const msg = `${header}%0A%0A*${currentLang === 'fr' ? 'Client' : 'Customer'}:* ${name}%0A*${currentLang === 'fr' ? 'Tél' : 'Phone'}:* ${tel}%0A*${currentLang === 'fr' ? 'Lieu' : 'Location'}:* ${loc}%0A%0A*${currentLang === 'fr' ? 'Articles' : 'Items'}:*%0A${itemsList}%0A%0A*TOTAL: ${total.toLocaleString()} F*`;
             if (currentUser) { const orderData = { date: new Date().toLocaleString('fr-FR'), items: itemsList.replace(/%0A/g, '\n'), total: total.toLocaleString() + " F", timestamp: Date.now() }; await push(ref(db, `orders/${currentUser.uid}`), orderData); }
             window.open(`https://wa.me/237658562104?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1851,7 +1997,7 @@
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             const adminBtn = document.getElementById('adminBtn');
-            const dot = document.getElementById('authStatusDot');
+            const dot      = document.getElementById('authStatusDot');
             if (user) {
                 if (user.email && adminEmails.includes(user.email.toLowerCase())) adminBtn.classList.remove('hidden');
                 else adminBtn.classList.add('hidden');
@@ -1864,9 +2010,9 @@
         });
 
         window.handleAuth = async () => {
-            const email = document.getElementById('authEmail').value;
-            const pass = document.getElementById('authPass').value;
-            const name = document.getElementById('authName').value;
+            const email   = document.getElementById('authEmail').value;
+            const pass    = document.getElementById('authPass').value;
+            const name    = document.getElementById('authName').value;
             const isLogin = document.getElementById('authTitle').textContent.includes('CONNEXION') || document.getElementById('authTitle').textContent.includes('LOGIN');
             try {
                 if (isLogin) { const res = await signInWithEmailAndPassword(auth, email, pass); if (!res.user.emailVerified) alert(currentLang === 'fr' ? "Vérifiez votre adresse e-mail." : "Please verify your email."); }
@@ -1881,13 +2027,13 @@
             try { await sendPasswordResetEmail(auth, email); alert((currentLang === 'fr' ? "Lien envoyé à : " : "Link sent to: ") + email); } catch (e) { alert("Erreur : " + e.message); }
         };
 
-        window.openAuth = () => currentUser ? (confirm(currentLang === 'fr' ? "Se déconnecter ?" : "Log out?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden');
-        window.closeAuth = () => document.getElementById('authModal').classList.add('hidden');
+        window.openAuth   = () => currentUser ? (confirm(currentLang === 'fr' ? "Se déconnecter ?" : "Log out?") && signOut(auth)) : document.getElementById('authModal').classList.remove('hidden');
+        window.closeAuth  = () => document.getElementById('authModal').classList.add('hidden');
         window.toggleAuthMode = () => {
-            const title = document.getElementById('authTitle');
+            const title     = document.getElementById('authTitle');
             const signUpDiv = document.getElementById('signUpOnly');
             const btnToggle = event.target;
-            const isLogin = title.textContent.includes('CONNEXION') || title.textContent.includes('LOGIN');
+            const isLogin   = title.textContent.includes('CONNEXION') || title.textContent.includes('LOGIN');
             if (isLogin) {
                 title.textContent = currentLang === 'fr' ? "INSCRIPTION" : "SIGN UP";
                 signUpDiv.classList.remove('hidden');
@@ -1900,8 +2046,8 @@
         };
 
         // ==================== UI ====================
-        window.openNav = function() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
-        window.openCart = function() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
+        window.openNav    = function() { document.getElementById('sideNav').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
+        window.openCart   = function() { document.getElementById('sideCart').style.transform = "translateX(0)"; document.getElementById('overlay').classList.remove('hidden'); };
         window.closeMenus = function() { document.querySelectorAll('#sideNav, #sideCart, #detailModal').forEach(el => { el.style.transform = el.id === 'sideNav' ? "translateX(-100%)" : "translateX(100%)"; }); document.getElementById('overlay').classList.add('hidden'); };
         window.closeDetail = function() { document.getElementById('detailModal').style.transform = "translateX(100%)"; document.getElementById('overlay').classList.add('hidden'); updateWALink(); };
         window.switchAdminTab = function(tabName) {
@@ -1912,9 +2058,9 @@
             activeTab.classList.remove('border-transparent', 'text-slate-400');
             activeTab.classList.add('border-red-600', 'text-red-600');
             if (tabName === 'categories') renderVisualManager();
-            if (tabName === 'products') renderAdminStock();
+            if (tabName === 'products')   renderAdminStock();
         };
-        window.openAdmin = function() { document.getElementById('adminModal').classList.remove('hidden'); window.switchAdminTab('products'); renderAdminStock(); };
+        window.openAdmin  = function() { document.getElementById('adminModal').classList.remove('hidden'); window.switchAdminTab('products'); renderAdminStock(); };
         window.closeAdmin = function() { document.getElementById('adminModal').classList.add('hidden'); editId = null; document.getElementById('admTitle').textContent = currentLang === 'fr' ? "Ajouter un article" : "Add an item"; resetAdminForm(); };
         window.renderProducts = renderProducts;
         window.stock = stock;
@@ -1922,30 +2068,61 @@
         // ==================== FIREBASE LISTENERS ====================
         const BLUE_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle;flex-shrink:0"><path d="M12 1L14.39 3.42L17.66 2.38L18.87 5.61L22.24 6.38L21.5 9.74L24 12L21.5 14.26L22.24 17.62L18.87 18.39L17.66 21.62L14.39 20.58L12 23L9.61 20.58L6.34 21.62L5.13 18.39L1.76 17.62L2.5 14.26L0 12L2.5 9.74L1.76 6.38L5.13 5.61L6.34 2.38L9.61 3.42L12 1Z" fill="#1877F2"/><path d="M7 12.5L10 15.5L17 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
+        let _lastStockJSON = '';
+        let _lastCatsJSON  = '';
+        let _stockLoaded   = false;
+
         onValue(stockRef, (snapshot) => {
-            const data = snapshot.val();
-            stock = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
+            const data    = snapshot.val();
+            const newJSON = JSON.stringify(data);
+            if (newJSON === _lastStockJSON) return;
+            _lastStockJSON = newJSON;
+
+            stock        = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
             window.stock = stock;
-            updateDynamicBanners(stock);
-            renderProducts(stock);
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-products') && !document.getElementById('panel-products').classList.contains('hidden')) renderAdminStock();
-            renderCategoryBubbles();
+
+            if (!_stockLoaded) {
+                _stockLoaded = true;
+                updateDynamicBanners(stock);
+                renderProducts(stock);
+                renderCategoryBubbles();
+            } else {
+                updateDynamicBanners(stock);
+                const adminOpen = document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden');
+                if (!adminOpen) renderProducts(stock);
+                renderCategoryBubbles();
+            }
+
+            const adminModal    = document.getElementById('adminModal');
+            const panelProducts = document.getElementById('panel-products');
+            if (adminModal && !adminModal.classList.contains('hidden') && panelProducts && !panelProducts.classList.contains('hidden')) {
+                renderAdminStock();
+            }
         });
 
         onValue(catsRef, (snapshot) => {
-            const data = snapshot.val();
+            const data    = snapshot.val();
+            const newJSON = JSON.stringify(data);
+            if (newJSON === _lastCatsJSON) return;
+            _lastCatsJSON = newJSON;
+
             categories = data ? data.map(cat => ({ ...cat, subs: cat.subs ? cat.subs.map(sub => ({ ...sub, subsubs: sub.subsubs || [] })) : [] })) : [];
             renderMenu();
             renderCategoryBubbles();
-            if (document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden') && document.getElementById('panel-categories') && !document.getElementById('panel-categories').classList.contains('hidden')) { renderVisualManager(); syncAdminMenus(); }
+
+            const adminModal = document.getElementById('adminModal');
+            const panelCats  = document.getElementById('panel-categories');
+            if (adminModal && !adminModal.classList.contains('hidden') && panelCats && !panelCats.classList.contains('hidden')) {
+                renderVisualManager(); syncAdminMenus();
+            }
         });
 
         onValue(reviewsRef, (snapshot) => {
-            const data = snapshot.val();
-            const container = document.getElementById('reviewsDisplay');
+            const data           = snapshot.val();
+            const container      = document.getElementById('reviewsDisplay');
             const adminContainer = document.getElementById('adminReviewsList');
             if (!data) {
-                if (container) container.innerHTML = `<p class='text-[10px] text-slate-400 italic'>${currentLang === 'fr' ? "Soyez le premier à donner votre avis !" : "Be the first to leave a review!"}</p>`;
+                if (container)      container.innerHTML      = `<p class='text-[10px] text-slate-400 italic'>${currentLang === 'fr' ? "Soyez le premier à donner votre avis !" : "Be the first to leave a review!"}</p>`;
                 if (adminContainer) adminContainer.innerHTML = `<p class='text-[10px] text-slate-400'>${currentLang === 'fr' ? "Aucun avis à modérer." : "No reviews to moderate."}</p>`;
                 return;
             }
@@ -1956,18 +2133,18 @@
                 let html = "";
                 for (const [id, r] of entries.slice(0, 10)) {
                     if (!r || !r.name || !r.comment) continue;
-                    const note = Math.min(5, Math.max(0, parseInt(r.note) || 5));
+                    const note   = Math.min(5, Math.max(0, parseInt(r.note) || 5));
                     const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
                     let badgeHtml = '';
-                    if (r.badge === 'Nouveau Client') badgeHtml = `<span class="badge-new"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Nouveau Client</span>`;
+                    if (r.badge === 'Nouveau Client')   badgeHtml = `<span class="badge-new"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Nouveau Client</span>`;
                     else if (r.badge === 'Client Régulier') badgeHtml = `<span class="badge-regular"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Client Régulier</span>`;
-                    else if (r.badge === 'Client Fidèle') badgeHtml = `<span class="badge-loyal"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Client Fidèle</span>`;
+                    else if (r.badge === 'Client Fidèle')   badgeHtml = `<span class="badge-loyal"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Client Fidèle</span>`;
                     html += `<div class="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100 min-w-[200px] max-w-[240px] flex-shrink-0"><div class="flex justify-between items-center mb-1.5"><div class="flex text-orange-400 gap-0.5">${SF.repeat(note)}${SE.repeat(5 - note)}</div><button onclick="window.likeReview('${id}')" class="flex items-center gap-0.5 bg-slate-50 px-1.5 py-0.5 rounded-full border border-slate-100"><svg class="w-2 h-2 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg><span class="text-[8px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span></button></div><p class="text-[10px] font-black uppercase text-[#101944] mb-1 flex items-center gap-1 flex-wrap">${r.name} ${badgeHtml}</p><p class="text-[10px] text-slate-600 leading-snug line-clamp-2">"${r.comment}"</p>${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5 flex items-center gap-1">Afro Service ${BLUE_CHECK}</p><p class="text-[10px] text-slate-500 line-clamp-2">${r.adminReply}</p></div>` : ''}<div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50"><p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<button onclick="window.replyToReview('${id}')" class="bg-[#101944] text-white text-[7px] font-black px-2 py-0.5 rounded-lg uppercase">${currentLang === 'fr' ? 'RÉPONDRE' : 'REPLY'}</button>` : ''}</div></div>`;
                 }
                 container.innerHTML = html || `<p class='text-[10px] text-slate-400 italic px-1'>${currentLang === 'fr' ? 'Aucun avis pour l\'instant.' : 'No reviews yet.'}</p>`;
             }
             if (adminContainer) {
-                adminContainer.innerHTML = entries.map(([id, r]) => `<div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span><span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span></div><p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p><div class="flex gap-3"><button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline">${r.adminReply ? (currentLang === 'fr' ? 'Modifier' : 'Edit') : (currentLang === 'fr' ? 'Répondre' : 'Reply')}</button><button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline">${currentLang === 'fr' ? 'Supprimer' : 'Delete'}</button></div></div><span class="text-[8px] text-slate-400 font-bold">${r.date}</span></div></div>`).join('');
+                adminContainer.innerHTML = entries.map(([id, r]) => `<div class="bg-white p-4 rounded-2xl border border-slate-200 mb-3 shadow-sm"><div class="flex justify-between items-start"><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-black text-[10px] uppercase text-[#101944]">${r.name}</span><span class="text-orange-500 text-[10px]">${'★'.repeat(r.note)}</span></div><p class="text-xs text-slate-700 font-medium mb-2">"${r.comment}"</p>${r.adminReply ? `<div class="mb-2 p-2.5 bg-slate-50 rounded-xl border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-1">Votre réponse :</p><p class="text-[10px] text-slate-600 leading-snug">${r.adminReply}</p></div>` : ''}<div class="flex gap-3"><button onclick="window.replyToReview('${id}')" class="text-[9px] font-black uppercase text-blue-600 underline">${r.adminReply ? (currentLang === 'fr' ? 'Modifier' : 'Edit') : (currentLang === 'fr' ? 'Répondre' : 'Reply')}</button><button onclick="window.deleteReviewFromFirebase('${id}')" class="text-[9px] font-black uppercase text-red-600 underline">${currentLang === 'fr' ? 'Supprimer' : 'Delete'}</button></div></div><span class="text-[8px] text-slate-400 font-bold">${r.date}</span></div></div>`).join('');
             }
         });
 
@@ -1976,51 +2153,24 @@
             renderMenu();
             renderCategoryBubbles();
             updateWALink();
-
-            // Init langue sauvegardée
             applyLang(currentLang);
 
-            // Promo message initial
             const msgs = PROMO_MESSAGES[currentLang];
-            const pm = document.getElementById('promoMsg');
+            const pm   = document.getElementById('promoMsg');
             if (pm) { pm.textContent = msgs[0]; pm.style.opacity = '1'; }
             setInterval(rotatePromoMsg, 4000);
 
-            // Défilement bannières (scroll horizontal) — 4 bannières
-            let bannerIndex = 0;
-            function updateBannerDots(idx) {
-                const dots = document.querySelectorAll('#bannerDots span');
-                dots.forEach((d, i) => {
-                    d.style.width = i === idx ? '20px' : '6px';
-                    d.style.background = i === idx ? '#bd1e24' : '#cbd5e1';
-                    d.style.transition = 'all 0.3s ease';
-                });
-            }
-            setInterval(() => {
-                const bannerContainer = document.querySelector('#dynamicBanners');
-                if (!bannerContainer) return;
-                const items = bannerContainer.querySelectorAll('.banner-item');
-                if (items.length <= 1) return;
-                bannerIndex = (bannerIndex + 1) % items.length;
-                items[bannerIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                updateBannerDots(bannerIndex);
-            }, 8000);
-
-            // ===== BOUTON NAVIGATION UNIQUE — discret, disparaît en haut =====
+            // Bouton navigation unique
             const scrollBtn  = document.getElementById('scrollToggleBtn');
             const scrollIcon = document.getElementById('scrollToggleIcon');
-
-            const ICON_UP   = `<path d="M5 15l7-7 7 7"/>`;
-            const ICON_DOWN = `<path d="M19 9l-7 7-7-7"/>`;
+            const ICON_UP    = `<path d="M5 15l7-7 7 7"/>`;
+            const ICON_DOWN  = `<path d="M19 9l-7 7-7-7"/>`;
 
             function getActiveScroller() {
                 const admin = document.getElementById('adminModal');
                 if (admin && !admin.classList.contains('hidden')) {
-                    // Le scroll réel est dans le div flex-1 overflow-y-auto de l'admin
-                    const adminScroll = admin.querySelector('.flex-1.overflow-y-auto');
-                    return adminScroll || admin;
+                    return admin.querySelector('.flex-1.overflow-y-auto') || admin;
                 }
-
                 const detail = document.getElementById('detailModal');
                 if (detail) {
                     const t = detail.style.transform || '';
@@ -2028,37 +2178,28 @@
                         return document.getElementById('detailContent') || detail;
                     }
                 }
-
-                const cart = document.getElementById('sideCart');
-                if (cart) {
-                    const t = cart.style.transform || '';
+                const cartEl = document.getElementById('sideCart');
+                if (cartEl) {
+                    const t = cartEl.style.transform || '';
                     if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') {
-                        return document.getElementById('cartItems') || cart;
+                        return document.getElementById('cartItems') || cartEl;
                     }
                 }
-
                 const nav = document.getElementById('sideNav');
                 if (nav) {
                     const t = nav.style.transform || '';
                     if (t === 'translateX(0px)' || t === 'translateX(0)' || t === 'translateX(0%)') return nav;
                 }
-
                 return null;
             }
 
             function updateScrollBtn() {
-                const sc = getActiveScroller();
-                const y  = sc ? sc.scrollTop : window.scrollY;
-                const max = sc
-                    ? sc.scrollHeight - sc.clientHeight
-                    : document.body.scrollHeight - window.innerHeight;
-
-                // N'apparaît qu'après 150px de scroll — disparaît totalement si < 80px
+                const sc  = getActiveScroller();
+                const y   = sc ? sc.scrollTop : window.scrollY;
+                const max = sc ? sc.scrollHeight - sc.clientHeight : document.body.scrollHeight - window.innerHeight;
                 const visible = y > 150;
                 scrollBtn.style.opacity       = visible ? '1' : '0';
                 scrollBtn.style.pointerEvents = visible ? 'auto' : 'none';
-
-                // Direction : si on est dans la moitié basse → flèche ↑, sinon ↓
                 const goUp = y > max * 0.45;
                 scrollIcon.innerHTML = goUp ? ICON_UP : ICON_DOWN;
             }
@@ -2066,49 +2207,34 @@
             window.handleScrollToggle = function() {
                 const sc  = getActiveScroller();
                 const y   = sc ? sc.scrollTop : window.scrollY;
-                const max = sc
-                    ? sc.scrollHeight - sc.clientHeight
-                    : document.body.scrollHeight - window.innerHeight;
-                const goUp = y > max * 0.45;
-
+                const max = sc ? sc.scrollHeight - sc.clientHeight : document.body.scrollHeight - window.innerHeight;
+                const goUp   = y > max * 0.45;
                 const target = goUp ? 0 : (sc ? sc.scrollHeight : document.body.scrollHeight);
                 if (sc) sc.scrollTo({ top: target, behavior: 'smooth' });
                 else    window.scrollTo({ top: target, behavior: 'smooth' });
-
                 scrollBtn.style.transform = 'scale(0.82)';
                 setTimeout(() => scrollBtn.style.transform = 'scale(1)', 160);
             };
 
             window.addEventListener('scroll', updateScrollBtn, { passive: true });
+            document.getElementById('adminModal')?.addEventListener('scroll', updateScrollBtn, { passive: true });
+            document.getElementById('adminModal')?.querySelector('.flex-1.overflow-y-auto')?.addEventListener('scroll', updateScrollBtn, { passive: true });
+            document.getElementById('detailContent')?.addEventListener('scroll', updateScrollBtn, { passive: true });
+            document.getElementById('sideCart')?.addEventListener('scroll', updateScrollBtn, { passive: true });
+            document.getElementById('sideNav')?.addEventListener('scroll', updateScrollBtn, { passive: true });
 
-            const adminModalEl = document.getElementById('adminModal');
-            if (adminModalEl) {
-                adminModalEl.addEventListener('scroll', updateScrollBtn, { passive: true });
-                const adminInner = adminModalEl.querySelector('.flex-1.overflow-y-auto');
-                if (adminInner) adminInner.addEventListener('scroll', updateScrollBtn, { passive: true });
-            }
-
-            const detailContentEl = document.getElementById('detailContent');
-            if (detailContentEl) detailContentEl.addEventListener('scroll', updateScrollBtn, { passive: true });
-
-            const sideCartEl = document.getElementById('sideCart');
-            if (sideCartEl) sideCartEl.addEventListener('scroll', updateScrollBtn, { passive: true });
-
-            const sideNavEl = document.getElementById('sideNav');
-            if (sideNavEl) sideNavEl.addEventListener('scroll', updateScrollBtn, { passive: true });
-
-            const _origOpen  = window.openAdmin;
-            const _origClose = window.closeAdmin;
-            const _origOpenNav = window.openNav;
-            const _origOpenCart = window.openCart;
-            const _origCloseMenus = window.closeMenus;
-            const _origCloseDetail = window.closeDetail;
-            window.openAdmin   = function() { _origOpen  && _origOpen();  setTimeout(updateScrollBtn, 120); };
-            window.closeAdmin  = function() { _origClose && _origClose(); setTimeout(updateScrollBtn, 120); };
-            window.openNav     = function() { _origOpenNav  && _origOpenNav();  setTimeout(updateScrollBtn, 120); };
-            window.openCart    = function() { _origOpenCart && _origOpenCart(); setTimeout(updateScrollBtn, 120); };
-            window.closeMenus  = function() { _origCloseMenus && _origCloseMenus(); setTimeout(updateScrollBtn, 120); };
-            window.closeDetail = function() { _origCloseDetail && _origCloseDetail(); setTimeout(updateScrollBtn, 120); };
+            const _wrapOpenAdmin    = window.openAdmin;
+            const _wrapCloseAdmin   = window.closeAdmin;
+            const _wrapOpenNav      = window.openNav;
+            const _wrapOpenCart     = window.openCart;
+            const _wrapCloseMenus   = window.closeMenus;
+            const _wrapCloseDetail  = window.closeDetail;
+            window.openAdmin   = function() { _wrapOpenAdmin   && _wrapOpenAdmin();  setTimeout(updateScrollBtn, 120); };
+            window.closeAdmin  = function() { _wrapCloseAdmin  && _wrapCloseAdmin(); setTimeout(updateScrollBtn, 120); };
+            window.openNav     = function() { _wrapOpenNav     && _wrapOpenNav();    setTimeout(updateScrollBtn, 120); };
+            window.openCart    = function() { _wrapOpenCart    && _wrapOpenCart();   setTimeout(updateScrollBtn, 120); };
+            window.closeMenus  = function() { _wrapCloseMenus  && _wrapCloseMenus(); setTimeout(updateScrollBtn, 120); };
+            window.closeDetail = function() { _wrapCloseDetail && _wrapCloseDetail(); setTimeout(updateScrollBtn, 120); };
 
             updateScrollBtn();
         });
