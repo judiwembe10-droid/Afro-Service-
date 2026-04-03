@@ -808,7 +808,7 @@
 
     <div id="authModal" class="hidden fixed inset-0 bg-black/80 z-[300] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white w-full max-w-sm rounded-[32px] p-8 space-y-4 text-center">
-            <h2 id="authTitle" class="text-xl font-black text-[#101944] uppercase italic">CONNEXION</h2>
+            <h2 id="authTitle" class="text-xl font-black text-[#101944] uppercase italic" data-fr="CONNEXION" data-en="LOGIN">CONNEXION</h2>
             <div id="signUpOnly" class="hidden"><input id="authName" type="text" data-placeholder-fr="Nom Complet" data-placeholder-en="Full Name" placeholder="Nom Complet" class="w-full border-2 p-4 rounded-2xl text-sm mb-2"></div>
             <input id="authEmail" type="email" data-placeholder-fr="Email Admin" data-placeholder-en="Admin Email" placeholder="Email Admin" class="w-full border-2 p-4 rounded-2xl text-sm">
             <input id="authPass" type="password" data-placeholder-fr="Mot de passe" data-placeholder-en="Password" placeholder="Mot de passe" class="w-full border-2 p-4 rounded-2xl text-sm">
@@ -816,10 +816,10 @@
                 <span data-fr="Valider" data-en="Confirm">Valider</span>
             </button>
             <div class="flex flex-col gap-3 mt-4">
-                <button onclick="window.toggleAuthMode && window.toggleAuthMode()" class="text-[10px] font-bold text-slate-500 underline uppercase">Créer un compte ?</button>
-                <button onclick="window.forgotPassword && window.forgotPassword()" class="text-[10px] font-bold text-red-600 underline uppercase italic">Mot de passe oublié ?</button>
+                <button onclick="window.toggleAuthMode && window.toggleAuthMode()" class="text-[10px] font-bold text-slate-500 underline uppercase" data-fr="Créer un compte ?" data-en="Create an account?">Créer un compte ?</button>
+                <button onclick="window.forgotPassword && window.forgotPassword()" class="text-[10px] font-bold text-red-600 underline uppercase italic" data-fr="Mot de passe oublié ?" data-en="Forgot password?">Mot de passe oublié ?</button>
             </div>
-            <button onclick="window.closeAuth && window.closeAuth()" class="block w-full text-[10px] text-slate-300 uppercase mt-4">Fermer</button>
+            <button onclick="window.closeAuth && window.closeAuth()" class="block w-full text-[10px] text-slate-300 uppercase mt-4" data-fr="Fermer" data-en="Close">Fermer</button>
         </div>
     </div>
 
@@ -985,29 +985,58 @@
             localStorage.setItem('afroLang', lang);
             document.getElementById('langFlag').textContent = lang === 'fr' ? '🇫🇷' : '🇬🇧';
             document.getElementById('langCode').textContent = lang === 'fr' ? 'FR' : 'EN';
+
+            // ── Tous les éléments avec data-fr / data-en ──
             document.querySelectorAll('[data-fr][data-en]').forEach(el => {
                 const tag = el.tagName.toLowerCase();
                 if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
                 const val = el.getAttribute('data-' + lang);
                 if (val !== null) el.textContent = val;
             });
+
+            // ── Placeholders ──
             document.querySelectorAll('[data-placeholder-fr], [data-placeholder-en]').forEach(el => {
                 const ph = el.getAttribute('data-placeholder-' + lang);
                 if (ph) el.placeholder = ph;
             });
+
+            // ── Ticker header ──
             document.querySelectorAll('#headerTicker .ticker__item').forEach(el => {
                 const t = el.getAttribute('data-' + lang);
                 if (t) el.textContent = t;
             });
+
+            // ── Marquee promo ──
             document.querySelectorAll('.animate-marquee [data-fr][data-en]').forEach(el => {
                 const val = el.getAttribute('data-' + lang);
                 if (val !== null) el.textContent = val;
             });
+
+            // ── Promo phone label ──
             const lbl = document.getElementById('promoPhoneLabel');
             if (lbl) lbl.textContent = lbl.getAttribute('data-' + lang);
+
+            // ── Message promo rotatif ──
             const msgs = PROMO_MESSAGES[lang];
             const pm = document.getElementById('promoMsg');
             if (pm) { pm.textContent = msgs[promoMsgIndex % msgs.length]; pm.style.opacity = '1'; pm.style.transform = 'translateY(0)'; }
+
+            // ── Auth modal : titre + boutons non data-fr/en ──
+            const authTitle = document.getElementById('authTitle');
+            if (authTitle) {
+                const isLogin = authTitle.textContent.includes('CONNEXION') || authTitle.textContent.includes('LOGIN');
+                authTitle.textContent = isLogin
+                    ? (lang === 'fr' ? 'CONNEXION' : 'LOGIN')
+                    : (lang === 'fr' ? 'INSCRIPTION' : 'SIGN UP');
+            }
+
+            // ── Menu latéral label "TOUTE LA BOUTIQUE" ──
+            renderMenu();
+
+            // ── Bannières produits (textes recalculés selon la langue) ──
+            if (stock && stock.length > 0) updateDynamicBanners(stock);
+
+            // ── Produits ──
             renderProducts(stock);
         }
 
@@ -1763,7 +1792,7 @@
             document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
         };
         window.saveProductToFirebase = function() {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert(currentLang === "fr" ? "Action non autorisée" : "Unauthorized action");
             const name = document.getElementById('admName').value.trim();
             const price = document.getElementById('admPrice').value;
             const oldPrice = document.getElementById('admOld').value;
@@ -1774,12 +1803,12 @@
             const images = document.getElementById('admImgs').value.split(',').map(i => i.trim()).filter(i => i !== "");
             const colors = document.getElementById('admColors').value.trim();
             const memory = document.getElementById('admMem').value.trim();
-            if (!name || !price) return alert("Nom et prix requis");
+            if (!name || !price) return alert(currentLang === "fr" ? "Nom et prix requis" : "Name and price required");
             const productData = { name, price: parseInt(price), old: oldPrice ? parseInt(oldPrice) : null, desc: description || "", cat: category, sub: subCategory, subsub: subSubCategory || "", imgs: images.length ? images : ['https://via.placeholder.com/300'], colors: colors || "", memory: memory || "" };
-            if (editId) { update(ref(db, 'stock/' + editId), productData).then(() => { alert("Article mis à jour !"); editId = null; document.getElementById('admTitle').textContent = "Ajouter un article"; resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
-            else { push(stockRef, productData).then(() => { alert("Article ajouté !"); resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
+            if (editId) { update(ref(db, 'stock/' + editId), productData).then(() => { alert(currentLang === "fr" ? "Article mis à jour !" : "Item updated!"); editId = null; document.getElementById('admTitle').textContent = currentLang === "fr" ? "Ajouter un article" : "Add an item"; resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
+            else { push(stockRef, productData).then(() => { alert(currentLang === "fr" ? "Article ajouté !" : "Item added!"); resetAdminForm(); }).catch(e => alert("Erreur: " + e.message)); }
         };
-        window.deleteProductFromFirebase = function(id) { if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return; if (confirm("Supprimer définitivement ?")) remove(ref(db, 'stock/' + id)); };
+        window.deleteProductFromFirebase = function(id) { if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return; if (confirm(currentLang === "fr" ? "Supprimer définitivement ?" : "Delete permanently?")) remove(ref(db, 'stock/' + id)); };
         
         function badgeSelectOptions(currentLabel) {
             const opts = [
@@ -1862,7 +1891,7 @@
                         </div>
                     </div>
                     <div class="px-4 pb-4 pt-0 border-t border-slate-50 bg-slate-50/50">
-                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-3">Badge boutique</p>
+                        <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2 mt-3">${currentLang === 'fr' ? 'Badge boutique' : 'Store badge'}</p>
                         <div style="position:relative">
                             <select id="badge_${p.id}" class="badge-select-box" style="font-size:10px;padding:10px 38px 10px 12px;" onchange="window.previewAdminBadge('${p.id}')">
                                 ${badgeSelectOptions(currentBadgeLabel)}
@@ -1909,22 +1938,22 @@
         function renderVisualManager() {
             const container = document.getElementById('visualCatsManager');
             if (!container) return;
-            container.innerHTML = (categories || []).map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="window.updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="window.deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${(cat.subs || []).map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="window.updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="window.deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${(sub.subsubs || []).map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="window.updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="window.deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('')}<button onclick="window.addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1 text-xs">+ Variante</button></div></div>`).join('')}<button onclick="window.addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">+ Sous-Catégorie</button></div></div>`).join('');
+            container.innerHTML = (categories || []).map((cat, cIdx) => `<div class="border-2 border-slate-100 rounded-2xl p-4 bg-white mb-2"><div class="flex gap-2 mb-2"><input type="text" value="${cat.name}" oninput="window.updateCatName(${cIdx}, this.value)" class="flex-1 font-black text-[10px] uppercase p-2 border rounded-lg focus:border-red-500 outline-none"><button onclick="window.deleteCat(${cIdx})" class="text-red-500 font-bold px-2">✕</button></div><div class="pl-4 border-l-2 border-red-500 space-y-2">${(cat.subs || []).map((sub, sIdx) => `<div class="bg-slate-50 p-2 rounded-lg"><div class="flex gap-2 mb-1"><input type="text" value="${sub.name}" oninput="window.updateSubName(${cIdx}, ${sIdx}, this.value)" class="flex-1 text-[9px] font-bold p-1 border rounded outline-none"><button onclick="window.deleteSub(${cIdx}, ${sIdx})" class="text-slate-400">✕</button></div><div class="flex flex-wrap gap-1">${(sub.subsubs || []).map((ss, ssIdx) => `<span class="bg-white border text-[8px] px-2 py-1 rounded flex items-center"><input type="text" value="${ss}" oninput="window.updateSubSubName(${cIdx}, ${sIdx}, ${ssIdx}, this.value)" class="w-16 border-none focus:ring-0 p-0 text-center uppercase"><button onclick="window.deleteSubSub(${cIdx}, ${sIdx}, ${ssIdx})" class="ml-1 text-red-400">×</button></span>`).join('')}<button onclick="window.addSubSub(${cIdx}, ${sIdx})" class="text-red-500 font-black px-1 text-xs">' + (currentLang === 'fr' ? 'Variante' : 'Variant') + '</button></div></div>`).join('')}<button onclick="window.addNewSub(${cIdx})" class="text-[8px] font-black text-blue-500">${currentLang === 'fr' ? '+ Sous-Catégorie' : '+ Sub-Category'}</button></div></div>`).join('');
         }
 
         window.updateCatName    = (c, val)        => { categories[c].name                      = val.toUpperCase(); syncAdminMenus(); };
         window.updateSubName    = (c, s, val)      => { categories[c].subs[s].name              = val.toUpperCase(); syncAdminMenus(); };
         window.updateSubSubName = (c, s, ss, val)  => { categories[c].subs[s].subsubs[ss]       = val.toUpperCase(); syncAdminMenus(); };
-        window.addNewCategory   = ()               => { categories.push({ name: "NOUVEAU", subs: [] }); renderVisualManager(); syncAdminMenus(); };
-        window.addNewSub        = (cIdx)           => { if (!categories[cIdx].subs) categories[cIdx].subs = []; categories[cIdx].subs.push({ name: "SOUS-CAT", subsubs: [] }); renderVisualManager(); syncAdminMenus(); };
-        window.addSubSub        = (c, s)           => { if (!categories[c].subs[s].subsubs) categories[c].subs[s].subsubs = []; categories[c].subs[s].subsubs.push("NOUVELLE VARIANTE"); renderVisualManager(); syncAdminMenus(); };
-        window.deleteCat        = (c)              => { if (confirm("Supprimer cette catégorie ?")) { categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); } };
+        window.addNewCategory   = ()               => { categories.push({ name: currentLang === "fr" ? "NOUVEAU" : "NEW", subs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addNewSub        = (cIdx)           => { if (!categories[cIdx].subs) categories[cIdx].subs = []; categories[cIdx].subs.push({ name: currentLang === "fr" ? "SOUS-CAT" : "SUB-CAT", subsubs: [] }); renderVisualManager(); syncAdminMenus(); };
+        window.addSubSub        = (c, s)           => { if (!categories[c].subs[s].subsubs) categories[c].subs[s].subsubs = []; categories[c].subs[s].subsubs.push(currentLang === "fr" ? "NOUVELLE VARIANTE" : "NEW VARIANT"); renderVisualManager(); syncAdminMenus(); };
+        window.deleteCat        = (c)              => { if (confirm(currentLang === "fr" ? "Supprimer cette catégorie ?" : "Delete this category?")) { categories.splice(c, 1); renderVisualManager(); syncAdminMenus(); } };
         window.deleteSub        = (c, s)           => { categories[c].subs.splice(s, 1); renderVisualManager(); syncAdminMenus(); };
         window.deleteSubSub     = (c, s, ss)       => { categories[c].subs[s].subsubs.splice(ss, 1); renderVisualManager(); syncAdminMenus(); };
         window.saveCategoriesToFirebase = function() {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert("Action non autorisée");
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return alert(currentLang === "fr" ? "Action non autorisée" : "Unauthorized action");
             const cleanCategories = categories.map(cat => ({ ...cat, subs: cat.subs ? cat.subs.map(sub => ({ ...sub, subsubs: sub.subsubs && sub.subsubs.length > 0 ? sub.subsubs : null })) : null }));
-            set(catsRef, cleanCategories).then(() => { alert("Structure enregistrée !"); renderMenu(); renderVisualManager(); }).catch(e => alert("Erreur: " + e.message));
+            set(catsRef, cleanCategories).then(() => { alert(currentLang === "fr" ? "Structure enregistrée !" : "Structure saved!"); renderMenu(); renderVisualManager(); }).catch(e => alert("Erreur: " + e.message));
         };
 
         // ==================== AVIS ====================
@@ -1954,7 +1983,7 @@
         };
 
         window.replyToReview = async function(reviewId) {
-            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) { alert("Action non autorisée"); return; }
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) { alert(currentLang === "fr" ? "Action non autorisée" : "Unauthorized action"); return; }
             const reply = prompt(currentLang === 'fr' ? "Réponse de l'équipe Afro Service :" : "Reply from Afro Service team:");
             if (reply && reply.trim()) { await update(ref(db, `reviews/${reviewId}`), { adminReply: reply.trim(), adminReplyDate: new Date().toLocaleDateString('fr-FR') }); alert(currentLang === 'fr' ? "Réponse ajoutée !" : "Reply added!"); }
         };
@@ -2018,7 +2047,7 @@
                 if (isLogin) { const res = await signInWithEmailAndPassword(auth, email, pass); if (!res.user.emailVerified) alert(currentLang === 'fr' ? "Vérifiez votre adresse e-mail." : "Please verify your email."); }
                 else { const res = await createUserWithEmailAndPassword(auth, email, pass); await updateProfile(res.user, { displayName: name }); await sendEmailVerification(res.user); alert(currentLang === 'fr' ? "Compte créé ! Un e-mail de vérification vous a été envoyé." : "Account created! A verification email has been sent."); }
                 closeAuth();
-            } catch (e) { alert("Erreur : " + e.message); }
+            } catch (e) { alert((currentLang === "fr" ? "Erreur : " : "Error: ") + e.message); }
         };
 
         window.forgotPassword = async () => {
