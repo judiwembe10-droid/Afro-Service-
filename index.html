@@ -33,6 +33,7 @@
         .ticker { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; }
         .ticker__item { display: inline-block; padding: 0 30px; }
         @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+        @keyframes taglineScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         .whatsapp-float {
             position: fixed;
@@ -407,9 +408,12 @@
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="font-black text-[15px] leading-none tracking-tight text-white" style="letter-spacing:-0.3px">Afro Service</span>
-                    <span id="taglineText" class="text-[8px] font-semibold leading-tight mt-0.5 italic" style="color:#f87171;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
-                          data-fr="Le Commerce Vous Ouvre Son Cœur"
-                          data-en="Commerce Opens Its Heart To You">Le Commerce Vous Ouvre Son Cœur</span>
+                    <div style="overflow:hidden;max-width:150px;margin-top:2px;">
+                        <span id="taglineText" class="text-[8px] font-semibold leading-tight italic"
+                              style="color:#f87171;display:inline-block;white-space:nowrap;animation:taglineScroll 8s linear infinite;"
+                              data-fr="Le Commerce Vous Ouvre Son Cœur"
+                              data-en="Commerce Opens Its Heart To You">Le Commerce Vous Ouvre Son Cœur</span>
+                    </div>
                 </div>
             </div>
 
@@ -2270,3 +2274,5 @@
     </script>
 </body>
 </html>
+
+
