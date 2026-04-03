@@ -379,12 +379,16 @@
             content: attr(data-placeholder);
             color: #94a3b8;
             pointer-events: none;
-            font-size: 11px;
+            font-size: 12px;
+            font-style: italic;
+            position: absolute;
         }
-        #admDescEditor[data-empty='true'] {
-        }
-        #admDescEditor h3 { font-size: 14px; font-weight: 900; color: #101944; margin: 8px 0 4px; }
-        #admDescEditor ul { list-style: disc; padding-left: 18px; margin: 4px 0; }
+        #admDescEditor[data-empty='true'] { position: relative; }
+        #admDescEditor { -webkit-user-select: text; user-select: text; }
+        #admDescEditor h3 { font-size: 14px; font-weight: 900; color: #101944; margin: 10px 0 5px; }
+        #admDescEditor p { margin: 4px 0; line-height: 1.8; }
+        #admDescEditor ul { list-style: disc; padding-left: 20px; margin: 6px 0; }
+        #admDescEditor li { margin: 3px 0; line-height: 1.7; }
         #admDescEditor b, #admDescEditor strong { font-weight: 900; color: #0f172a; }
         #admDescEditor i, #admDescEditor em { font-style: italic; }
 
@@ -847,7 +851,7 @@
                               <button type="button" onclick="window.insertDescImage()" style="height:28px;padding:0 10px;border:none;border-radius:8px;background:linear-gradient(135deg,#bd1e24,#e03030);color:white;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;letter-spacing:.04em;display:flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>+ Image</button>
                             </div>
                           </div>
-                          <div id="admDescEditor" contenteditable="true" style="min-height:120px;max-height:320px;overflow-y:auto;padding:14px;font-size:12px;line-height:1.7;color:#334155;outline:none;font-family:inherit;" oninput="window.syncDescToHidden()" data-placeholder="Rédigez la description ici... Utilisez la toolbar pour mettre en forme ou insérer des images." data-empty="true"></div>
+                          <div id="admDescEditor" contenteditable="true" style="min-height:200px;max-height:60vh;overflow-y:auto;padding:14px;font-size:13px;line-height:1.8;color:#334155;outline:none;font-family:inherit;word-break:break-word;-webkit-user-modify:read-write-plaintext-only;" oninput="window.syncDescToHidden()" data-placeholder="Rédigez la description ici... Utilisez la toolbar pour mettre en forme ou insérer des images." data-empty="true"></div>
                           <textarea id="admDesc" style="display:none;"></textarea>
                         </div>
                         <button onclick="window.saveProductToFirebase()" class="md:col-span-2 bg-[#101944] text-white py-4 rounded-xl font-black uppercase shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
@@ -2468,3 +2472,5 @@
     </script>
 </body>
 </html>
+
+
