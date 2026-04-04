@@ -2507,42 +2507,78 @@
         function _cleanPastedHTML(html) {
             var tmp = document.createElement('div');
             tmp.innerHTML = html;
-            tmp.querySelectorAll('script,style,meta,link').forEach(function(el){ el.remove(); });
 
-            function processNode(node) {
-                if (node.nodeType === Node.TEXT_NODE) return;
-                var tag = node.tagName ? node.tagName.toLowerCase() : '';
-                var keepSemantic = ['b','strong','i','em','u','ul','ol','li','p','br','img','h1','h2','h3','h4'];
-                if (keepSemantic.includes(tag)) {
-                    Array.from(node.attributes || []).forEach(function(attr) {
-                        if (tag === 'img' && attr.name === 'src') return;
-                        node.removeAttribute(attr.name);
-                    });
-                    if (tag === 'img') { node.style.maxWidth = '100%'; node.style.borderRadius = '12px'; }
-                    if (['h1','h2','h4'].includes(tag)) {
-                        var h3 = document.createElement('h3');
-                        h3.innerHTML = node.innerHTML;
-                        node.replaceWith(h3);
-                        return;
-                    }
-                    node.childNodes.forEach(processNode);
-                    return;
+            // Supprimer balises inutiles
+            tmp.querySelectorAll('script,style,meta,link,head').forEach(function(el){ el.remove(); });
+
+            // Etape 1 : convertir spans/fonts avec style bold/italic en balises semantiques
+            tmp.querySelectorAll('span,font').forEach(function(el) {
+                var fw = el.style.fontWeight || '';
+                var fs = el.style.fontStyle  || '';
+                var isBold   = fw === 'bold' || fw === '700' || fw === '800' || fw === '900' || (parseInt(fw) >= 700);
+                var isItalic = fs === 'italic';
+                if (isBold && isItalic) {
+                    var bi = document.createElement('b');
+                    var ii = document.createElement('i');
+                    ii.innerHTML = el.innerHTML;
+                    bi.appendChild(ii);
+                    el.replaceWith(bi);
+                } else if (isBold) {
+                    var b = document.createElement('b');
+                    b.innerHTML = el.innerHTML;
+                    el.replaceWith(b);
+                } else if (isItalic) {
+                    var ic = document.createElement('i');
+                    ic.innerHTML = el.innerHTML;
+                    el.replaceWith(ic);
                 }
-                var isBlock = ['div','section','article','tr','figure','blockquote','td','th'].includes(tag);
-                var frag = document.createDocumentFragment();
-                Array.from(node.childNodes).forEach(function(child) {
-                    processNode(child);
-                    frag.appendChild(child.cloneNode(true));
-                });
-                if (isBlock) frag.appendChild(document.createElement('br'));
-                node.replaceWith(frag);
-            }
+            });
 
-            Array.from(tmp.childNodes).forEach(processNode);
+            // Etape 2 : normaliser h1/h2/h4/h5/h6 en h3
+            tmp.querySelectorAll('h1,h2,h4,h5,h6').forEach(function(el) {
+                var h3 = document.createElement('h3');
+                h3.innerHTML = el.innerHTML;
+                el.replaceWith(h3);
+            });
+
+            // Etape 3 : paragraphes entierement en gras et courts → titres h3
+            tmp.querySelectorAll('p').forEach(function(el) {
+                var txt   = el.textContent.trim();
+                var inner = el.innerHTML.trim();
+                var allBold = /^(<b>|<strong>)/i.test(inner);
+                if (allBold && txt.length > 2 && txt.length < 120) {
+                    var h3 = document.createElement('h3');
+                    h3.textContent = txt;
+                    el.replaceWith(h3);
+                }
+            });
+
+            // Etape 4 : deballer divs/sections en ajoutant un <br> de separation
+            tmp.querySelectorAll('div,section,article,blockquote,figure,td,th').forEach(function(el) {
+                var br = document.createElement('br');
+                el.after(br);
+                while (el.firstChild) el.before(el.firstChild);
+                el.remove();
+            });
+
+            // Etape 5 : nettoyer les attributs parasites sur balises conservees
+            tmp.querySelectorAll('b,strong,i,em,u,ul,ol,li,p,h3,img,br').forEach(function(el) {
+                var tag = el.tagName.toLowerCase();
+                Array.from(el.attributes || []).forEach(function(attr) {
+                    if (tag === 'img' && attr.name === 'src') return;
+                    el.removeAttribute(attr.name);
+                });
+                if (tag === 'img') { el.style.maxWidth = '100%'; el.style.borderRadius = '12px'; }
+            });
+
+            // Nettoyage final HTML
             return tmp.innerHTML
+                .replace(/ style="[^"]*"/gi, '')
+                .replace(/ class="[^"]*"/gi, '')
+                .replace(/ id="[^"]*"/gi, '')
                 .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>')
-                .replace(/^(<br\s*\/?>)+/i, '')
-                .replace(/(<br\s*\/?>)+$/i, '')
+                .replace(/^(\s*<br\s*\/?>)+/i, '')
+                .replace(/(<br\s*\/?>)+\s*$/i, '')
                 .trim();
         }
 
