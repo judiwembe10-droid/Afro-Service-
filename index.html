@@ -1254,11 +1254,11 @@
             }
         };
 
-        // Placeholder styling for the contenteditable
+        // Placeholder styling + Smart Paste pour le contenteditable
         document.addEventListener('DOMContentLoaded', function() {
             const editor = document.getElementById('admDescEditor');
             if (!editor) return;
-            const placeholder = 'Rédigez la description ici... Utilisez la toolbar pour mettre en forme ou insérer des images.';
+
             function updatePlaceholder() {
                 if (editor.innerHTML === '' || editor.innerHTML === '<br>') {
                     editor.setAttribute('data-empty', 'true');
@@ -1269,6 +1269,124 @@
             editor.addEventListener('input', updatePlaceholder);
             editor.addEventListener('blur', updatePlaceholder);
             updatePlaceholder();
+
+            // ── SMART PASTE : nettoie le HTML collé et conserve le formatage sémantique ──
+            editor.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const clipData = e.clipboardData || window.clipboardData;
+
+                // Priorité 1 : HTML riche dispo → on nettoie et on garde le formatage
+                let html = clipData.getData('text/html');
+                if (html && html.trim()) {
+                    const clean = cleanPastedHTML(html);
+                    document.execCommand('insertHTML', false, clean);
+                } else {
+                    // Priorité 2 : texte brut → on convertit les sauts de ligne en <br>
+                    const text = clipData.getData('text/plain') || '';
+                    const lines = text.split(/\r?\n/);
+                    const converted = lines.map(line => {
+                        const t = line.trim();
+                        if (!t) return '<br>';
+                        // Détection heuristique titre : ligne courte (< 60 car) tout en majuscules ou se terminant par ':'
+                        if ((t === t.toUpperCase() && t.length > 2 && t.length < 60) || (t.endsWith(':') && t.length < 60)) {
+                            return `<h3>${escHtml(t)}</h3>`;
+                        }
+                        // Détection liste : ligne commençant par -, •, *, →, ✓, ✔, ▶
+                        if (/^[-•*→✓✔▶]\s+/.test(t)) {
+                            return `<li>${escHtml(t.replace(/^[-•*→✓✔▶]\s+/, ''))}</li>`;
+                        }
+                        return `<p>${escHtml(t)}</p>`;
+                    });
+                    // Regrouper les <li> consécutifs dans un <ul>
+                    const wrapped = wrapListItems(converted.join(''));
+                    document.execCommand('insertHTML', false, wrapped);
+                }
+
+                window.syncDescToHidden();
+                updatePlaceholder();
+            });
+
+            // ── Nettoie le HTML riche : supprime styles/classes parasites, garde sémantique ──
+            function cleanPastedHTML(html) {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+
+                // Supprimer balises inutiles : script, style, meta, link, img (sauf si src http)
+                tmp.querySelectorAll('script, style, meta, link, [class*="Apple"], [class*="google"], [class*="Docs"]').forEach(el => el.remove());
+
+                // Transformer les spans/divs en inline propre, supprimer attributs parasites
+                function processNode(node) {
+                    if (node.nodeType === Node.TEXT_NODE) return;
+                    const tag = node.tagName ? node.tagName.toLowerCase() : '';
+
+                    // Balises à conserver telles quelles (sémantiques)
+                    const keep = ['b','strong','i','em','u','h1','h2','h3','h4','ul','ol','li','p','br','img'];
+                    if (keep.includes(tag)) {
+                        // Nettoyer les attributs non essentiels
+                        Array.from(node.attributes || []).forEach(attr => {
+                            if (tag === 'img' && attr.name === 'src') return; // garder src des images
+                            node.removeAttribute(attr.name);
+                        });
+                        // Garder max-width sur les images
+                        if (tag === 'img') {
+                            node.style.maxWidth = '100%';
+                            node.style.borderRadius = '12px';
+                        }
+                        // Normaliser h1/h2 → h3
+                        if (tag === 'h1' || tag === 'h2') {
+                            const h3 = document.createElement('h3');
+                            h3.innerHTML = node.innerHTML;
+                            node.replaceWith(h3);
+                            return;
+                        }
+                        node.childNodes.forEach(processNode);
+                        return;
+                    }
+
+                    // span/div/section/article/table/td/tr → extraire le contenu texte/inline
+                    if (['span','div','section','article','table','tbody','tr','td','th','figure','figcaption','aside','header','footer','nav'].includes(tag)) {
+                        const frag = document.createDocumentFragment();
+                        Array.from(node.childNodes).forEach(child => {
+                            processNode(child);
+                            frag.appendChild(child.cloneNode(true));
+                        });
+                        // Ajouter un saut de ligne entre blocs
+                        if (['div','section','article','tr','figure'].includes(tag)) {
+                            frag.appendChild(document.createElement('br'));
+                        }
+                        node.replaceWith(frag);
+                        return;
+                    }
+
+                    // Tout le reste : supprimer la balise, garder le texte
+                    const frag = document.createDocumentFragment();
+                    Array.from(node.childNodes).forEach(child => {
+                        processNode(child);
+                        frag.appendChild(child.cloneNode(true));
+                    });
+                    node.replaceWith(frag);
+                }
+
+                Array.from(tmp.childNodes).forEach(processNode);
+
+                // Supprimer les <br> en trop en début/fin
+                let result = tmp.innerHTML
+                    .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>') // max 2 <br> consécutifs
+                    .replace(/^(<br\s*\/?>)+/i, '')
+                    .replace(/(<br\s*\/?>)+$/i, '')
+                    .trim();
+
+                return result;
+            }
+
+            function escHtml(str) {
+                return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            }
+
+            function wrapListItems(html) {
+                // Entoure les séquences de <li> dans un <ul>
+                return html.replace(/(<li>[\s\S]*?<\/li>(\s*<li>[\s\S]*?<\/li>)*)/gi, '<ul>$1</ul>');
+            }
         });
 
         // ==================== FIX 3 : BANNIÈRES avec rotation d'images toutes les 8s ====================
