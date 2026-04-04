@@ -1488,126 +1488,143 @@
             });
 
             // ── BANNIÈRE CASH — totalement refaite, textes gérés par JS ──
-            const cashBannerId  = 'cashBanner_text';
-            const cashBannerBgId = 'cashBanner_bg';
             const cashBanner = `
-                <div class="banner-item relative overflow-hidden" 
-                     id="${cashBannerBgId}"
-                     style="height:200px;border-radius:22px;margin-right:16px;
-                            background:linear-gradient(135deg,#8b0000 0%,#bd1e24 50%,#8b0000 100%);
-                            box-shadow:0 8px 32px rgba(189,30,36,0.3);
-                            transition:background 1.8s ease, box-shadow 1.8s ease;">
-                    <div style="position:absolute;top:-35px;right:-35px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
-                    <div style="position:absolute;bottom:-45px;left:-25px;width:180px;height:180px;border-radius:50%;background:rgba(0,0,0,0.07);pointer-events:none;"></div>
-                    <div style="position:absolute;top:50%;right:16px;transform:translateY(-50%);opacity:0.09;pointer-events:none;">
-                        <svg width="96" height="96" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+                <div class="banner-item relative overflow-hidden"
+                     id="cashAnimBanner"
+                     style="height:200px;border-radius:22px;margin-right:16px;overflow:hidden;
+                            box-shadow:0 8px 32px rgba(192,57,43,0.4);cursor:pointer;">
+
+                    <!-- SCÈNE A : LE PROBLÈME — fond rouge -->
+                    <div id="cashSceneA" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:20px 22px;
+                         background:linear-gradient(135deg,#c0392b 0%,#e74c3c 50%,#c0392b 100%);
+                         transition:transform 0.55s cubic-bezier(0.77,0,0.175,1);z-index:2;">
+                        <!-- Cercles déco -->
+                        <div style="position:absolute;top:-40px;right:-40px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none;"></div>
+                        <div style="position:absolute;bottom:-45px;left:-25px;width:190px;height:190px;border-radius:50%;background:rgba(0,0,0,0.07);pointer-events:none;"></div>
+                        <!-- Ligne accent -->
+                        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.28);"></div>
+                        <!-- Contenu A -->
+                        <div id="cashTextShake" style="margin-bottom:6px;">
+                            <span style="display:block;color:white;font-size:1.7rem;font-weight:900;text-transform:uppercase;line-height:1;text-shadow:0 3px 16px rgba(0,0,0,0.45);letter-spacing:-0.02em;">PAS DE CASH ?</span>
+                        </div>
+                        <span id="cashSubA" style="display:block;color:#ffe066;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;opacity:0;transform:translateY(8px);transition:opacity 0.5s ease,transform 0.5s ease;">Pas de panique !</span>
+                        <div style="width:28px;height:2.5px;background:rgba(255,255,255,0.4);border-radius:2px;margin:12px 0 10px;"></div>
+                        <!-- Pills -->
+                        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                            <span style="display:inline-flex;align-items:center;gap:3px;background:rgba(0,0,0,0.22);border:1px solid rgba(255,255,255,0.22);border-radius:20px;padding:3px 9px;">
+                                <svg width="7" height="7" fill="white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                <span style="color:white;font-size:7px;font-weight:900;letter-spacing:0.05em;">MOBILE MONEY</span>
+                            </span>
+                            <span style="display:inline-flex;align-items:center;gap:3px;background:rgba(0,0,0,0.22);border:1px solid rgba(255,255,255,0.22);border-radius:20px;padding:3px 9px;">
+                                <svg width="7" height="7" fill="white" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                <span style="color:white;font-size:7px;font-weight:900;letter-spacing:0.05em;">ORANGE MONEY</span>
+                            </span>
+                        </div>
                     </div>
-                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.2);"></div>
-                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:20px 24px;z-index:3;">
-                        <div id="cashBanner_badge" style="display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.22);border:1px solid rgba(255,255,255,0.18);border-radius:999px;padding:4px 10px;width:fit-content;margin-bottom:13px;transition:border-color 1.8s ease;">
-                            <svg width="11" height="11" fill="none" stroke="rgba(255,255,255,0.75)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"/></svg>
-                            <span id="cashBanner_label" style="color:rgba(255,255,255,0.7);font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.12em;transition:color 1.8s ease;">AFRO SERVICE · BAFOUSSAM</span>
+
+                    <!-- SCÈNE B : LA SOLUTION — fond blanc/marine -->
+                    <div id="cashSceneB" style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:20px 22px;
+                         background:linear-gradient(135deg,#f8fafc 0%,#ffffff 60%,#eef2ff 100%);
+                         transform:translateX(100%);transition:transform 0.55s cubic-bezier(0.77,0,0.175,1);z-index:1;">
+                        <!-- Cercles déco marine -->
+                        <div style="position:absolute;top:-40px;right:-40px;width:170px;height:170px;border-radius:50%;background:rgba(16,25,68,0.04);pointer-events:none;"></div>
+                        <!-- Ligne accent marine -->
+                        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#101944;"></div>
+                        <!-- Badge 3x/4x -->
+                        <div style="display:inline-flex;align-items:center;gap:6px;background:#101944;border-radius:999px;padding:5px 13px;width:fit-content;margin-bottom:12px;">
+                            <svg width="10" height="10" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            <span style="color:white;font-size:7.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;">PAIEMENT EN 3X · 4X</span>
                         </div>
-                        <div style="position:relative;height:2.5rem;overflow:hidden;margin-bottom:13px;">
-                            <div id="${cashBannerId}" style="color:white;font-size:1.2rem;font-weight:900;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,0.5);line-height:1.2;transition:opacity 0.4s ease,transform 0.4s ease;position:absolute;left:0;right:0;top:0;">
-                                PAS DE CASH ?
-                            </div>
-                        </div>
-                        <div id="cashBanner_sep" style="width:36px;height:2px;background:rgba(255,255,255,0.35);border-radius:2px;margin-bottom:9px;transition:background 1.8s ease;"></div>
-                        <div id="cashBanner_footer" style="display:flex;align-items:center;gap:5px;color:rgba(255,255,255,0.55);font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;flex-wrap:wrap;transition:color 1.8s ease;">
-                            <svg width="10" height="10" fill="none" stroke="rgba(255,255,255,0.55)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                            Mobile Money
-                            <span style="opacity:0.3;">·</span>
-                            Orange Money
-                            <span style="opacity:0.3;">·</span>
-                            <svg width="10" height="10" fill="none" stroke="rgba(255,255,255,0.55)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"/></svg>
-                            Livraison
+                        <!-- Titre B -->
+                        <span id="cashTypewriter" style="display:block;color:#101944;font-size:1.2rem;font-weight:900;text-transform:uppercase;line-height:1.15;letter-spacing:-0.01em;min-height:2.6rem;"></span>
+                        <div style="width:28px;height:2.5px;background:#bd1e24;border-radius:2px;margin:10px 0 10px;"></div>
+                        <!-- CTA -->
+                        <div id="cashCTA" style="display:inline-flex;align-items:center;gap:7px;background:#bd1e24;border-radius:22px;padding:8px 18px;width:fit-content;
+                             box-shadow:0 4px 16px rgba(189,30,36,0.4);opacity:0;transform:translateY(10px);transition:opacity 0.4s ease,transform 0.4s ease;">
+                            <svg width="11" height="11" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span style="color:white;font-size:8.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;">J'en profite !</span>
                         </div>
                     </div>
                 </div>`;
 
             container.innerHTML = [...productBannerHTMLs, cashBanner].join('');
 
-            // ── Cycle couleurs bannière cash : rouge → bleu → blanc ──
-            const cashColorCycles = [
-                {
-                    bg:     'linear-gradient(135deg,#8b0000 0%,#bd1e24 50%,#8b0000 100%)',
-                    shadow: '0 8px 32px rgba(189,30,36,0.35)',
-                    textColor: 'white',
-                    accent:    '#ffe066',
-                },
-                {
-                    bg:     'linear-gradient(135deg,#0a1f6e 0%,#1a3bbf 50%,#0a1f6e 100%)',
-                    shadow: '0 8px 32px rgba(26,59,191,0.35)',
-                    textColor: 'white',
-                    accent:    '#93c5fd',
-                },
-                {
-                    bg:     'linear-gradient(135deg,#e2e8f0 0%,#f8fafc 50%,#e2e8f0 100%)',
-                    shadow: '0 8px 32px rgba(100,116,139,0.22)',
-                    textColor: '#101944',
-                    accent:    '#bd1e24',
-                },
-            ];
-            let _cashColorIdx = 0;
+            // ── ANIMATION BANNIÈRE CASH : 2 scènes en boucle ──
+            (function initCashAnim() {
+                const sceneA    = document.getElementById('cashSceneA');
+                const sceneB    = document.getElementById('cashSceneB');
+                const subA      = document.getElementById('cashSubA');
+                const shakeEl   = document.getElementById('cashTextShake');
+                const typeEl    = document.getElementById('cashTypewriter');
+                const ctaEl     = document.getElementById('cashCTA');
+                if (!sceneA || !sceneB) return;
 
-            function rotateCashColor() {
-                _cashColorIdx = (_cashColorIdx + 1) % cashColorCycles.length;
-                const scheme = cashColorCycles[_cashColorIdx];
-                const bg     = document.getElementById(cashBannerBgId);
-                const label  = document.getElementById('cashBanner_label');
-                const sep    = document.getElementById('cashBanner_sep');
-                if (!bg) return;
-                bg.style.background = scheme.bg;
-                bg.style.boxShadow  = scheme.shadow;
-                // Adapter la couleur du texte principal si fond blanc
-                const textEl = document.getElementById(cashBannerId);
-                if (textEl) textEl.style.color = scheme.textColor;
-                if (label) label.style.color = _cashColorIdx === 2
-                    ? 'rgba(16,25,68,0.65)' : 'rgba(255,255,255,0.7)';
-                if (sep) sep.style.background = _cashColorIdx === 2
-                    ? 'rgba(16,25,68,0.25)' : 'rgba(255,255,255,0.35)';
-                // Mettre à jour la couleur accent des phrases tournantes
-                window._cashAccentColor = scheme.accent;
-            }
-            if (window._cashColorInterval) clearInterval(window._cashColorInterval);
-            window._cashColorInterval = setInterval(rotateCashColor, 5600); // change toutes les ~2 textes
+                const PHRASE_B  = 'PAIE À TON RYTHME !';
+                let loopTimer   = null;
 
-            // ── Rotation texte bannière cash — 100% JS, zéro CSS animation ──
-            const cashLines = [
-                { text: 'PAS DE CASH ?',              accent: false },
-                { text: 'PAS DE PANIQUE !',            accent: false },
-                { text: 'PAIE A TON RYTHME !',         accent: true  },
-                { text: 'ON LIVRE PARTOUT !',          accent: false },
-                { text: 'QUALITE 100% GARANTIE',       accent: true  },
-            ];
-            window._cashAccentColor = '#ffe066'; // couleur accent initiale (rouge)
-            let _cashIdx = 0;
+                function shakeEffect(el) {
+                    if (!el) return;
+                    const frames = [
+                        {transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},
+                        {transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},
+                        {transform:'translateX(3px)'},{transform:'translateX(0)'}
+                    ];
+                    if (el.animate) el.animate(frames, {duration:480, easing:'ease-in-out'});
+                }
 
-            function rotateCashText() {
-                const el = document.getElementById(cashBannerId);
-                if (!el) { clearInterval(window._cashTextInterval); return; }
-                el.style.opacity   = '0';
-                el.style.transform = 'translateY(-16px)';
-                setTimeout(() => {
-                    _cashIdx = (_cashIdx + 1) % cashLines.length;
-                    const line  = cashLines[_cashIdx];
-                    const theme = cashColorCycles[_cashColorIdx];
-                    el.textContent    = line.text;
-                    el.style.color    = line.accent ? (window._cashAccentColor || theme.accent) : theme.textColor;
-                    el.style.fontSize = '1.2rem';
-                    el.style.transition = 'none';
-                    el.style.transform  = 'translateY(16px)';
-                    el.style.opacity    = '0';
-                    requestAnimationFrame(() => requestAnimationFrame(() => {
-                        el.style.transition = 'opacity 0.38s ease, transform 0.38s ease';
-                        el.style.opacity    = '1';
-                        el.style.transform  = 'translateY(0)';
-                    }));
-                }, 400);
-            }
-            if (window._cashTextInterval) clearInterval(window._cashTextInterval);
-            window._cashTextInterval = setInterval(rotateCashText, 2800);
+                function typewrite(el, text, speed, onDone) {
+                    el.textContent = '';
+                    let i = 0;
+                    const t = setInterval(() => {
+                        el.textContent += text[i++];
+                        if (i >= text.length) { clearInterval(t); onDone && onDone(); }
+                    }, speed);
+                }
+
+                function playSceneA() {
+                    // Reset état
+                    sceneA.style.transform = 'translateX(0)';
+                    sceneB.style.transform = 'translateX(100%)';
+                    subA.style.opacity     = '0';
+                    subA.style.transform   = 'translateY(8px)';
+                    ctaEl.style.opacity    = '0';
+                    ctaEl.style.transform  = 'translateY(10px)';
+                    if (typeEl) typeEl.textContent = '';
+
+                    // 0s → shake titre
+                    setTimeout(() => shakeEffect(shakeEl), 120);
+
+                    // 0.6s → apparition "Pas de panique !"
+                    setTimeout(() => {
+                        subA.style.opacity   = '1';
+                        subA.style.transform = 'translateY(0)';
+                    }, 600);
+
+                    // 1.8s → transition slide vers scène B
+                    loopTimer = setTimeout(() => {
+                        sceneA.style.transform = 'translateX(-100%)';
+                        sceneB.style.transform = 'translateX(0)';
+
+                        // 2.3s → typewriter "PAIE À TON RYTHME !"
+                        setTimeout(() => {
+                            typewrite(typeEl, PHRASE_B, 48, () => {
+                                // Fin typewriter → CTA apparaît
+                                setTimeout(() => {
+                                    ctaEl.style.opacity   = '1';
+                                    ctaEl.style.transform = 'translateY(0)';
+                                }, 200);
+                            });
+                        }, 500);
+
+                        // 5s → reboucle sur scène A
+                        loopTimer = setTimeout(playSceneA, 4800);
+                    }, 1900);
+                }
+
+                // Démarrer après que les bannières produits ont eu le temps de s'afficher
+                setTimeout(playSceneA, 600);
+                if (window._cashAnimInterval) clearInterval(window._cashAnimInterval);
+            })();
 
             // ── Rotation d'images + Ken Burns sur chaque bannière produit ──
             bannerConfigs.forEach((cfg, bi) => {
