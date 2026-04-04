@@ -2239,7 +2239,15 @@
             const header    = currentLang === 'fr' ? '*COMMANDE AFRO SERVICE*' : '*AFRO SERVICE ORDER*';
             const msg = `${header}\n\n*${currentLang === 'fr' ? 'Client' : 'Customer'}:* ${name}\n*${currentLang === 'fr' ? 'Tél' : 'Phone'}:* ${tel}\n*${currentLang === 'fr' ? 'Lieu' : 'Location'}:* ${loc}\n\n*${currentLang === 'fr' ? 'Articles' : 'Items'}:*\n${itemsList}\n\n*TOTAL: ${total.toLocaleString()} F*`;
             if (currentUser) { const orderData = { date: new Date().toLocaleString('fr-FR'), items: itemsList, total: total.toLocaleString() + " FCFA", timestamp: Date.now() }; await push(ref(db, `orders/${currentUser.uid}`), orderData); }
-            window.open(`https://wa.me/237658562104?text=${encodeURIComponent(msg)}`, '_blank');
+            // Ouvrir WhatsApp via un lien <a> temporaire pour éviter le blocage popup
+            const waUrl = `https://wa.me/237658562104?text=${encodeURIComponent(msg)}`;
+            const waLink = document.createElement('a');
+            waLink.href = waUrl;
+            waLink.target = '_blank';
+            waLink.rel = 'noopener noreferrer';
+            document.body.appendChild(waLink);
+            waLink.click();
+            document.body.removeChild(waLink);
             cart = []; updateCart(); closeMenus();
         };
 
