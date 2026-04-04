@@ -1270,95 +1270,7 @@
             updatePlaceholder();
         });
 
-        // ── SMART PASTE — fonction globale appelée via onpaste dans le HTML ──
-        window.handleDescPaste = function(e) {
-            e.preventDefault();
-            const clipData = e.clipboardData || window.clipboardData;
-            const editor   = document.getElementById('admDescEditor');
-            if (!editor) return;
 
-            let html = clipData.getData('text/html');
-
-            if (html && html.trim()) {
-                // HTML riche (copié depuis une page web, Google Docs, Word…)
-                const clean = _cleanPastedHTML(html);
-                document.execCommand('insertHTML', false, clean);
-            } else {
-                // Texte brut (WhatsApp, Notes, SMS…)
-                const text  = clipData.getData('text/plain') || '';
-                const lines = text.split(/\r?\n/);
-                const parts = lines.map(line => {
-                    const t = line.trim();
-                    if (!t) return '<br>';
-                    if (/^[-•*→✓✔▶]\s+/.test(t))
-                        return `<li>${_esc(t.replace(/^[-•*→✓✔▶]\s+/, ''))}</li>`;
-                    if ((t === t.toUpperCase() && t.length > 2 && t.length < 60) || (t.endsWith(':') && t.length < 60))
-                        return `<h3>${_esc(t)}</h3>`;
-                    return `<p>${_esc(t)}</p>`;
-                });
-                const wrapped = parts.join('').replace(/(<li>[\s\S]*?<\/li>(\s*<li>[\s\S]*?<\/li>)*)/gi, '<ul>$1</ul>');
-                document.execCommand('insertHTML', false, wrapped);
-            }
-
-            window.syncDescToHidden && window.syncDescToHidden();
-            // Mettre à jour le placeholder
-            if (editor.innerHTML === '' || editor.innerHTML === '<br>') editor.setAttribute('data-empty','true');
-            else editor.removeAttribute('data-empty');
-        };
-
-        function _esc(str) {
-            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        }
-
-        function _cleanPastedHTML(html) {
-            const tmp = document.createElement('div');
-            tmp.innerHTML = html;
-
-            // Supprimer balises parasites
-            tmp.querySelectorAll('script,style,meta,link').forEach(el => el.remove());
-
-            function processNode(node) {
-                if (node.nodeType === Node.TEXT_NODE) return;
-                const tag = node.tagName ? node.tagName.toLowerCase() : '';
-                const keepSemantic = ['b','strong','i','em','u','ul','ol','li','p','br','img','h1','h2','h3','h4'];
-
-                if (keepSemantic.includes(tag)) {
-                    // Supprimer tous les attributs sauf src sur img
-                    Array.from(node.attributes || []).forEach(attr => {
-                        if (tag === 'img' && attr.name === 'src') return;
-                        node.removeAttribute(attr.name);
-                    });
-                    if (tag === 'img') { node.style.maxWidth = '100%'; node.style.borderRadius = '12px'; }
-                    // Normaliser h1/h2/h4 → h3
-                    if (['h1','h2','h4'].includes(tag)) {
-                        const h3 = document.createElement('h3');
-                        h3.innerHTML = node.innerHTML;
-                        node.replaceWith(h3);
-                        return;
-                    }
-                    node.childNodes.forEach(processNode);
-                    return;
-                }
-
-                // div/span/section → extraire le contenu, ajouter <br> entre blocs
-                const isBlock = ['div','section','article','tr','figure','blockquote','td','th'].includes(tag);
-                const frag = document.createDocumentFragment();
-                Array.from(node.childNodes).forEach(child => {
-                    processNode(child);
-                    frag.appendChild(child.cloneNode(true));
-                });
-                if (isBlock) frag.appendChild(document.createElement('br'));
-                node.replaceWith(frag);
-            }
-
-            Array.from(tmp.childNodes).forEach(processNode);
-
-            return tmp.innerHTML
-                .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>')
-                .replace(/^(<br\s*\/?>)+/i, '')
-                .replace(/(<br\s*\/?>)+$/i, '')
-                .trim();
-        }
 
         // ==================== FIX 3 : BANNIÈRES avec rotation d'images toutes les 8s ====================
         // Chaque bannière produit a un tableau d'images qui tournent indépendamment
@@ -2323,10 +2235,10 @@
             const loc   = document.getElementById('cQuartier').value.trim();
             if (!name || !tel || !loc || !cart.length) return alert(currentLang === 'fr' ? "Veuillez remplir vos informations." : "Please fill in your information.");
             const total     = cart.reduce((sum, item) => sum + parseInt(item.price), 0);
-            const itemsList = cart.map(x => `- ${x.name}`).join('%0A');
+            const itemsList = cart.map(x => `- ${x.name}`).join('\n');
             const header    = currentLang === 'fr' ? '*COMMANDE AFRO SERVICE*' : '*AFRO SERVICE ORDER*';
-            const msg = `${header}%0A%0A*${currentLang === 'fr' ? 'Client' : 'Customer'}:* ${name}%0A*${currentLang === 'fr' ? 'Tél' : 'Phone'}:* ${tel}%0A*${currentLang === 'fr' ? 'Lieu' : 'Location'}:* ${loc}%0A%0A*${currentLang === 'fr' ? 'Articles' : 'Items'}:*%0A${itemsList}%0A%0A*TOTAL: ${total.toLocaleString()} F*`;
-            if (currentUser) { const orderData = { date: new Date().toLocaleString('fr-FR'), items: itemsList.replace(/%0A/g, '\n'), total: total.toLocaleString() + " FCFA", timestamp: Date.now() }; await push(ref(db, `orders/${currentUser.uid}`), orderData); }
+            const msg = `${header}\n\n*${currentLang === 'fr' ? 'Client' : 'Customer'}:* ${name}\n*${currentLang === 'fr' ? 'Tél' : 'Phone'}:* ${tel}\n*${currentLang === 'fr' ? 'Lieu' : 'Location'}:* ${loc}\n\n*${currentLang === 'fr' ? 'Articles' : 'Items'}:*\n${itemsList}\n\n*TOTAL: ${total.toLocaleString()} F*`;
+            if (currentUser) { const orderData = { date: new Date().toLocaleString('fr-FR'), items: itemsList, total: total.toLocaleString() + " FCFA", timestamp: Date.now() }; await push(ref(db, `orders/${currentUser.uid}`), orderData); }
             window.open(`https://wa.me/237658562104?text=${encodeURIComponent(msg)}`, '_blank');
             cart = []; updateCart(); closeMenus();
         };
@@ -2576,6 +2488,87 @@
 
             updateScrollBtn();
         });
+    </script>
+
+    <!-- SMART PASTE — script non-module pour accès onpaste inline -->
+    <script>
+        function _esc(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        function _cleanPastedHTML(html) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            tmp.querySelectorAll('script,style,meta,link').forEach(function(el){ el.remove(); });
+
+            function processNode(node) {
+                if (node.nodeType === Node.TEXT_NODE) return;
+                var tag = node.tagName ? node.tagName.toLowerCase() : '';
+                var keepSemantic = ['b','strong','i','em','u','ul','ol','li','p','br','img','h1','h2','h3','h4'];
+                if (keepSemantic.includes(tag)) {
+                    Array.from(node.attributes || []).forEach(function(attr) {
+                        if (tag === 'img' && attr.name === 'src') return;
+                        node.removeAttribute(attr.name);
+                    });
+                    if (tag === 'img') { node.style.maxWidth = '100%'; node.style.borderRadius = '12px'; }
+                    if (['h1','h2','h4'].includes(tag)) {
+                        var h3 = document.createElement('h3');
+                        h3.innerHTML = node.innerHTML;
+                        node.replaceWith(h3);
+                        return;
+                    }
+                    node.childNodes.forEach(processNode);
+                    return;
+                }
+                var isBlock = ['div','section','article','tr','figure','blockquote','td','th'].includes(tag);
+                var frag = document.createDocumentFragment();
+                Array.from(node.childNodes).forEach(function(child) {
+                    processNode(child);
+                    frag.appendChild(child.cloneNode(true));
+                });
+                if (isBlock) frag.appendChild(document.createElement('br'));
+                node.replaceWith(frag);
+            }
+
+            Array.from(tmp.childNodes).forEach(processNode);
+            return tmp.innerHTML
+                .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>')
+                .replace(/^(<br\s*\/?>)+/i, '')
+                .replace(/(<br\s*\/?>)+$/i, '')
+                .trim();
+        }
+
+        window.handleDescPaste = function(e) {
+            e.preventDefault();
+            var clipData = e.clipboardData || window.clipboardData;
+            var editor   = document.getElementById('admDescEditor');
+            if (!editor) return;
+
+            var html = clipData.getData('text/html');
+
+            if (html && html.trim()) {
+                var clean = _cleanPastedHTML(html);
+                document.execCommand('insertHTML', false, clean);
+            } else {
+                var text  = clipData.getData('text/plain') || '';
+                var lines = text.split(/\r?\n/);
+                var parts = lines.map(function(line) {
+                    var t = line.trim();
+                    if (!t) return '<br>';
+                    if (/^[-•*→✓✔▶]\s+/.test(t))
+                        return '<li>' + _esc(t.replace(/^[-•*→✓✔▶]\s+/, '')) + '</li>';
+                    if ((t === t.toUpperCase() && t.length > 2 && t.length < 60) || (t.endsWith(':') && t.length < 60))
+                        return '<h3>' + _esc(t) + '</h3>';
+                    return '<p>' + _esc(t) + '</p>';
+                });
+                var wrapped = parts.join('').replace(/(<li>[\s\S]*?<\/li>(\s*<li>[\s\S]*?<\/li>)*)/gi, '<ul>$1</ul>');
+                document.execCommand('insertHTML', false, wrapped);
+            }
+
+            if (window.syncDescToHidden) window.syncDescToHidden();
+            if (editor.innerHTML === '' || editor.innerHTML === '<br>') editor.setAttribute('data-empty','true');
+            else editor.removeAttribute('data-empty');
+        };
     </script>
 </body>
 </html>
