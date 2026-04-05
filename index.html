@@ -534,13 +534,133 @@
             </div>
             <div id="heroCardsContainer"
                  class="no-scrollbar"
-                 style="display:flex;flex-direction:column;gap:16px;padding:0 16px 8px;"></div>
+                 style="display:flex;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+                        scroll-snap-type:x mandatory;padding:0 16px 12px;"></div>
         </div>
 
         <div id="productScrollWrapper" class="no-scrollbar" style="position:relative;">
             <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4" style="display:none"></div>
             <div id="productScrollTrack" style="display:none"></div>
         </div>
+
+        <!-- ============ GRILLE ARTICLES STYLE TEMU ============ -->
+        <section id="temuGridSection" class="mt-6 mb-2" style="display:none;">
+            <div class="flex items-center justify-between px-4 mb-3">
+                <div class="flex items-center gap-2">
+                    <div style="width:4px;height:18px;background:linear-gradient(135deg,#bd1e24,#ff4d4d);border-radius:3px;"></div>
+                    <span class="text-[13px] font-black uppercase tracking-widest text-[#101944]" data-fr="Tous les Articles" data-en="All Products">Tous les Articles</span>
+                </div>
+                <span id="temuGridCount" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"></span>
+            </div>
+            <div id="temuGrid" class="px-3" style="display:flex;gap:10px;align-items:flex-start;">
+                <div id="temuColLeft"  style="flex:1;display:flex;flex-direction:column;gap:10px;"></div>
+                <div id="temuColRight" style="flex:1;display:flex;flex-direction:column;gap:10px;margin-top:28px;"></div>
+            </div>
+            <div id="temuGridEmpty" class="hidden px-4 py-8 text-center">
+                <p class="text-xs text-slate-400 italic" data-fr="Aucun article disponible" data-en="No products available">Aucun article disponible</p>
+            </div>
+        </section>
+
+        <style>
+            /* ===== GRILLE TEMU — thème Afro Service ===== */
+            .temu-card {
+                background: white;
+                border-radius: 0px;
+                overflow: hidden;
+                border: 1px solid #eef0f5;
+                box-shadow: 0 1px 6px rgba(16,25,68,0.06);
+                cursor: pointer;
+                transition: transform 0.18s ease, box-shadow 0.18s ease;
+                position: relative;
+                width: 100%;
+            }
+            .temu-card:active { transform: scale(0.97); box-shadow: 0 3px 14px rgba(16,25,68,0.13); }
+            .temu-card-img-wrap {
+                position: relative;
+                width: 100%;
+                background: #f4f6fa;
+                overflow: hidden;
+                border-radius: 0;
+            }
+            .temu-card-img-wrap img {
+                width: 100%;
+                height: auto;
+                min-height: 120px;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+                display: block;
+            }
+            .temu-card:active .temu-card-img-wrap img { transform: scale(1.04); }
+            .temu-card-badge {
+                position: absolute;
+                top: 0; left: 0;
+                background: linear-gradient(135deg, #bd1e24, #e03030);
+                color: white;
+                font-size: 9px; font-weight: 900;
+                padding: 3px 8px;
+                border-radius: 0 0 4px 0;
+                letter-spacing: 0.04em;
+                z-index: 2;
+            }
+            .temu-card-promo {
+                position: absolute;
+                bottom: 7px; right: 7px;
+                background: linear-gradient(135deg, #bd1e24, #e03030);
+                color: white;
+                font-size: 9px; font-weight: 900;
+                padding: 3px 8px;
+                border-radius: 2px;
+                box-shadow: 0 2px 6px rgba(189,30,36,0.4);
+                z-index: 2;
+                letter-spacing: 0.03em;
+            }
+            .temu-card-body {
+                padding: 8px 10px 10px;
+                display: flex; flex-direction: column; gap: 4px;
+            }
+            .temu-card-name {
+                font-size: 11px; font-weight: 700;
+                color: #1e293b; line-height: 1.35;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                min-height: 30px;
+            }
+            .temu-card-price {
+                font-size: 15px; font-weight: 900;
+                color: #0f172a; letter-spacing: -0.5px; line-height: 1;
+            }
+            .temu-card-oldprice {
+                font-size: 9px; font-weight: 600;
+                color: #94a3b8; text-decoration: line-through; line-height: 1;
+            }
+            .temu-card-cart-btn {
+                position: absolute;
+                bottom: 8px; right: 8px;
+                width: 30px; height: 30px;
+                background: #101944;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                box-shadow: 0 2px 8px rgba(16,25,68,0.3);
+                transition: background 0.2s, transform 0.15s;
+                z-index: 3;
+                border: none; cursor: pointer;
+            }
+            .temu-card-cart-btn:active { transform: scale(0.85); background: #bd1e24; }
+            .temu-card-cart-btn svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2; }
+            .temu-trending-chip {
+                display: inline-flex; align-items: center; gap: 3px;
+                background: linear-gradient(135deg, #fff7ed, #fef3c7);
+                border: 1px solid #fde68a;
+                border-radius: 10px;
+                padding: 2px 6px;
+                font-size: 8px; font-weight: 900;
+                color: #b45309; text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+            .temu-trending-chip svg { width: 9px; height: 9px; }
+        </style>
 
         <section class="py-3 mt-4 border-t border-slate-200">
             <h3 class="font-black text-[10px] uppercase tracking-widest text-[#101944] mb-3 flex items-center gap-1.5">
@@ -1781,6 +1901,69 @@
             }, 300);
         }
 
+
+        // ==================== GRILLE STYLE TEMU ====================
+        function renderTemuGrid(data) {
+            var section  = document.getElementById('temuGridSection');
+            var colLeft  = document.getElementById('temuColLeft');
+            var colRight = document.getElementById('temuColRight');
+            var empty    = document.getElementById('temuGridEmpty');
+            var counter  = document.getElementById('temuGridCount');
+            if (!section || !colLeft || !colRight) return;
+            if (!data || data.length === 0) {
+                section.style.display = 'none';
+                colLeft.innerHTML = ''; colRight.innerHTML = '';
+                return;
+            }
+            section.style.display = 'block';
+            if (empty) empty.classList.add('hidden');
+            if (counter) counter.textContent = data.length + ' article' + (data.length > 1 ? 's' : '');
+
+            function buildCard(p, idx) {
+                var img     = p.imgs && p.imgs[0] ? p.imgs[0] : 'https://via.placeholder.com/300';
+                var promo   = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
+                var isTrend = !!(p.badgeLabel && p.badgeLabel.toLowerCase().indexOf('tendance') !== -1);
+                var isNew   = idx < 4;
+                var h = '<div class="temu-card" onclick="window.showDetail(\'' + p.id + '\')">';
+                h += '<div class="temu-card-img-wrap">';
+                if (isNew) h += '<span class="temu-card-badge">NOUVEAU</span>';
+                h += '<img src="' + img + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300\'">';
+                if (promo > 0) h += '<span class="temu-card-promo">-' + promo + '%</span>';
+                h += '</div>';
+                h += '<div class="temu-card-body">';
+                h += '<div class="temu-card-name">' + p.name + '</div>';
+                if (isTrend) h += '<div class="temu-trending-chip">&#8593; TENDANCE</div>';
+                h += '<div style="position:relative;padding-bottom:36px;">';
+                h += '<span class="temu-card-price">' + parseInt(p.price).toLocaleString('fr-FR') + ' <span style="font-size:10px;font-weight:700">FCFA</span></span>';
+                if (p.old) h += '<br><span class="temu-card-oldprice">' + parseInt(p.old).toLocaleString('fr-FR') + ' FCFA</span>';
+                h += '<button class="temu-card-cart-btn" onclick="event.stopPropagation();window._temuQuickAdd(\'' + p.id + '\')">';
+                h += '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.63.63-.18 1.7.7 1.7H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>';
+                h += '</button></div></div></div>';
+                return h;
+            }
+
+            var reversed = data.slice().reverse();
+            var leftHTML = '', rightHTML = '';
+            reversed.forEach(function(p, idx) {
+                if (idx % 2 === 0) leftHTML  += buildCard(p, idx);
+                else               rightHTML += buildCard(p, idx);
+            });
+            colLeft.innerHTML  = leftHTML;
+            colRight.innerHTML = rightHTML;
+        }
+
+        window._temuQuickAdd = function(id) {
+            var p = stock.find(function(x){ return x.id === id; });
+            if (!p) return;
+            cart.push({ name: p.name, price: p.price, img: p.imgs && p.imgs[0] ? p.imgs[0] : '' });
+            updateCart();
+            var badge = document.getElementById('badge');
+            if (badge) {
+                badge.style.transform = 'scale(1.6)';
+                setTimeout(function(){ badge.style.transform = 'scale(1)'; }, 300);
+            }
+        };
+
         // ==================== FICHE PRODUIT ====================
         window.showDetail = function(id) {
             const p = stock.find(x => x.id === id);
@@ -1885,28 +2068,36 @@
                 return;
             }
 
+            const W = Math.round(window.innerWidth * 0.78);
+
             container.innerHTML = all.map(p => {
                 const img       = p.imgs[0];
                 const promo     = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
-                const shortName = p.name.length > 38 ? p.name.substring(0, 38) + '\u2026' : p.name;
+                const shortName = p.name.length > 36 ? p.name.substring(0, 36) + '\u2026' : p.name;
                 return `
                 <div onclick="window.showDetail('${p.id}')"
-                     style="width:100%;border-radius:22px;overflow:hidden;
-                            cursor:pointer;background:#111;box-shadow:0 10px 30px rgba(0,0,0,0.22);
+                     style="flex:0 0 ${W}px;scroll-snap-align:start;border-radius:22px;overflow:hidden;
+                            cursor:pointer;background:#101944;
+                            box-shadow:0 10px 28px rgba(16,25,68,0.28);
                             display:flex;flex-direction:column;">
-                    <div style="padding:20px 20px 0;background:#111;flex-shrink:0;">
-                        ${promo > 0 ? `<div style="display:inline-block;background:#bd1e24;color:white;font-size:9px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:0.06em;">-${promo}%</div>` : '<div style="height:22px;margin-bottom:10px;"></div>'}
-                        <p style="color:white;font-size:16px;font-weight:900;line-height:1.25;margin:0 0 8px;letter-spacing:-0.02em;">${shortName}</p>
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-                            <span style="color:white;font-size:13px;font-weight:900;">${parseInt(p.price).toLocaleString()} F</span>
-                            ${p.old ? `<span style="color:rgba(255,255,255,0.38);font-size:10px;font-weight:600;text-decoration:line-through;">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+
+                    <!-- Texte HAUT — fond bleu marine Afro Service -->
+                    <div style="padding:20px 18px 0;background:#101944;flex-shrink:0;">
+                        ${promo > 0 ? `<div style="display:inline-block;background:#bd1e24;color:white;font-size:9px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:0.06em;">−${promo}%</div>` : '<div style="height:22px;margin-bottom:10px;"></div>'}
+                        <p style="color:white;font-size:15px;font-weight:900;line-height:1.25;margin:0 0 7px;letter-spacing:-0.01em;">${shortName}</p>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                            <span style="color:#f87171;font-size:14px;font-weight:900;">${parseInt(p.price).toLocaleString()} F</span>
+                            ${p.old ? `<span style="color:rgba(255,255,255,0.35);font-size:10px;font-weight:600;text-decoration:line-through;">${parseInt(p.old).toLocaleString()} F</span>` : ''}
                         </div>
-                        <div style="display:inline-flex;align-items:center;gap:5px;background:white;border-radius:22px;padding:7px 16px;margin-bottom:18px;">
-                            <span style="color:#111;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;">Commander</span>
-                            <svg width="10" height="10" fill="none" stroke="#111" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                        <!-- CTA rouge Afro Service -->
+                        <div style="display:inline-flex;align-items:center;gap:5px;background:#bd1e24;border-radius:22px;padding:7px 16px;margin-bottom:18px;box-shadow:0 3px 10px rgba(189,30,36,0.4);">
+                            <span style="color:white;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.07em;">Commander</span>
+                            <svg width="10" height="10" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
                         </div>
                     </div>
-                    <div style="flex:1;min-height:280px;overflow:hidden;background:#111;">
+
+                    <!-- Image BAS -->
+                    <div style="flex:1;min-height:270px;overflow:hidden;background:#0d1538;">
                         <img src="${img}" loading="lazy" alt="${p.name}"
                              style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
                     </div>
@@ -2334,12 +2525,14 @@
                 renderProducts(stock);
                 renderCategoryBubbles();
                 renderHeroCards();
+                renderTemuGrid(stock);
             } else {
                 updateDynamicBanners(stock);
                 const adminOpen = document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden');
                 if (!adminOpen) renderProducts(stock);
                 renderCategoryBubbles();
                 renderHeroCards();
+                renderTemuGrid(stock);
             }
 
             const adminModal    = document.getElementById('adminModal');
