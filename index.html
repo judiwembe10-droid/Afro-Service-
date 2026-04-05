@@ -129,11 +129,12 @@
             color: #94a3b8; font-size: 9px; font-weight: 600; text-decoration: line-through; line-height: 1;
         }
         
-        .category-bubble { flex: 0 0 auto; width: 85px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.2s ease; }
-        .bubble-img-container { width: 70px; height: 70px; border-radius: 22px; background: white; padding: 2px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; }
-        .category-bubble:hover .bubble-img-container { border-color: var(--afro-red); transform: scale(1.05); }
-        .bubble-img-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 19px; }
-        .bubble-text { font-size: 10px; font-weight: 800; text-align: center; color: var(--afro-blue); text-transform: uppercase; line-height: 1.2; letter-spacing: 0.05em; }
+        .category-bubble { flex: 0 0 auto; width: 105px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s ease; }
+        .category-bubble:active { transform: scale(0.95); }
+        .bubble-img-container { width: 96px; height: 96px; border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(0,0,0,0.10); border: 1.5px solid #f0f0f5; transition: all 0.25s ease; overflow: hidden; }
+        .category-bubble:active .bubble-img-container { box-shadow: 0 2px 8px rgba(0,0,0,0.13); }
+        .bubble-img-container img { width: 88%; height: 88%; object-fit: contain; border-radius: 0; }
+        .bubble-text { font-size: 12px; font-weight: 700; text-align: center; color: #1d1d1f; line-height: 1.3; letter-spacing: -0.01em; }
 
         .price-tag { color: var(--afro-red); font-weight: 900; font-size: 1.1rem; letter-spacing: -0.5px; }
 
@@ -174,10 +175,10 @@
         /* ============ CATÉGORIES — Scroll horizontal natif ============ */
         #categoryBubbles {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 4px 16px 8px;
+            padding: 8px 16px 16px;
         }
 
         /* ============ MARQUEE PROMO — CSS pur ============ */
@@ -499,27 +500,12 @@
             </div>
         </div>
 
-        <!-- LIGNE 3 : Ticker -->
-        <div class="ticker-wrap" style="border-top:1px solid rgba(255,255,255,0.08)">
-            <div class="ticker" id="headerTicker">
-                <span class="ticker__item" data-fr="Livraison Rapide à Bafoussam" data-en="Fast Delivery in Bafoussam">Livraison Rapide à Bafoussam</span>
-                <span class="ticker__item" data-fr="Qualité Garantie sur tous nos produits" data-en="Quality Guaranteed on all products">Qualité Garantie sur tous nos produits</span>
-                <span class="ticker__item" data-fr="Service Client 24h/7j sur WhatsApp" data-en="Customer Service 24/7 on WhatsApp">Service Client 24h/7j sur WhatsApp</span>
-                <span class="ticker__item" data-fr="Nouvel arrivage chaque semaine !" data-en="New arrivals every week!">Nouvel arrivage chaque semaine !</span>
-                <span class="ticker__item" data-fr="Paiement sécurisé à la livraison" data-en="Secure payment on delivery">Paiement sécurisé à la livraison</span>
-                <span class="ticker__item" data-fr="Livraison Rapide à Bafoussam" data-en="Fast Delivery in Bafoussam">Livraison Rapide à Bafoussam</span>
-                <span class="ticker__item" data-fr="Qualité Garantie sur tous nos produits" data-en="Quality Guaranteed on all products">Qualité Garantie sur tous nos produits</span>
-                <span class="ticker__item" data-fr="Service Client 24h/7j sur WhatsApp" data-en="Customer Service 24/7 on WhatsApp">Service Client 24h/7j sur WhatsApp</span>
-                <span class="ticker__item" data-fr="Nouvel arrivage chaque semaine !" data-en="New arrivals every week!">Nouvel arrivage chaque semaine !</span>
-                <span class="ticker__item" data-fr="Paiement sécurisé à la livraison" data-en="Secure payment on delivery">Paiement sécurisé à la livraison</span>
-            </div>
-        </div>
     </header>
 
     <!-- BANNIÈRES DYNAMIQUES -->
     <section class="pt-4 pb-3 bg-[#f0f4ff]">
         <div id="dynamicBanners" class="banner-container no-scrollbar">
-            <div class="banner-item relative rounded-2xl overflow-hidden bg-slate-200 animate-pulse" style="height:200px;margin-left:16px;"></div>
+            <div class="banner-item relative rounded-2xl overflow-hidden bg-slate-200 animate-pulse" style="height:260px;margin-left:16px;"></div>
         </div>
         <!-- Indicateurs points -->
         <div id="bannerDots" class="flex justify-center gap-1.5 mt-2.5">
@@ -531,71 +517,26 @@
     </section>
 
     <!-- CATÉGORIES BULLES -->
-    <section class="bg-white py-5 border-b border-slate-100">
+    <section class="bg-white pt-6 pb-4 border-b border-slate-100">
         <div id="categoryBubbles" class="no-scrollbar"></div>
     </section>
 
-    <!-- MARQUEE PROMO -->
-    <div class="relative py-5 bg-white overflow-hidden border-b border-slate-100 shadow-sm">
-        <div id="promoMarquee" class="flex flex-nowrap animate-marquee whitespace-nowrap items-center">
-            <div class="flex items-center gap-10 px-6">
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    <span data-fr="Nouvel arrivage Électroménager" data-en="New Appliance Arrivals">Nouvel arrivage Électroménager</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic">
-                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-                    <span data-fr="-25% sur les TV Smart" data-en="-25% on Smart TVs">-25% sur les TV Smart</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
-                    <span data-fr="Livraison Rapide à Bafoussam" data-en="Fast Delivery in Bafoussam">Livraison Rapide à Bafoussam</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    <span data-fr="Qualité 100% Garantie" data-en="100% Quality Guaranteed">Qualité 100% Garantie</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    <span data-fr="Paiement à la Livraison" data-en="Payment on Delivery">Paiement à la Livraison</span>
-                </span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="flex items-center gap-10 px-6">
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    <span data-fr="Nouvel arrivage Électroménager" data-en="New Appliance Arrivals">Nouvel arrivage Électroménager</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-red-600 italic">
-                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-                    <span data-fr="-25% sur les TV Smart" data-en="-25% on Smart TVs">-25% sur les TV Smart</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
-                    <span data-fr="Livraison Rapide à Bafoussam" data-en="Fast Delivery in Bafoussam">Livraison Rapide à Bafoussam</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    <span data-fr="Qualité 100% Garantie" data-en="100% Quality Guaranteed">Qualité 100% Garantie</span>
-                </span>
-                <span class="h-1.5 w-1.5 bg-red-600 rotate-45 flex-shrink-0"></span>
-                <span class="flex items-center gap-2 text-[10px] font-black uppercase text-[#101944]">
-                    <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                    <span data-fr="Paiement à la Livraison" data-en="Payment on Delivery">Paiement à la Livraison</span>
-                </span>
-            </div>
-        </div>
-    </div>
+
 
     <!-- GRILLE PRODUITS + AVIS -->
     <main class="py-4 min-h-screen" style="overflow:visible">
+
+        <!-- HERO CARDS — tous les articles, défilement horizontal -->
+        <div id="heroCardsSection" class="mb-6" style="display:none">
+            <div class="flex items-center justify-between px-4 mb-3">
+                <span class="text-[13px] font-black uppercase tracking-widest text-[#101944]" data-fr="Nos Articles" data-en="Our Products">Nos Articles</span>
+
+            </div>
+            <div id="heroCardsContainer"
+                 class="no-scrollbar"
+                 style="display:flex;flex-direction:column;gap:16px;padding:0 16px 8px;"></div>
+        </div>
+
         <div id="productScrollWrapper" class="no-scrollbar" style="position:relative;">
             <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 px-4" style="display:none"></div>
             <div id="productScrollTrack" style="display:none"></div>
@@ -1279,7 +1220,7 @@
         function updateDynamicBanners(products) {
             const container = document.getElementById('dynamicBanners');
             if (!container || !products || products.length === 0) {
-                if (container) container.innerHTML = `<div class="banner-item relative h-48 rounded-[40px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse"></div>`;
+                if (container) container.innerHTML = `<div class="banner-item relative rounded-[22px] overflow-hidden shadow-2xl bg-slate-200 animate-pulse" style="height:260px"></div>`;
                 return;
             }
 
@@ -1362,7 +1303,7 @@
                 <div class="banner-item relative overflow-hidden cursor-pointer" 
                      id="${bannerId}"
                      onclick="window.showDetail('${cfg.anchorId}')"
-                     style="height:200px;border-radius:22px;box-shadow:0 8px 32px rgba(16,25,68,0.18);">
+                     style="height:260px;border-radius:22px;box-shadow:0 8px 32px rgba(16,25,68,0.18);">
                     <!-- Image A — Ken Burns dès le départ -->
                     <img id="${bannerId}_imgA" src="${firstImg}" 
                          class="banner-bg-img visible-img kb${(bi % 3) + 1}" 
@@ -1373,8 +1314,6 @@
                          loading="lazy" alt="Afro Service">
                     <!-- Overlay dégradé -->
                     <div class="absolute inset-0" style="background:linear-gradient(115deg,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.05) 100%);z-index:2"></div>
-                    <!-- Ligne accent bas -->
-                    <div class="absolute bottom-0 left-0 right-0" style="height:3px;background:${cfg.accentColor};z-index:3"></div>
                     <!-- Contenu textuel -->
                     <div class="absolute inset-0 flex flex-col justify-center p-5" style="z-index:4">
                         <!-- Badge tag avec icône SVG -->
@@ -1403,7 +1342,7 @@
             const cashBanner = `
                 <div class="banner-item relative overflow-hidden"
                      id="cashAnimBanner"
-                     style="height:200px;border-radius:22px;margin-right:16px;overflow:hidden;
+                     style="height:260px;border-radius:22px;margin-right:16px;overflow:hidden;
                             box-shadow:0 8px 32px rgba(192,57,43,0.4);cursor:pointer;">
 
                     <!-- SCÈNE A : LE PROBLÈME — fond rouge -->
@@ -1589,7 +1528,7 @@
                             dot.style.background = i === imgIdx % maxDots ? 'white' : 'rgba(255,255,255,0.4)';
                         }
                     }
-                }, 8000);
+                }, 12000);
 
                 _bannerImgIntervals.push(interval);
             });
@@ -1618,7 +1557,7 @@
                 });
             }
 
-            window._bannerAutoSlide = setInterval(() => _gotoSlide(_bannerIdx + 1), 8000);
+            window._bannerAutoSlide = setInterval(() => _gotoSlide(_bannerIdx + 1), 12000);
 
             container.addEventListener('scroll', () => {
                 const itemW = _bannerItems[0]?.offsetWidth + 12 || container.clientWidth * 0.88 + 12;
@@ -1921,10 +1860,60 @@
             const container = document.getElementById('categoryBubbles');
             if (!container || !categories || categories.length === 0) return;
             container.innerHTML = categories.map(cat => {
-                const prod = stock.find(p => p.cat === cat.name);
-                const imgSrc = (prod && prod.imgs && prod.imgs[0]) ? prod.imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
-                return `<div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')"><div class="bubble-img-container"><img src="${imgSrc}" alt="${cat.name}" loading="lazy"></div><span class="bubble-text">${cat.name}</span></div>`;
+                // Prendre la meilleure image du rayon (produit avec image)
+                const prods = stock.filter(p => p.cat === cat.name && p.imgs && p.imgs[0]);
+                const imgSrc = prods.length ? prods[0].imgs[0] : 'https://i.postimg.cc/9QB2XQRM/20260329-213515.png';
+                return `<div class="category-bubble" onclick="window.filterItems('${cat.name}', '', '')">
+                    <div class="bubble-img-container">
+                        <img src="${imgSrc}" alt="${cat.name}" loading="lazy">
+                    </div>
+                    <span class="bubble-text">${cat.name}</span>
+                </div>`;
             }).join('');
+        }
+
+        function renderHeroCards() {
+            const section   = document.getElementById('heroCardsSection');
+            const container = document.getElementById('heroCardsContainer');
+            if (!section || !container) return;
+
+            // TOUS les articles avec image, du plus récent au plus ancien
+            const all = stock.filter(p => p.imgs && p.imgs[0]).reverse();
+
+            if (all.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = all.map(p => {
+                const img       = p.imgs[0];
+                const promo     = p.old ? Math.round(((p.old - p.price) / p.old) * 100) : 0;
+                const shortName = p.name.length > 38 ? p.name.substring(0, 38) + '\u2026' : p.name;
+                return `
+                <div onclick="window.showDetail('${p.id}')"
+                     style="width:100%;border-radius:22px;overflow:hidden;
+                            cursor:pointer;background:#111;box-shadow:0 10px 30px rgba(0,0,0,0.22);
+                            display:flex;flex-direction:column;">
+                    <div style="padding:20px 20px 0;background:#111;flex-shrink:0;">
+                        ${promo > 0 ? `<div style="display:inline-block;background:#bd1e24;color:white;font-size:9px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:0.06em;">-${promo}%</div>` : '<div style="height:22px;margin-bottom:10px;"></div>'}
+                        <p style="color:white;font-size:16px;font-weight:900;line-height:1.25;margin:0 0 8px;letter-spacing:-0.02em;">${shortName}</p>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+                            <span style="color:white;font-size:13px;font-weight:900;">${parseInt(p.price).toLocaleString()} F</span>
+                            ${p.old ? `<span style="color:rgba(255,255,255,0.38);font-size:10px;font-weight:600;text-decoration:line-through;">${parseInt(p.old).toLocaleString()} F</span>` : ''}
+                        </div>
+                        <div style="display:inline-flex;align-items:center;gap:5px;background:white;border-radius:22px;padding:7px 16px;margin-bottom:18px;">
+                            <span style="color:#111;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;">Commander</span>
+                            <svg width="10" height="10" fill="none" stroke="#111" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                    <div style="flex:1;min-height:280px;overflow:hidden;background:#111;">
+                        <img src="${img}" loading="lazy" alt="${p.name}"
+                             style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
+                    </div>
+                </div>`;
+            }).join('');
+
+            section.style.display = 'block';
         }
 
         function renderMenu() {
@@ -2344,11 +2333,13 @@
                 updateDynamicBanners(stock);
                 renderProducts(stock);
                 renderCategoryBubbles();
+                renderHeroCards();
             } else {
                 updateDynamicBanners(stock);
                 const adminOpen = document.getElementById('adminModal') && !document.getElementById('adminModal').classList.contains('hidden');
                 if (!adminOpen) renderProducts(stock);
                 renderCategoryBubbles();
+                renderHeroCards();
             }
 
             const adminModal    = document.getElementById('adminModal');
