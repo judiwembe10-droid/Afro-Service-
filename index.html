@@ -1998,10 +1998,9 @@
                     <span class="text-3xl font-black text-red-600">${parseInt(p.price).toLocaleString()} FCFA</span>
                     ${p.old ? `<span class="text-slate-400 line-through text-sm font-bold">${parseInt(p.old).toLocaleString()} FCFA</span>` : ''}
                 </div>
-                <p class="text-[9px] font-black text-slate-400 uppercase mb-4 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
-                <div class="rich-desc mb-8">${desc}</div>
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-6 italic underline">${p.cat} / ${p.sub} / ${p.subsub || ''}</p>
                 
-                <div class="space-y-6 mt-6">
+                <div class="space-y-6">
                     ${p.colors ? `<div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">${lang === 'fr' ? 'Couleur disponible' : 'Available Color'}</label><select id="vCol" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">${p.colors.split(',').map(c => `<option>${c.trim()}</option>`).join('')}</select></div>` : ''}
                     ${p.memory ? `<div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">${lang === 'fr' ? 'Capacité / Mémoire' : 'Capacity / Memory'}</label><select id="vMem" class="w-full border-2 border-slate-100 p-4 rounded-2xl text-xs font-bold uppercase tracking-wider bg-slate-50 focus:border-red-600 outline-none transition-all">${p.memory.split(',').map(m => `<option>${m.trim()}</option>`).join('')}</select></div>` : ''}
                     <div class="space-y-2"><label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">${lang === 'fr' ? 'Quantité souhaitée' : 'Desired Quantity'}</label><input id="vQty" type="number" value="1" min="1" class="w-full border-2 border-slate-100 p-4 rounded-2xl font-black text-sm bg-slate-50 focus:border-red-600 outline-none transition-all"></div>
@@ -2010,11 +2009,160 @@
                 <button onclick="window.addToCart('${p.id}')" class="w-full bg-[#101944] text-white py-5 rounded-[24px] font-black uppercase text-xs mt-8 shadow-xl hover:bg-red-600 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     ${lang === 'fr' ? 'Ajouter au Panier' : 'Add to Cart'}
-                </button>`;
-            
+                </button>
+
+                <!-- ===== SKU ===== -->
+                <div class="mt-6 flex items-center justify-between bg-[#f8fafc] border border-[#eef2f7] rounded-2xl px-5 py-4">
+                    <div>
+                        <span class="text-[9px] font-black uppercase tracking-[0.15em] text-slate-400 block mb-1">SKU</span>
+                        <span id="detailSkuVal" class="text-[12px] font-black text-[#101944] tracking-wide">${'AFRO-' + (p.id || '').toUpperCase().slice(-10)}</span>
+                    </div>
+                    <button onclick="window._copySku('${('AFRO-' + (p.id || '').toUpperCase().slice(-10))}')" id="skuCopyBtn" class="flex items-center justify-center w-10 h-10 bg-white border border-slate-200 rounded-xl shadow-sm active:scale-90 transition-all" title="Copier">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    </button>
+                </div>
+
+                <!-- ===== BADGES DE CONFIANCE ===== -->
+                <div class="mt-5 grid grid-cols-3 gap-3">
+                    <!-- Livraison Rapide -->
+                    <div class="flex flex-col items-center gap-2.5 bg-[#f8fafc] border border-[#eef2f7] rounded-2xl py-5 px-2">
+                        <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <!-- Boîte colis -->
+                          <rect x="6" y="22" width="30" height="22" rx="4" fill="#FFA94D"/>
+                          <rect x="6" y="22" width="30" height="10" rx="4" fill="#FF8C00"/>
+                          <!-- Ruban colis -->
+                          <rect x="18" y="22" width="6" height="22" fill="#FFD08A"/>
+                          <rect x="6" y="27" width="30" height="5" fill="#FFD08A"/>
+                          <!-- Nœud -->
+                          <circle cx="21" cy="27" r="3.5" fill="#FF8C00"/>
+                          <!-- Épingle localisation -->
+                          <circle cx="44" cy="16" r="9" fill="#FF4D4D"/>
+                          <circle cx="44" cy="16" r="4" fill="white"/>
+                          <path d="M44 25 L44 32" stroke="#FF4D4D" stroke-width="2.5" stroke-linecap="round"/>
+                          <!-- Points déco -->
+                          <circle cx="12" cy="50" r="2" fill="#CBD5E1"/>
+                          <circle cx="20" cy="52" r="1.5" fill="#CBD5E1"/>
+                          <circle cx="28" cy="50" r="2" fill="#CBD5E1"/>
+                        </svg>
+                        <span class="text-[8px] font-black uppercase text-center text-[#475569] leading-tight tracking-wider">${lang === 'fr' ? 'Livraison\nRapide' : 'Fast\nDelivery'}</span>
+                    </div>
+                    <!-- Paiement Sécurisé -->
+                    <div class="flex flex-col items-center gap-2.5 bg-[#f8fafc] border border-[#eef2f7] rounded-2xl py-5 px-2">
+                        <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <!-- Carte -->
+                          <rect x="6" y="18" width="44" height="30" rx="5" fill="#F8AEBA"/>
+                          <rect x="6" y="18" width="44" height="13" rx="5" fill="#F07090"/>
+                          <rect x="6" y="26" width="44" height="5" fill="#F07090"/>
+                          <!-- Puce -->
+                          <rect x="13" y="34" width="11" height="8" rx="2" fill="#FFD08A"/>
+                          <rect x="13" y="34" width="11" height="3" rx="1" fill="#FFA94D"/>
+                          <!-- Lignes -->
+                          <rect x="28" y="35" width="14" height="3" rx="1.5" fill="#fff" opacity="0.6"/>
+                          <rect x="28" y="40" width="10" height="3" rx="1.5" fill="#fff" opacity="0.4"/>
+                          <!-- Badge sécurité -->
+                          <circle cx="50" cy="18" r="9" fill="#22C55E"/>
+                          <path d="M46.5 18l2.5 2.5 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="text-[8px] font-black uppercase text-center text-[#475569] leading-tight tracking-wider">${lang === 'fr' ? 'Paiement\nSécurisé' : 'Secure\nPayment'}</span>
+                    </div>
+                    <!-- Service Après Vente -->
+                    <div class="flex flex-col items-center gap-2.5 bg-[#f8fafc] border border-[#eef2f7] rounded-2xl py-5 px-2">
+                        <svg width="44" height="44" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <!-- Bâtiment -->
+                          <rect x="8" y="28" width="48" height="28" rx="3" fill="#93C5FD"/>
+                          <!-- Toit -->
+                          <path d="M4 30 L32 10 L60 30 Z" fill="#3B82F6"/>
+                          <!-- Porte -->
+                          <rect x="26" y="38" width="12" height="18" rx="2" fill="#1D4ED8"/>
+                          <!-- Poignée -->
+                          <circle cx="36" cy="47" r="1.5" fill="#93C5FD"/>
+                          <!-- Fenêtres -->
+                          <rect x="12" y="34" width="10" height="9" rx="2" fill="white" opacity="0.9"/>
+                          <rect x="42" y="34" width="10" height="9" rx="2" fill="white" opacity="0.9"/>
+                          <!-- Croix fenêtre G -->
+                          <line x1="17" y1="34" x2="17" y2="43" stroke="#93C5FD" stroke-width="1"/>
+                          <line x1="12" y1="38.5" x2="22" y2="38.5" stroke="#93C5FD" stroke-width="1"/>
+                          <!-- Croix fenêtre D -->
+                          <line x1="47" y1="34" x2="47" y2="43" stroke="#93C5FD" stroke-width="1"/>
+                          <line x1="42" y1="38.5" x2="52" y2="38.5" stroke="#93C5FD" stroke-width="1"/>
+                          <!-- Badge info -->
+                          <circle cx="52" cy="16" r="9" fill="#F97316"/>
+                          <path d="M52 13v4M52 19v1" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                        <span class="text-[8px] font-black uppercase text-center text-[#475569] leading-tight tracking-wider">${lang === 'fr' ? 'Service\nAprès Vente' : 'After-Sales\nService'}</span>
+                    </div>
+                </div>
+
+                <!-- ===== ACCORDÉON DÉTAIL DU PRODUIT ===== -->
+                <div class="mt-3 bg-[#f8fafc] border border-[#eef2f7] rounded-2xl overflow-hidden">
+                    <button onclick="window._toggleDetailAccordion()" class="w-full flex items-center justify-between px-5 py-4 active:bg-slate-100 transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <svg id="detailAccordionIcon" class="w-4 h-4 text-[#101944] transition-transform duration-300 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+                            <span class="text-[12px] font-black text-[#101944] uppercase tracking-wider">${lang === 'fr' ? 'Détail du produit' : 'Product Details'}</span>
+                        </div>
+                    </button>
+                    <div id="detailAccordionBody" class="overflow-hidden transition-all duration-300" style="max-height:0">
+                        <div class="px-5 pb-5 border-t border-slate-200">
+                            <div class="rich-desc text-[12px] text-slate-700 leading-relaxed pt-4">${desc}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION AVIS ARTICLE ===== -->
+                <div class="mt-10 border-t border-slate-100 pt-6">
+                    <h3 class="font-black text-[13px] uppercase tracking-widest text-[#101944] mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        ${lang === 'fr' ? 'Avis Clients' : 'Customer Reviews'}
+                    </h3>
+
+                    <!-- Résumé note globale -->
+                    <div id="prodRatingSummary_${p.id}" class="bg-slate-50 rounded-2xl p-4 mb-4 flex items-center gap-4">
+                        <div class="text-center flex-shrink-0">
+                            <div id="prodRatingAvg_${p.id}" class="text-4xl font-black text-[#101944]">0.0</div>
+                            <div id="prodRatingStars_${p.id}" class="flex justify-center gap-0.5 mt-1"></div>
+                            <div id="prodRatingCount_${p.id}" class="text-[9px] font-bold text-slate-400 mt-1">${lang === 'fr' ? 'Basé sur 0 avis' : 'Based on 0 reviews'}</div>
+                        </div>
+                        <div class="flex-1 space-y-1" id="prodRatingBars_${p.id}">
+                            ${[5,4,3,2,1].map(n => `<div class="flex items-center gap-2"><span class="text-[9px] font-bold text-slate-400 w-2">${n}</span><svg class="w-2.5 h-2.5 text-orange-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><div class="flex-1 bg-slate-200 rounded-full h-1.5"><div id="prodBar_${p.id}_${n}" class="h-1.5 bg-orange-400 rounded-full transition-all" style="width:0%"></div></div><span id="prodBarCount_${p.id}_${n}" class="text-[9px] font-bold text-slate-400 w-3 text-right">0</span></div>`).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Liste des avis -->
+                    <div id="prodReviewsList_${p.id}" class="space-y-3 mb-5">
+                        <p class="text-[10px] text-slate-400 italic">${lang === 'fr' ? 'Chargement des avis...' : 'Loading reviews...'}</p>
+                    </div>
+
+                    <!-- Formulaire écrire un avis -->
+                    <div class="bg-[#101944] rounded-2xl p-4 text-white">
+                        <h4 class="font-black text-[10px] uppercase mb-3 flex items-center gap-1.5">
+                            <svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            ${lang === 'fr' ? 'Écrire un avis' : 'Write a review'}
+                        </h4>
+                        <!-- Sélection étoiles interactive -->
+                        <div class="flex items-center gap-1 mb-3" id="prodStarPicker_${p.id}">
+                            <span class="text-[9px] font-bold text-white/60 uppercase mr-1">${lang === 'fr' ? 'Note :' : 'Rating:'}</span>
+                            ${[1,2,3,4,5].map(n => `<button onclick="window.setProdStar('${p.id}',${n})" id="prodStar_${p.id}_${n}" class="text-2xl transition-transform active:scale-90" style="color:#94a3b8;background:none;border:none;cursor:pointer;padding:0 2px;">★</button>`).join('')}
+                        </div>
+                        <input type="hidden" id="prodStarVal_${p.id}" value="5">
+                        <textarea id="prodRevText_${p.id}"
+                                  placeholder="${lang === 'fr' ? 'Votre expérience avec ce produit...' : 'Your experience with this product...'}"
+                                  class="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-[11px] outline-none focus:border-red-400 h-16 text-white resize-none placeholder-white/40 mb-3"></textarea>
+                        <button onclick="window.sendProductReview('${p.id}')" class="w-full bg-red-600 text-white font-black py-2.5 rounded-xl text-[9px] uppercase shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            ${lang === 'fr' ? 'Envoyer mon avis' : 'Send my review'}
+                        </button>
+                    </div>
+                </div>`;
+
             document.getElementById('detailModal').style.transform = "translateX(0)";
             document.getElementById('overlay').classList.remove('hidden');
             updateWALink(p.name);
+
+            // Initialiser le star picker à 5 étoiles par défaut
+            window.setProdStar(p.id, 5);
+
+            // Charger les avis de cet article
+            window.loadProductReviews(p.id);
         };
 
         window.moveSlide = function(dir, total) {
@@ -2031,6 +2179,174 @@
             updateCart();
             closeDetail();
             openCart();
+        };
+
+        // Copier le SKU
+        window._copySku = function(sku) {
+            navigator.clipboard.writeText(sku).then(() => {
+                const btn = document.getElementById('skuCopyBtn');
+                if (btn) {
+                    btn.style.background = '#dcfce7';
+                    btn.style.borderColor = '#86efac';
+                    btn.innerHTML = '<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+                    setTimeout(() => {
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.innerHTML = '<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>';
+                    }, 1500);
+                }
+            }).catch(() => {});
+        };
+
+        // Accordéon Détail du produit
+        window._toggleDetailAccordion = function() {
+            const body = document.getElementById('detailAccordionBody');
+            const icon = document.getElementById('detailAccordionIcon');
+            if (!body) return;
+            const isOpen = body.style.maxHeight !== '0px' && body.style.maxHeight !== '0' && body.style.maxHeight !== '';
+            body.style.maxHeight = isOpen ? '0' : body.scrollHeight + 'px';
+            if (icon) icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        };
+
+        // ==================== AVIS PAR ARTICLE ====================
+
+        // Étoiles interactives — sélection
+        window.setProdStar = function(productId, val) {
+            document.getElementById('prodStarVal_' + productId).value = val;
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById('prodStar_' + productId + '_' + i);
+                if (btn) btn.style.color = i <= val ? '#f97316' : '#94a3b8';
+            }
+        };
+
+        // Charger et afficher les avis d'un article
+        window.loadProductReviews = function(productId) {
+            const prodRevRef = ref(db, 'productReviews/' + productId);
+            onValue(prodRevRef, (snapshot) => {
+                const data = snapshot.val();
+                const listEl = document.getElementById('prodReviewsList_' + productId);
+                const avgEl  = document.getElementById('prodRatingAvg_' + productId);
+                const starsEl= document.getElementById('prodRatingStars_' + productId);
+                const countEl= document.getElementById('prodRatingCount_' + productId);
+                if (!listEl) return;
+
+                const SF = '<svg class="w-3 h-3 fill-current text-orange-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                const SE = '<svg class="w-3 h-3 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+
+                if (!data) {
+                    listEl.innerHTML = `<p class="text-[10px] text-slate-400 italic">${currentLang === 'fr' ? 'Aucun avis pour cet article.' : 'No reviews for this product yet.'}</p>`;
+                    if (avgEl)  avgEl.textContent = '0.0';
+                    if (starsEl) starsEl.innerHTML = SE.repeat(5);
+                    if (countEl) countEl.textContent = currentLang === 'fr' ? 'Basé sur 0 avis' : 'Based on 0 reviews';
+                    [5,4,3,2,1].forEach(n => {
+                        const bar = document.getElementById('prodBar_' + productId + '_' + n);
+                        const cnt = document.getElementById('prodBarCount_' + productId + '_' + n);
+                        if (bar) bar.style.width = '0%';
+                        if (cnt) cnt.textContent = '0';
+                    });
+                    return;
+                }
+
+                const entries = Object.entries(data).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+                const total   = entries.length;
+                const sum     = entries.reduce((acc, [, r]) => acc + (parseInt(r.note) || 5), 0);
+                const avg     = total > 0 ? (sum / total).toFixed(1) : '0.0';
+
+                // Barres de répartition
+                const counts = {5:0,4:0,3:0,2:0,1:0};
+                entries.forEach(([,r]) => { const n = Math.min(5,Math.max(1,parseInt(r.note)||5)); counts[n]++; });
+                [5,4,3,2,1].forEach(n => {
+                    const pct = total > 0 ? Math.round((counts[n]/total)*100) : 0;
+                    const bar = document.getElementById('prodBar_' + productId + '_' + n);
+                    const cnt = document.getElementById('prodBarCount_' + productId + '_' + n);
+                    if (bar) bar.style.width = pct + '%';
+                    if (cnt) cnt.textContent = counts[n];
+                });
+
+                if (avgEl)  avgEl.textContent = avg;
+                const avgInt = Math.round(parseFloat(avg));
+                if (starsEl) starsEl.innerHTML = SF.repeat(avgInt) + SE.repeat(5 - avgInt);
+                if (countEl) countEl.textContent = currentLang === 'fr' ? 'Basé sur ' + total + ' avis' : 'Based on ' + total + ' review' + (total > 1 ? 's' : '');
+
+                // Liste des avis
+                let html = '';
+                for (const [id, r] of entries.slice(0, 20)) {
+                    if (!r || !r.name || !r.comment) continue;
+                    const note = Math.min(5, Math.max(1, parseInt(r.note) || 5));
+                    const isLiked = r.likes && currentUser && r.likes[currentUser.uid];
+                    let badgeHtml = '';
+                    if (r.badge === 'Nouveau Client')    badgeHtml = `<span class="badge-new"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Nouveau</span>`;
+                    else if (r.badge === 'Client Régulier') badgeHtml = `<span class="badge-regular"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Régulier</span>`;
+                    else if (r.badge === 'Client Fidèle')  badgeHtml = `<span class="badge-loyal"><svg class="w-1.5 h-1.5" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>Fidèle</span>`;
+                    html += `<div class="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex gap-0.5">${SF.repeat(note)}${SE.repeat(5-note)}</div>
+                            <button onclick="window.likeProductReview('${productId}','${id}')" class="flex items-center gap-0.5 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 active:scale-90 transition-transform">
+                                <svg class="w-2.5 h-2.5 ${isLiked ? 'text-red-500 fill-current' : 'text-slate-300'}" fill="${isLiked?'currentColor':'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                <span class="text-[8px] font-black ${isLiked ? 'text-red-500' : 'text-slate-400'}">${r.likeCount || 0}</span>
+                            </button>
+                        </div>
+                        <p class="text-[10px] font-black uppercase text-[#101944] mb-1 flex items-center gap-1 flex-wrap">${r.name} ${badgeHtml}</p>
+                        <p class="text-[10px] text-slate-600 leading-snug">"${r.comment}"</p>
+                        ${r.adminReply ? `<div class="mt-2 p-2 bg-slate-50 rounded-lg border-l-2 border-[#101944]"><p class="text-[8px] font-black text-[#101944] uppercase mb-0.5">Afro Service ✓</p><p class="text-[9px] text-slate-500">${r.adminReply}</p></div>` : ''}
+                        <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50">
+                            <p class="text-[8px] text-slate-400 font-bold">${r.date || ''}</p>
+                            ${currentUser && adminEmails.includes(currentUser.email.toLowerCase()) ? `<div class="flex gap-2"><button onclick="window.replyProdReview('${productId}','${id}')" class="text-[7px] font-black uppercase text-blue-600">${currentLang==='fr'?'Répondre':'Reply'}</button><button onclick="window.deleteProdReview('${productId}','${id}')" class="text-[7px] font-black uppercase text-red-500">${currentLang==='fr'?'Supprimer':'Delete'}</button></div>` : ''}
+                        </div>
+                    </div>`;
+                }
+                listEl.innerHTML = html || `<p class="text-[10px] text-slate-400 italic">${currentLang === 'fr' ? 'Aucun avis pour cet article.' : 'No reviews yet.'}</p>`;
+            });
+        };
+
+        // Envoyer un avis sur un article
+        window.sendProductReview = async function(productId) {
+            if (!currentUser) return alert(currentLang === 'fr' ? "Connectez-vous pour laisser un avis !" : "Log in to leave a review!");
+            if (!currentUser.emailVerified) return alert(currentLang === 'fr' ? "Vérifiez votre email avant de noter." : "Verify your email before reviewing.");
+            const note    = parseInt(document.getElementById('prodStarVal_' + productId).value) || 5;
+            const comment = (document.getElementById('prodRevText_' + productId).value || '').trim();
+            if (!comment) return alert(currentLang === 'fr' ? "Laissez un petit commentaire !" : "Please write something!");
+            const badge = await getCustomerBadge(currentUser.uid);
+            await push(ref(db, 'productReviews/' + productId), {
+                name: currentUser.displayName || "Client AfroService",
+                note, comment,
+                date: new Date().toLocaleDateString('fr-FR'),
+                userId: currentUser.uid,
+                likes: {}, likeCount: 0,
+                timestamp: Date.now(),
+                badge: badge ? badge.label : null,
+                badgeClass: badge ? badge.class : null
+            });
+            document.getElementById('prodRevText_' + productId).value = '';
+            window.setProdStar(productId, 5);
+            alert(currentLang === 'fr' ? "Merci pour votre avis !" : "Thank you for your review!");
+        };
+
+        // Liker un avis article
+        window.likeProductReview = async function(productId, reviewId) {
+            if (!currentUser) { alert(currentLang === 'fr' ? "Connectez-vous pour aimer un avis !" : "Log in to like a review!"); return; }
+            const rRef     = ref(db, 'productReviews/' + productId + '/' + reviewId);
+            const snapshot = await new Promise((resolve) => onValue(rRef, resolve, { onlyOnce: true }));
+            const review   = snapshot.val();
+            if (!review) return;
+            const likes = review.likes || {};
+            const likeCount = review.likeCount || 0;
+            const uid = currentUser.uid;
+            if (likes[uid]) { delete likes[uid]; await update(rRef, { likes, likeCount: likeCount - 1 }); }
+            else { likes[uid] = true; await update(rRef, { likes, likeCount: likeCount + 1 }); }
+        };
+
+        // Répondre à un avis article (admin)
+        window.replyProdReview = async function(productId, reviewId) {
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return;
+            const reply = prompt(currentLang === 'fr' ? "Réponse de l'équipe Afro Service :" : "Reply from Afro Service team:");
+            if (reply && reply.trim()) await update(ref(db, 'productReviews/' + productId + '/' + reviewId), { adminReply: reply.trim(), adminReplyDate: new Date().toLocaleDateString('fr-FR') });
+        };
+
+        // Supprimer un avis article (admin)
+        window.deleteProdReview = function(productId, reviewId) {
+            if (!currentUser || !adminEmails.includes(currentUser.email.toLowerCase())) return;
+            if (confirm(currentLang === 'fr' ? "Supprimer cet avis ?" : "Delete this review?")) remove(ref(db, 'productReviews/' + productId + '/' + reviewId));
         };
 
         window.quickSearch = function(q) {
