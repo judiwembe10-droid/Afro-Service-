@@ -502,6 +502,17 @@
 
     </header>
 
+    <!-- BANDEAU VÉRIFICATION EMAIL -->
+    <div id="emailVerifyBanner" style="display:none;background:linear-gradient(90deg,#ea580c,#f97316);color:white;padding:10px 16px;text-align:center;z-index:200;position:relative;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
+            <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span id="emailVerifyBannerText" style="font-size:11px;font-weight:700;">Email non vérifié — Vérifiez votre boîte mail ou</span>
+            <button onclick="window.resendVerificationEmail()" style="background:white;color:#ea580c;border:none;border-radius:20px;padding:4px 12px;font-size:10px;font-weight:900;cursor:pointer;letter-spacing:0.03em;flex-shrink:0;transition:opacity 0.2s;" id="resendVerifyBtn">
+                RENVOYER L'EMAIL
+            </button>
+        </div>
+    </div>
+
     <!-- BANNIÈRES DYNAMIQUES -->
     <section class="pt-4 pb-3 bg-[#f0f4ff]">
         <div id="dynamicBanners" class="banner-container no-scrollbar">
@@ -2769,18 +2780,50 @@
         // ==================== AUTH ====================
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            const adminBtn = document.getElementById('adminBtn');
-            const dot      = document.getElementById('authStatusDot');
+            const adminBtn   = document.getElementById('adminBtn');
+            const dot        = document.getElementById('authStatusDot');
+            const verifyBanner = document.getElementById('emailVerifyBanner');
+            const bannerText   = document.getElementById('emailVerifyBannerText');
             if (user) {
                 if (user.email && adminEmails.includes(user.email.toLowerCase())) adminBtn.classList.remove('hidden');
                 else adminBtn.classList.add('hidden');
                 if (dot) dot.style.backgroundColor = user.emailVerified ? '#22c55e' : '#f97316';
                 if (document.getElementById('cName')) document.getElementById('cName').value = user.displayName || "";
+                // Afficher le bandeau si email non vérifié
+                if (verifyBanner) {
+                    if (!user.emailVerified) {
+                        verifyBanner.style.display = 'block';
+                        if (bannerText) bannerText.textContent = currentLang === 'fr'
+                            ? 'Email non vérifié — Vérifiez votre boîte mail ou'
+                            : 'Email not verified — Check your inbox or';
+                    } else {
+                        verifyBanner.style.display = 'none';
+                    }
+                }
             } else {
                 if (dot) dot.style.backgroundColor = '#94a3b8';
                 adminBtn.classList.add('hidden');
+                if (verifyBanner) verifyBanner.style.display = 'none';
             }
         });
+
+        // Renvoyer l'email de vérification
+        window.resendVerificationEmail = async function() {
+            if (!currentUser) return;
+            const btn = document.getElementById('resendVerifyBtn');
+            if (btn) { btn.disabled = true; btn.textContent = currentLang === 'fr' ? '⏳ ENVOI...' : '⏳ SENDING...'; btn.style.opacity = '0.7'; }
+            try {
+                await sendEmailVerification(currentUser);
+                alert(currentLang === 'fr'
+                    ? "✅ Email de vérification envoyé ! Vérifiez votre boîte mail (et vos spams)."
+                    : "✅ Verification email sent! Check your inbox (and spam folder).");
+                if (btn) { btn.disabled = false; btn.textContent = currentLang === 'fr' ? '✅ EMAIL ENVOYÉ !' : '✅ EMAIL SENT!'; btn.style.opacity = '1'; }
+                setTimeout(() => { if (btn) { btn.textContent = currentLang === 'fr' ? 'RENVOYER L\'EMAIL' : 'RESEND EMAIL'; } }, 4000);
+            } catch(err) {
+                if (btn) { btn.disabled = false; btn.textContent = currentLang === 'fr' ? 'RENVOYER L\'EMAIL' : 'RESEND EMAIL'; btn.style.opacity = '1'; }
+                alert((currentLang === 'fr' ? "Erreur : " : "Error: ") + err.message);
+            }
+        };
 
         window.handleAuth = async () => {
             const email   = document.getElementById('authEmail').value;
